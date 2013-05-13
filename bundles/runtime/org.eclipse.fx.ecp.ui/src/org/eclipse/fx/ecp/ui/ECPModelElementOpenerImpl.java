@@ -19,11 +19,11 @@ public class ECPModelElementOpenerImpl implements ECPModelElementOpener {
 	@Override
 	public void openModelElement(EObject modelElement, MApplication application, EModelService modelService, EPartService partService) {
 		 MPartStack stack = (MPartStack)
-		 modelService.find("at.bestsolution.efxclipse.ecp.app.partstacks.editors",
+		 modelService.find("org.eclipse.fx.ecp.app.partstacks.editors",
 		 application);
 		
 		 MInputPart part = MBasicFactory.INSTANCE.createInputPart();
-		 part.setContributionURI("bundleclass://at.bestsolution.efxclipse.ecp.app/at.bestsolution.efxclipse.ecp.ModelEditorPart");
+		 part.setContributionURI("bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.ModelEditorPart");
 		
 //		 part.setIconURI("platform:/plugin/de.vogella.rcp.e4.todo/icons/sample.gif");
 		 part.setCloseable(true);

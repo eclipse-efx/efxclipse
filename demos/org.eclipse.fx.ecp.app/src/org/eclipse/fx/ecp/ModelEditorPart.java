@@ -42,10 +42,11 @@ import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ModelElementEditor;
 
 
 @SuppressWarnings("restriction")
-public class ModelEditorPart implements org.eclipse.fx.ecp.ui.ModelElementEditor {
+public class ModelEditorPart implements ModelElementEditor {
 
 	private ScrollPane scrollPane;
 	private MPart part;
