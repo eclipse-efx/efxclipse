@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="controls" name="JavaFX ECP Controls" schema="schema/controls.exsd"/>
    <extension
          point="org.eclipse.emf.ecp.edit.controls">
       <!--
@@ -82,6 +83,20 @@
                priority="1"
                singleValue="true"
                supportedClassType="java.lang.String">
+         </staticTest>
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.fx.ecp.ui.controls">
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.DummyControl$Factory"
+            controlClass="javafx.scene.Node"
+            id="org.eclipse.fx.ecp.ui.controls.dummy"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="java.lang.Object">
          </staticTest>
       </factory>
    </extension>

@@ -1,6 +1,5 @@
 package org.eclipse.fx.ecp.ui;
 
-import org.eclipse.emf.ecp.edit.Control;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 

@@ -7,9 +7,9 @@ import javafx.scene.layout.HBox;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecp.edit.Control;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.Control;
 
 @SuppressWarnings("restriction")
 public class CheckBoxControl extends HBox implements Control {

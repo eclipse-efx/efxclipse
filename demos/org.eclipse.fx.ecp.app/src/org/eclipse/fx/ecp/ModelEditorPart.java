@@ -34,15 +34,15 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.Diagnostician;
-import org.eclipse.emf.ecp.edit.Control;
-import org.eclipse.emf.ecp.edit.Control.Factory;
-import org.eclipse.emf.ecp.edit.Control.Factory.Registry;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.Control;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
+import org.eclipse.fx.ecp.ui.Control.Factory;
+import org.eclipse.fx.ecp.ui.Control.Factory.Registry;
 
 
 @SuppressWarnings("restriction")

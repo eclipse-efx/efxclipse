@@ -1,0 +1,228 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.fx.ecp.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.fx.ecp.ui" id="controls" name="JavaFX ECP Controls"/>
+      </appinfo>
+      <documentation>
+         [Enter description of this extension point.]
+      </documentation>
+   </annotation>
+
+<element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="factory" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="factory">
+      <annotation>
+         <documentation>
+            The control being added. A control must define its class, a composite it can be rendered onto and whether or not to show a label. Furthermore either a dynamicTest or a staticTest must be added as a child element.
+         </documentation>
+      </annotation>
+      <complexType>
+         <choice>
+            <element ref="dynamicTest"/>
+            <element ref="staticTest" minOccurs="1" maxOccurs="unbounded"/>
+         </choice>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The class implementing the control. This must extend org.eclipse.emf.ecp.edit.AbstractControl.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.fx.ecp.ui.Control$Factory"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="controlClass" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="showLabel" type="boolean" use="default" value="true">
+            <annotation>
+               <documentation>
+                  If a label naming the attribut should be displayd. The default is true.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dynamicTest">
+      <annotation>
+         <documentation>
+            A dynamic test simply provides an implementation of the org.eclipse.emf.ecp.edit.util.ECPApplicableTester interface.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="testClass" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The implementation of the tester. The Class must extend the org.eclipse.emf.ecp.edit.util.ECPApplicableTester.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.ecp.edit.util.ECPApplicableTester"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="staticTest">
+      <annotation>
+         <documentation>
+            A static test can be used whenever the parameters of a control are fixed.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="priority" use="required">
+            <annotation>
+               <documentation>
+                  The prioriity to use this control if multiple fitting controls can be found.  The control with the higher priority will be taken.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="1">
+                  </enumeration>
+                  <enumeration value="2">
+                  </enumeration>
+                  <enumeration value="3">
+                  </enumeration>
+                  <enumeration value="4">
+                  </enumeration>
+                  <enumeration value="5">
+                  </enumeration>
+                  <enumeration value="6">
+                  </enumeration>
+                  <enumeration value="7">
+                  </enumeration>
+                  <enumeration value="8">
+                  </enumeration>
+                  <enumeration value="9">
+                  </enumeration>
+                  <enumeration value="10">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+         <attribute name="singleValue" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  Whether this control supports singe value or multivalue features.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="supportedClassType" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The type of the value the provided control renders.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="java.lang.Object:"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="supportedEObject" type="string">
+            <annotation>
+               <documentation>
+                  This defines for which EObject this control can be applied.
+The default is the org.eclipse.emf.ecore.EObject itself.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.ecore.EObject"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="supportedFeature" type="string">
+            <annotation>
+               <documentation>
+                  This field can be defined if the widget should only be used for a specific EStructuralFeature. The value must be a feature of the class set in supportedEObject.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>
