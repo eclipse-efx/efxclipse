@@ -2,90 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="controls" name="JavaFX ECP Controls" schema="schema/controls.exsd"/>
-   <extension
-         point="org.eclipse.emf.ecp.edit.controls">
-      <!--
-      <factory
-            class="at.bestsolution.efxclipse.ecp.ui.controls.DummyControl$Factory"
-            controlClass="javafx.scene.Node"
-            id="at.bestsolution.efxclipse.ecp.ui.factories.dummyControl"
-            showLabel="true">
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Object">
-         </staticTest>
-      </factory>
-      <factory
-            class="org.eclipse.fx.ecp.ui.controls.CheckBoxControl$Factory"
-            controlClass="javafx.scene.Node"
-            id="at.bestsolution.efxclipse.ecp.ui.factories.checkBoxControl"
-            showLabel="true">
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Boolean">
-         </staticTest>
-      </factory>
-      <factory
-            class="org.eclipse.fx.ecp.ui.controls.TextFieldControl$Factory"
-            controlClass="javafx.scene.Node"
-            id="at.bestsolution.efxclipse.ecp.ui.factories.textFieldControl"
-            showLabel="true">
-            
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.math.BigDecimal">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.math.BigInteger">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Character">
-         </staticTest>   
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.util.Date">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Double">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Float">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Integer">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Long">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Short">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.String">
-         </staticTest>
-      </factory>
-      -->
-   </extension>
+    
    <extension
          point="org.eclipse.fx.ecp.ui.controls">
          
@@ -105,7 +22,6 @@
       
       <factory
             class="org.eclipse.fx.ecp.ui.controls.CheckBoxControl$Factory"
-            controlClass="javafx.scene.Node"
             id="org.eclipse.fx.ecp.ui.controls.checkBox"
             showLabel="true">
          <staticTest
@@ -117,7 +33,6 @@
       
       <factory
             class="org.eclipse.fx.ecp.ui.controls.TextFieldControl$Factory"
-            controlClass="javafx.scene.Node"
             id="org.eclipse.fx.ecp.ui.controls.textField"
             showLabel="true">
             
@@ -175,7 +90,6 @@
       </factory>
       <factory
             class="org.eclipse.fx.ecp.ui.controls.EnumControl$Factory"
-            controlClass="javafx.scene.Node"
             id="org.eclipse.fx.ecp.ui.controls.enumCombo"
             showLabel="true">
          <staticTest

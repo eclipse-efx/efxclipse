@@ -14,11 +14,7 @@ public interface Control {
 	void handleValidation(Diagnostic diagnostic);
 	
 	void resetValidation();
-	
-//	T createWidget(Object parent);
-//	
-//	void dispose();
-	
+
 	interface Factory {
 		
 		Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context);

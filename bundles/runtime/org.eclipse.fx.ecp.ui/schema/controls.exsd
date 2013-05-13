@@ -10,7 +10,7 @@
       </documentation>
    </annotation>
 
-<element name="extension">
+   <element name="extension">
       <annotation>
          <appinfo>
             <meta.element />
@@ -73,13 +73,6 @@
                <appinfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.fx.ecp.ui.Control$Factory"/>
                </appinfo>
-            </annotation>
-         </attribute>
-         <attribute name="controlClass" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
             </annotation>
          </attribute>
          <attribute name="showLabel" type="boolean" use="default" value="true">
