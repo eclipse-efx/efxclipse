@@ -1,0 +1,12 @@
+
+
+org.eclipse.emf.edit.ui.provider.PropertyDescriptor
+
+Implements org.eclipse.ui.views.properties.IPropertyDescriptor
+- creates / validates SWT CellEditors
+
+org.eclipse.emf.edit.provider.ItemPropertyDescriptor
+
+-base class with most of the implementation for IItemProviderPropertyDescriptor
+
+org.eclipse.emf.common.ui.celleditor.ExtendedComboBoxCellEditor

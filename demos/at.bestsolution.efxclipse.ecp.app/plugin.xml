@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+<extension id="product" point="org.eclipse.core.runtime.products">
+	<product name="ECP for JavaFX" application="org.eclipse.fx.ui.workbench.fx.application" >
+		<property name="appName" value="ECP for JavaFX" />
+		
+		<property name="applicationXMI" value="at.bestsolution.efxclipse.ecp.app/Application.e4xmi" />
+		
+		<property name="cssTheme" value="theme.default" />
+		
+	</product>
+	
+</extension>
+<extension  point="org.eclipse.fx.ui.theme">
+	<theme id="theme.default" basestylesheet="css/default.css" />
+	
+</extension>
+</plugin>

@@ -1,0 +1,56 @@
+.invalid {
+	-fx-background-color: -fx-outer-border, #FF5555, #FFFAFA;
+}
+
+.theForm {
+	-fx-padding: 10.0;
+	-fx-hgap: 6.0;
+	-fx-vgap: 6.0;
+}
+
+.formControl {
+	/* -fx-min-height: 20; */
+	/* -fx-pref-height: 50; works */
+	/* -fx-padding: 10; */
+}
+
+.multiTextControl .list-view {
+	-fx-pref-height: 50.0;
+}
+
+.multiReferenceControl .list-view {
+	-fx-pref-height: 80.0;
+}
+
+.multiAttributeControl .list-view {
+	-fx-pref-height: 80.0;
+}
+
+.controlLabel {
+	/*-fx-pref-width: 150.0;*/
+	-fx-alignment: top-left;
+	-fx-min-height: 20.0;
+	/*-fx-background-color: red;*/
+	-fx-padding: 3;
+	
+	-fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+.validationLabel {
+	-fx-padding: 16 10 10 10;
+	/* -fx-background-insets: 0 0 -1 0, 0, 1, 2; */
+	/* -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color; */
+	/* -fx-background-image: url("arrow.png"); */
+	/* -fx-background-position: 50 -15; */
+	/* -fx-background-repeat: no-repeat; */
+	-fx-min-width: 100;
+	-fx-background-insets: 8 0 0 0;
+	-fx-background-color: linear-gradient(#f04349 0%, #c81e2b 100%);
+	-fx-background-radius: 5;
+	-fx-text-fill: white;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+

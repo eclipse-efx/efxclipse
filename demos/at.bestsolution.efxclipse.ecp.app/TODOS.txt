@@ -1,0 +1,31 @@
+
+API:
+
+- Prefixes: What's the rule behind the prefixes (ME, ECP, I, ...)?
+- Variable names sometimes don't match the type name / getters and setters
+- No clear separation between EMFStore and ECP
+- Interface documentation is very poor
+- An architecture chart would be nice
+- SWT dependencies all over the place
+
+
+Step 1:
+
+- create architectural overview
+- create JavaFX e4 application with basic parts (Repository Explorer, Project Explorer, Model Element Editor, Validation View) 
+- create a model workspace mockup 
+- create basic unit test
+- create build config
+- add some basic javadoc
+- update website
+ 
+Step 2:
+
+- add more dialogs / wizards
+- add Jemmy tests
+- add proper documentation
+
+ECP Questions:
+
+InternalChildreList contains a reference to its parent. Yet the parent needs to be passed to Provider.fillChildren(). Why?
+
