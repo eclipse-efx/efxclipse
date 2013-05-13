@@ -98,6 +98,16 @@
                supportedClassType="java.lang.Enum">
          </staticTest>
       </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.MultiControl$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.multiText"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="false"
+               supportedClassType="java.lang.Object">
+         </staticTest>
+      </factory>
       
    </extension>
 
