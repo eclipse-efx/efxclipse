@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.Diagnostic;
@@ -25,16 +24,13 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
 
 @SuppressWarnings("restriction")
-public class EnumControl extends HBox implements Control {
+public class EnumControl extends VBox implements Control {
+
+	private ValidationMessage validationMessage;
 
 	public EnumControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		final EObject modelElement = context.getModelElement();
 		final EditingDomain editingDomain = context.getEditingDomain();
-
-		String displayName = propertyDescriptor.getDisplayName(modelElement);
-		Label label = new Label(displayName);
-		label.getStyleClass().add(IControlConstants.CONTROL_LABEL_CLASS);
-		getChildren().add(label);
 
 		final EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 
@@ -71,30 +67,65 @@ public class EnumControl extends HBox implements Control {
 				Command command = SetCommand.create(editingDomain, modelElement, feature, newValue);
 				if (command.canExecute())
 					editingDomain.getCommandStack().execute(command);
+				
+				if(newValue == null) {
+					validationMessage.setMessage("A value must be selected");
+				} else {
+					validationMessage.setMessage(null);
+				}
 			}
 
 		});
+
+		validationMessage = new ValidationMessage();
+		getChildren().add(validationMessage);
 	}
-	
+
 	@Override
 	public void handleValidation(Diagnostic diagnostic) {
-		// TODO Auto-generated method stub
-		
+//		if (diagnostic.getSeverity() != Diagnostic.OK) {
+//
+//			validationMessage.setMessage(diagnostic.getMessage());
+//			
+////			validationLabel.setText(diagnostic.getMessage());
+//
+//			// Timeline timeline = new Timeline();
+//			//
+//			// timeline.getKeyFrames().addAll(
+//			// new KeyFrame(Duration.ZERO, new
+//			// KeyValue(rectangle.heightProperty(), 0, Interpolator.EASE_BOTH)),
+//			// new KeyFrame(Duration.millis(300), new
+//			// KeyValue(rectangle.heightProperty(), 50, Interpolator.EASE_BOTH))
+//			// );
+//			//
+//			// timeline.play();
+//
+//			// ScaleTransition transition = ScaleTransitionBuilder.create()
+//			// .node(validationLabel)
+//			// .duration(Duration.seconds(2))
+//			// .fromY(0)
+//			// .toY(1)
+//			// .build();
+//			// transition.play();
+//
+//		} else {
+//			resetValidation();
+//		}
 	}
-	
+
 	@Override
 	public void resetValidation() {
-		// TODO Auto-generated method stub
+//		validationLabel.setText(null);
 		
 	}
-	
+
 	public static class Factory implements Control.Factory {
 
 		@Override
 		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new EnumControl(itemPropertyDescriptor, context);
 		}
-		
+
 	}
 
 }

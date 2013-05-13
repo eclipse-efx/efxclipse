@@ -1,85 +1,58 @@
 package org.eclipse.fx.ecp.ui.controls;
 
-import java.util.Collection;
 import java.util.Objects;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.util.Diagnostician;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
 
-import com.google.common.collect.Sets;
-
 @SuppressWarnings("restriction")
-public class TextFieldControl extends HBox implements Control {
+public class TextFieldControl extends VBox implements Control {
 
-	final Collection<EDataType> supportedTypes = Sets.newHashSet(
-			EcorePackage.Literals.EBIG_DECIMAL, 
-			EcorePackage.Literals.EBIG_INTEGER,
-			EcorePackage.Literals.EBOOLEAN, 
-			EcorePackage.Literals.ECHAR, 
-			EcorePackage.Literals.ECHARACTER_OBJECT,
-			EcorePackage.Literals.EDATE, 
-			EcorePackage.Literals.EDOUBLE, 
-			EcorePackage.Literals.EDOUBLE_OBJECT, 
-			EcorePackage.Literals.EFLOAT,
-			EcorePackage.Literals.EFLOAT_OBJECT, 
-			EcorePackage.Literals.EINT, 
-			EcorePackage.Literals.EINTEGER_OBJECT,
-			EcorePackage.Literals.ELONG, 
-			EcorePackage.Literals.ELONG_OBJECT, 
-			EcorePackage.Literals.ESHORT,
-			EcorePackage.Literals.ESHORT_OBJECT, 
-			EcorePackage.Literals.ESTRING);
 	private TextField textField;
-
-	public boolean isControlFor(EDataType type) {
-		return supportedTypes.contains(type);
-	}
+	private ValidationMessage validationMessage = null;
 
 	public TextFieldControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 
 		final EObject modelElement = context.getModelElement();
 		final EditingDomain editingDomain = context.getEditingDomain();
 
-		String displayName = propertyDescriptor.getDisplayName(modelElement);
-		Label label = new Label(displayName);
-		label.getStyleClass().add(IControlConstants.CONTROL_LABEL_CLASS);
-		getChildren().add(label);
-
 		final EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 
-		//final EDataTypeValueHandler valueHandler = new EDataTypeValueHandler((EDataType) feature.getEType());
+		final EDataTypeValueHandler valueHandler = new EDataTypeValueHandler((EDataType) feature.getEType());
 
 		Object value = modelElement.eGet(feature);
 
-		textField = null;//new TextField(valueHandler.toString(value));
+		textField = new TextField(valueHandler.toString(value));
 
 		textField.textProperty().addListener(new ChangeListener<String>() {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observableValue, String oldText, String newText) {
-				String message = "lala"; //valueHandler.isValid(newText);
+				final String message = valueHandler.isValid(newText);
 				ObservableList<String> styleClass = textField.getStyleClass();
-				if (message == null)
+				if (message == null) {
 					styleClass.remove(IControlConstants.INVALID_CLASS);
-				else if (!styleClass.contains(IControlConstants.INVALID_CLASS))
-					styleClass.add(IControlConstants.INVALID_CLASS);
+				} else {
+					if (!styleClass.contains(IControlConstants.INVALID_CLASS))
+						styleClass.add(IControlConstants.INVALID_CLASS);
+				}
+				validationMessage.setMessage(message);
 			}
 
 		});
@@ -91,10 +64,10 @@ public class TextFieldControl extends HBox implements Control {
 				if (!newFocused) {
 					Object oldValue = modelElement.eGet(feature);
 					String text = textField.getText();
-					String message = "lala"; // valueHandler.isValid(text);
+					String message = valueHandler.isValid(text);
 
 					if (message == null) {
-						Object newValue = "lala"; // valueHandler.toValue(text);
+						Object newValue = valueHandler.toValue(text);
 
 						// only commit if the value has changed
 						if (!Objects.equals(oldValue, newValue)) {
@@ -110,21 +83,24 @@ public class TextFieldControl extends HBox implements Control {
 
 		});
 
-		HBox.setHgrow(textField, Priority.ALWAYS);
-
 		getChildren().add(textField);
+
+		validationMessage = new ValidationMessage();
+		getChildren().add(validationMessage);
 	}
 
 	@Override
 	public void handleValidation(Diagnostic diagnostic) {
-		// TODO Auto-generated method stub
-
+		if (diagnostic.getSeverity() != Diagnostic.OK) {
+			validationMessage.setMessage(diagnostic.getMessage());
+		} else {
+			resetValidation();
+		}
 	}
 
 	@Override
 	public void resetValidation() {
-		// TODO Auto-generated method stub
-
+		validationMessage.setMessage(null);
 	}
 
 	public static class Factory implements Control.Factory {
@@ -132,6 +108,54 @@ public class TextFieldControl extends HBox implements Control {
 		@Override
 		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new TextFieldControl(itemPropertyDescriptor, context);
+		}
+
+	}
+
+	/**
+	 * A delegate for handling validation and conversion for data type values.
+	 */
+	protected static class EDataTypeValueHandler {
+		protected EDataType eDataType;
+
+		public EDataTypeValueHandler(EDataType eDataType) {
+			this.eDataType = eDataType;
+		}
+
+		public String isValid(Object object) {
+			Object value;
+			try {
+				value = eDataType.getEPackage().getEFactoryInstance().createFromString(eDataType, (String) object);
+			} catch (Exception exception) {
+				String message = exception.getClass().getName();
+				int index = message.lastIndexOf('.');
+				if (index >= 0) {
+					message = message.substring(index + 1);
+				}
+				if (exception.getLocalizedMessage() != null) {
+					message = message + ": " + exception.getLocalizedMessage();
+				}
+				return message;
+			}
+			Diagnostic diagnostic = Diagnostician.INSTANCE.validate(eDataType, value);
+			if (diagnostic.getSeverity() == Diagnostic.OK) {
+				return null;
+			} else {
+				return (diagnostic.getChildren().get(0)).getMessage().replaceAll("'", "''").replaceAll("\\{", "'{'"); // }}
+			}
+		}
+
+		public String isValid(String text) {
+			return isValid((Object) text);
+		}
+
+		public Object toValue(String string) {
+			return EcoreUtil.createFromString(eDataType, string);
+		}
+
+		public String toString(Object value) {
+			String result = EcoreUtil.convertToString(eDataType, value);
+			return result == null ? "" : result;
 		}
 
 	}
