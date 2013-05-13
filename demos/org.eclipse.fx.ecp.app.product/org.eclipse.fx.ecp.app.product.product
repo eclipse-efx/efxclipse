@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="ECP for JavaFX" uid="org.eclipse.fx.ecp.app.product" id="org.eclipse.fx.ecp.app.product" application="org.eclipse.fx.ui.workbench.fx.application" version="1.0.0" useFeatures="true" includeLaunchers="false">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-nosplash</programArgs>
+      <vmArgs>-Dosgi.framework.extensions=at.bestsolution.efxclipse.runtime.osgi</vmArgs>
+   </launcherArgs>
+
+   <windowImages/>
+
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="at.bestsolution.efxclipse.ecp.app.feature" version="1.0.0.qualifier"/>
+   </features>
+
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+   </configurations>
+
+</product>
