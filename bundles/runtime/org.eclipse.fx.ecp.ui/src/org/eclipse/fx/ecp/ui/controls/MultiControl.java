@@ -43,18 +43,31 @@ public class MultiControl extends VBox implements Control {
 
 		List<Object> values = (List<Object>) modelElement.eGet(feature);
 
-//		setAlignment(Pos.BASELINE_RIGHT);
+		setAlignment(Pos.BASELINE_RIGHT);
+		setSpacing(4);
 		
 		for (Object object : values) {
 			HBox hBox = new HBox();
+			hBox.setFillHeight(true);
+			getChildren().add(hBox);
+			
 			TextField label = new TextField(object.toString());
 			label.setMaxWidth(Double.MAX_VALUE);
 			HBox.setHgrow(label, Priority.ALWAYS);
+			label.setStyle("-fx-background-radius: 3 0 0 3, 2 0 0 2; -fx-background-insets: 0 0 1 0, 1 1 2 1;");
 			hBox.getChildren().add(label);
-			hBox.getChildren().add(new Button(null, getImage("icons/arrow_up.png")));
-			hBox.getChildren().add(new Button(null, getImage("icons/arrow_down.png")));
-			hBox.getChildren().add(new Button(null, getImage("icons/delete.png")));
-			getChildren().add(hBox);
+			
+			Button upButton = new Button(null, getImage("icons/arrow_up.png"));
+			upButton.getStyleClass().add("center-pill");
+			hBox.getChildren().add(upButton);
+			
+			Button downButton = new Button(null, getImage("icons/arrow_down.png"));
+			downButton.getStyleClass().add("center-pill");
+			hBox.getChildren().add(downButton);
+			
+			Button deleteButton = new Button(null, getImage("icons/delete.png"));
+			deleteButton.getStyleClass().add("right-pill");
+			hBox.getChildren().add(deleteButton);
 		}
 		
 		getChildren().add(new Button(null, getImage("icons/add.png")));
