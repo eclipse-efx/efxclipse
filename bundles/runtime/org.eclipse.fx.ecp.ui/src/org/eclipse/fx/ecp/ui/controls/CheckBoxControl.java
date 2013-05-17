@@ -1,32 +1,17 @@
 package org.eclipse.fx.ecp.ui.controls;
 
+import javafx.beans.property.Property;
 import javafx.scene.control.CheckBox;
-import javafx.scene.layout.VBox;
 
 import org.eclipse.emf.common.util.Diagnostic;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
-import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
 
-@SuppressWarnings("restriction")
-public class CheckBoxControl extends VBox implements Control {
+public class CheckBoxControl extends CheckBox implements Control {
 
-	public CheckBoxControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		getStyleClass().add("formControl");
-		
-		EObject modelElement = context.getModelElement();
-
-		EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
-		Object val = modelElement.eGet(feature);
-
-		CheckBox checkBox = new CheckBox();
-		checkBox.setSelected((Boolean) val);
-
-		getChildren().add(checkBox);
-		
-		getChildren().add(new ValidationMessage());
+	public CheckBoxControl(Property<Boolean> property, ECPControlContext context) {
+		selectedProperty().bindBidirectional(property);
 	}
 	
 	@Override
@@ -44,8 +29,8 @@ public class CheckBoxControl extends VBox implements Control {
 	public static class Factory implements Control.Factory {
 
 		@Override
-		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
-			return new CheckBoxControl(itemPropertyDescriptor, context);
+		public Control createControl(Property<?> property, EStructuralFeature feature, ECPControlContext context) {
+			return new CheckBoxControl((Property<Boolean>) property, context);
 		}
 		
 	}

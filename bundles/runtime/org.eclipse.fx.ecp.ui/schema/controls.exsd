@@ -55,7 +55,6 @@
       </annotation>
       <complexType>
          <choice>
-            <element ref="dynamicTest"/>
             <element ref="staticTest" minOccurs="1" maxOccurs="unbounded"/>
          </choice>
          <attribute name="id" type="string" use="required">
@@ -82,24 +81,11 @@
                </documentation>
             </annotation>
          </attribute>
-      </complexType>
-   </element>
-
-   <element name="dynamicTest">
-      <annotation>
-         <documentation>
-            A dynamic test simply provides an implementation of the org.eclipse.emf.ecp.edit.util.ECPApplicableTester interface.
-         </documentation>
-      </annotation>
-      <complexType>
-         <attribute name="testClass" type="string" use="required">
+         <attribute name="multi" type="boolean" use="required">
             <annotation>
                <documentation>
-                  The implementation of the tester. The Class must extend the org.eclipse.emf.ecp.edit.util.ECPApplicableTester.
+                  Whether the control can be embedded into a multi-control. The default is true.
                </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.ecp.edit.util.ECPApplicableTester"/>
-               </appinfo>
             </annotation>
          </attribute>
       </complexType>

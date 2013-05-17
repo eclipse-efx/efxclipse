@@ -22,6 +22,7 @@
       
       <factory
             class="org.eclipse.fx.ecp.ui.controls.CheckBoxControl$Factory"
+            multi="false"
             id="org.eclipse.fx.ecp.ui.controls.checkBox"
             showLabel="true">
          <staticTest
@@ -33,6 +34,7 @@
       
       <factory
             class="org.eclipse.fx.ecp.ui.controls.TextFieldControl$Factory"
+            multi="false"
             id="org.eclipse.fx.ecp.ui.controls.textField"
             showLabel="true">
             
@@ -90,6 +92,7 @@
       </factory>
       <factory
             class="org.eclipse.fx.ecp.ui.controls.EnumControl$Factory"
+            multi="false"
             id="org.eclipse.fx.ecp.ui.controls.enumCombo"
             showLabel="true">
          <staticTest
@@ -100,6 +103,7 @@
       </factory>
       <factory
             class="org.eclipse.fx.ecp.ui.controls.MultiControl$Factory"
+            multi="true"
             id="org.eclipse.fx.ecp.ui.controls.multiText"
             showLabel="true">
          <staticTest

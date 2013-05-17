@@ -10,14 +10,11 @@
  */
 package org.eclipse.fx.emf.databinding.edit;
 
-import javafx.beans.property.ListPropertyBase;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.Property;
-import javafx.collections.ObservableList;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -38,37 +35,17 @@ public class EMFEditFXProperties {
 		return new EObjectProperty<>(editingDomain, eObject, feature);
 	}
 
-	public static <T> ObservableList<T> list(EditingDomain editingDomain, Notifier owner, EList<T> list) {
-		throw new UnsupportedOperationException("Not implemented");
-	}
-	
-	public static <T> ObservableList<T> list(EditingDomain editingDomain, EObject eObject, EStructuralFeature feature) {
-		throw new UnsupportedOperationException("Not implemented");
-	}
-	
-	static class EObjectObservableList<T> extends ListPropertyBase<T> {
-
-		EObject eObject;
-		EStructuralFeature feature;
-		EditingDomain editingDomain;
-		
-		public Object getBean() {
-			return eObject;
-		}
-
-		public String getName() {
-			return feature.getName();
-		}
-		
+	public static <T> EListItemProperty<T> listItem(EditingDomain editingDomain, EObject eObject, EStructuralFeature feature, int index) {
+		return new EListItemProperty<>(editingDomain, eObject, feature, index);
 	}
 
-	static class EObjectProperty<T> extends ObjectPropertyBase<T> {
+	private static class EObjectProperty<T> extends ObjectPropertyBase<T> {
 
-		EObject eObject;
-		EStructuralFeature feature;
-		EditingDomain editingDomain;
+		final private EObject eObject;
+		final private EStructuralFeature feature;
+		final private EditingDomain editingDomain;
 
-		public EObjectProperty(EditingDomain editingDomain, EObject eObject, EStructuralFeature feature) {
+		private EObjectProperty(EditingDomain editingDomain, EObject eObject, EStructuralFeature feature) {
 			super();
 			this.eObject = eObject;
 			this.feature = feature;
@@ -80,10 +57,6 @@ public class EMFEditFXProperties {
 					fireValueChangedEvent();
 				}
 			});
-		}
-
-		public void setEObject(EObject eObject) {
-			this.eObject = eObject;
 		}
 
 		@Override
@@ -99,12 +72,108 @@ public class EMFEditFXProperties {
 			return (T) eObject.eGet(feature);
 		}
 
+		@Override
 		public Object getBean() {
 			return eObject;
 		}
 
+		@Override
 		public String getName() {
 			return feature.getName();
+		}
+
+	}
+
+	public static class EListItemProperty<T> extends ObjectPropertyBase<T> {
+
+		final private EObject eObject;
+		final private EStructuralFeature feature;
+		final private EditingDomain editingDomain;
+		final private EList<T> eList;
+		private int index;
+
+		@SuppressWarnings("unchecked")
+		private EListItemProperty(EditingDomain editingDomain, final EObject eObject, final EStructuralFeature feature, int initialIndex) {
+			super();
+			this.eObject = eObject;
+			this.feature = feature;
+			this.editingDomain = editingDomain;
+			this.eList = (EList<T>) eObject.eGet(feature);
+			this.index = initialIndex;
+
+			eObject.eAdapters().add(new AdapterImpl() {
+				@Override
+				public void notifyChanged(Notification msg) {
+					if (msg.getFeature() == feature) {
+
+						switch (msg.getEventType()) {
+						case Notification.ADD:
+							break;
+						case Notification.MOVE: {
+							int oldIndex = ((Integer) msg.getOldValue()).intValue();
+							int position = msg.getPosition();
+							if (oldIndex == index) 
+								index = position;
+							else if (oldIndex > index && position <= index)
+								index++;
+							else if (oldIndex < index && position >= index)
+								index--;
+							break;
+						}
+						case Notification.REMOVE:
+							int position = msg.getPosition();
+							if (index == position) {
+								index = -1;
+								eObject.eAdapters().remove(this);
+							} else if (index > position) {
+								index--;
+							}
+							break;
+						case Notification.ADD_MANY:
+							throw new RuntimeException("ADD_MANY is currently not supported");
+						case Notification.REMOVE_MANY:
+							throw new RuntimeException("REMOVE_MANY is currently not supported");
+						}
+
+						fireValueChangedEvent();
+
+					}
+
+				}
+			});
+		}
+
+		@Override
+		public void setValue(T newValue) {
+			Command command = SetCommand.create(editingDomain, eObject, feature, newValue, index);
+			if (command.canExecute())
+				editingDomain.getCommandStack().execute(command);
+		}
+
+		@Override
+		public T getValue() {
+			if (index >= 0 && index <= eList.size())
+				return (T) eList.get(index);
+			else
+				return null;
+		}
+
+		@Override
+		public Object getBean() {
+			return eObject;
+		}
+
+		@Override
+		public String getName() {
+			return feature.getName();
+		}
+
+		public int getIndex() {
+			return index;
+		}
+
+		public void setIndex(int index) {
+			this.index = index;
 		}
 
 	}
