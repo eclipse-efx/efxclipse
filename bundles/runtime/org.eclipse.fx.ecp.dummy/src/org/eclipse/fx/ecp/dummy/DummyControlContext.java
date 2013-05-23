@@ -26,11 +26,6 @@ public class DummyControlContext implements ECPControlContext {
 	}
 
 	@Override
-	public void openEditor(EObject o) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public void addModelElement(EObject eObject, EReference eReference) {
 		throw new UnsupportedOperationException();
 	}
@@ -53,6 +48,11 @@ public class DummyControlContext implements ECPControlContext {
 	@Override
 	public boolean isRunningAsWebApplication() {
 		return false;
+	}
+
+	@Override
+	public void openInNewContext(EObject eObject) {
+		throw new UnsupportedOperationException();
 	}
 
 }
