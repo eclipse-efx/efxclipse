@@ -5,7 +5,35 @@
 .theForm {
 	-fx-padding: 10.0;
 	-fx-hgap: 6.0;
-	-fx-vgap: 6.0;
+	-fx-vgap: 10.0;
+}
+
+.addButton {
+	-fx-background-image: url('add.png');
+	-fx-background-repeat: no-repeat;
+  	-fx-background-position: center;
+  	-fx-pref-width: 35;
+}
+
+.moveUpButton {
+	-fx-background-image: url('arrow_up.png');
+	-fx-background-repeat: no-repeat;
+  	-fx-background-position: center;
+  	-fx-pref-width: 35;
+}
+
+.moveDownButton {
+	-fx-background-image: url('arrow_down.png');
+	-fx-background-repeat: no-repeat;
+  	-fx-background-position: center;
+  	-fx-pref-width: 35;
+}
+
+.deleteButton {
+	-fx-background-image: url('delete.png');
+	-fx-background-repeat: no-repeat;
+  	-fx-background-position: center;
+  	-fx-pref-width: 35;
 }
 
 .formControl {
@@ -24,6 +52,11 @@
 
 .multiAttributeControl .list-view {
 	-fx-pref-height: 80.0;
+}
+
+.text-field.left-pill, .choice-box.left-pill {
+	-fx-background-radius: 3 0 0 3, 2 0 0 2;
+	-fx-max-width: 1000;
 }
 
 .controlLabel {

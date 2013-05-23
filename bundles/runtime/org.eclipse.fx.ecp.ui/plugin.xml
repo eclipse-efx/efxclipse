@@ -99,7 +99,7 @@
          </staticTest>
       </factory>
       <factory
-            class="org.eclipse.fx.ecp.ui.controls.MultiControl$Factory"
+            class="org.eclipse.fx.ecp.ui.controls.multi.MultiControl$Factory"
             id="org.eclipse.fx.ecp.ui.controls.multiText"
             showLabel="true">
          <staticTest

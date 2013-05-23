@@ -7,12 +7,13 @@ Bundle-Activator: org.eclipse.fx.ecp.ui.ECPUIPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecp.edit;bundle-version="1.0.0",
  org.eclipse.e4.ui.model.workbench;bundle-version="0.10.1",
- org.eclipse.e4.core.di;bundle-version="1.2.0",
- org.eclipse.e4.core.contexts;bundle-version="1.2.0",
+ org.eclipse.e4.core.di;bundle-version="0.0.0",
+ org.eclipse.e4.core.contexts;bundle-version="0.0.0",
  com.google.guava;bundle-version="10.0.1",
  org.eclipse.fx.emf.edit.ui;bundle-version="0.8.1",
  org.eclipse.fx.ecp.dummy;bundle-version="1.0.0",
- org.eclipse.e4.ui.workbench;bundle-version="0.11.0"
+ org.eclipse.e4.ui.workbench;bundle-version="0.0.0",
+ org.eclipse.fx.emf.databinding;bundle-version="0.8.1"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.fx.ecp.ui
 Service-Component: OSGI-INF/modelElementOpener.xml
