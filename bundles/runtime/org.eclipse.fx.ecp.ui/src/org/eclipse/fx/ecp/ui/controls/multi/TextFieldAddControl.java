@@ -4,6 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -37,10 +38,9 @@ public class TextFieldAddControl extends HBox {
 		addTextField = new TextField();
 		getChildren().add(addTextField);
 		addTextField.setPromptText("Enter a value");
-		addTextField.setStyle("-fx-background-radius: 3 0 0 3, 2 0 0 2;");
-		addTextField.setMaxWidth(Double.MAX_VALUE);
+		addTextField.getStyleClass().add("left-pill");
 		HBox.setHgrow(addTextField, Priority.ALWAYS);
-		
+
 		addTextField.textProperty().addListener(new ChangeListener<String>() {
 
 			@Override

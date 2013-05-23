@@ -68,7 +68,11 @@ public class MultiControl extends VBox implements Control {
 			controlsBox.getChildren().add(new ControlWrapper(propertyDescriptor, context, i));
 		}
 
-		getChildren().add(new TextFieldAddControl(editingDomain, feature, modelElement));
+		if (feature.getEType() instanceof EEnum) {
+			getChildren().add(new EnumAddControl(editingDomain, feature, modelElement));			
+		} else {
+			getChildren().add(new TextFieldAddControl(editingDomain, feature, modelElement));			
+		}
 
 		modelElement.eAdapters().add(new AdapterImpl() {
 
