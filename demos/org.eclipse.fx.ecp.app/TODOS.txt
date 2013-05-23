@@ -29,3 +29,20 @@ ECP Questions:
 
 InternalChildreList contains a reference to its parent. Yet the parent needs to be passed to Provider.fillChildren(). Why?
 
+TODO (by parts):
+
+Model Explorer:
+ - Add / Remove Model Element
+ - Open Model Element (double click)
+ - Add / Delete Project
+ - Update / Commit
+
+Model Editor
+ - Reference Control
+ - Reference Selection Dialog
+
+Repository Browser:
+ - Add Dialogs
+ - Checkout
+
+
