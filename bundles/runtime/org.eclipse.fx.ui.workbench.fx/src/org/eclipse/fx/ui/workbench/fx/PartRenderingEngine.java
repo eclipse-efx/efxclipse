@@ -17,9 +17,11 @@ import javax.inject.Named;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.contributions.IContributionFactory;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.PersistState;
 import org.eclipse.e4.ui.internal.workbench.E4Workbench;
 import org.eclipse.e4.ui.model.application.MApplication;
@@ -34,6 +36,8 @@ import org.eclipse.e4.ui.workbench.IPresentationEngine;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.fx.core.log.Log;
+import org.eclipse.fx.core.log.Logger;
 import org.eclipse.fx.ui.keybindings.e4.EBindingService;
 import org.eclipse.fx.ui.services.theme.ThemeManager;
 import org.eclipse.fx.ui.workbench.base.rendering.AbstractRenderer;
@@ -56,6 +60,10 @@ public class PartRenderingEngine implements IPresentationEngine {
 	private final EModelService modelService;
 	
 	private MApplication app;
+	
+	@Inject
+	@Log
+	private Logger log;
 	
 	@Inject
 	public PartRenderingEngine(
@@ -163,7 +171,7 @@ public class PartRenderingEngine implements IPresentationEngine {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <R extends AbstractRenderer<? extends M,Object>, M extends MUIElement> R getRendererFor(MUIElement element) {
+	protected <R extends AbstractRenderer<? extends M,Object>, M extends MUIElement> R getRendererFor(M element) {
 		return (R) element.getRenderer();
 	}
 	
@@ -180,8 +188,6 @@ public class PartRenderingEngine implements IPresentationEngine {
 		for (String key : props.keySet()) {
 			lclContext.set(key, props.get(key));
 		}
-		
-		E4Workbench.processHierarchy(model);
 		
 		return lclContext;
 	}
@@ -354,6 +360,39 @@ public class PartRenderingEngine implements IPresentationEngine {
 					removeGui(w);
 				}
 			}			
+		}
+	}
+
+	@Override
+	public void focusGui(MUIElement element) {
+		@SuppressWarnings("unchecked")
+		AbstractRenderer<MUIElement, Object> renderer =  (AbstractRenderer<MUIElement, Object>) element
+				.getRenderer();
+		if (renderer == null || element.getWidget() == null)
+			return;
+
+		Object implementation = element instanceof MContribution ? ((MContribution) element)
+				.getObject() : null;
+
+		// If there is no class to call @Focus on then revert to the default
+		if (implementation == null) {
+			renderer.focus(element);
+			return;
+		}
+
+		try {
+			IEclipseContext context = getContext(element);
+			Object defaultValue = new Object();
+			Object returnValue = ContextInjectionFactory.invoke(implementation,
+					Focus.class, context, defaultValue);
+			if (returnValue == defaultValue) {
+				// No @Focus method, force the focus
+				renderer.focus(element);
+			}
+		} catch (InjectionException e) {
+			log.errorf("Failed to grant focus to element (%s)", element.getElementId(), e); //$NON-NLS-1$
+		} catch (RuntimeException e) {
+			log.errorf("Failed to grant focus via DI to element (%s)", element.getElementId(), e); //$NON-NLS-1$
 		}
 	}
 }

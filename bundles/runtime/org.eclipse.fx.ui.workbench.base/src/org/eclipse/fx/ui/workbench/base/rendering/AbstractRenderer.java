@@ -33,7 +33,9 @@ public abstract class AbstractRenderer<M extends MUIElement, C> {
 		
 		public abstract void destroyWidget(M element);
 		
-		public abstract IEclipseContext getModelContext(M part);
+		public abstract IEclipseContext getModelContext(MUIElement part);
+		
+		public abstract void focus(MUIElement element);
 		
 		@SuppressWarnings("unchecked")
 		public C getWidget(M element) {
