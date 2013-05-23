@@ -7,9 +7,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecp.edit.util.ECPApplicableTester;
+import org.eclipse.emf.ecp.edit.util.StaticApplicableTester;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
-import org.eclipse.fx.ecp.ui.Control.ApplicableTester;
 import org.eclipse.fx.ecp.ui.Control.Factory;
 import org.osgi.framework.Bundle;
 
@@ -19,9 +20,8 @@ public class ControlFactoryRegistryImpl implements Control.Factory.Registry {
 
 	private static final String CLASS_ATTRIBUTE = "class";
 	private static final String CONTROL_ID = "id";
+	private static final String CONTROL_CLASS_ATTRIBUTE = "controlClass";
 	private static final String LABEL_ATTRIBUTE = "showLabel";
-	private static final String CONTROL_EMBEDDABLE = "embeddable";
-	private static final String CONTROL_MULTI = "multi";
 
 	private static final String TEST_DYNAMIC = "dynamicTest";
 	private static final String CONTROL_TESTER = "testClass";
@@ -31,6 +31,7 @@ public class ControlFactoryRegistryImpl implements Control.Factory.Registry {
 	private static final String TESTER_CLASSTYPE = "supportedClassType";
 	private static final String TESTER_EOBJECT = "supportedEObject";
 	private static final String TESTER_FEATURE = "supportedFeature";
+	private static final String TESTER_SINGLEVALUE = "singleValue";
 
 	private final Set<ControlFactoryDescriptor> controlDescriptors = new HashSet<ControlFactoryDescriptor>();
 
@@ -38,29 +39,33 @@ public class ControlFactoryRegistryImpl implements Control.Factory.Registry {
 		readExtensionPoint();
 	}
 
-	public Factory getFactory(EStructuralFeature feature, EObject modelElement, boolean multi) {
-		ControlFactoryDescriptor factoryDescriptor = getControlFactoryCandidate(feature, modelElement, multi);
+	public Factory getFactory(Class<?> controlClass, IItemPropertyDescriptor propertyDescriptor, EObject modelElement) {
+		ControlFactoryDescriptor factoryDescriptor = getControlFactoryCandidate(controlClass, propertyDescriptor,
+			modelElement);
 		return factoryDescriptor != null ? factoryDescriptor.createFactory() : null;
 	}
 
 	private void readExtensionPoint() {
-		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(CONTROL_EXTENSION);
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(
+			CONTROL_EXTENSION);
 
 		for (IConfigurationElement configurationElement : configurationElements) {
 			try {
 				String id = configurationElement.getAttribute(CONTROL_ID);
-				Control.Factory factory = (Control.Factory) configurationElement.createExecutableExtension(CLASS_ATTRIBUTE);
-
+				Control.Factory factory = (Control.Factory) configurationElement
+					.createExecutableExtension(CLASS_ATTRIBUTE);
 				boolean showLabel = Boolean.parseBoolean(configurationElement.getAttribute(LABEL_ATTRIBUTE));
-				boolean multi = Boolean.parseBoolean(configurationElement.getAttribute(CONTROL_MULTI));
+				String controlClass = configurationElement.getAttribute(CONTROL_CLASS_ATTRIBUTE);
+//				Class<?> resolvedWidgetClass = loadClass(configurationElement.getContributor().getName(), controlClass);
 
-				Set<ApplicableTester> testers = new HashSet<ApplicableTester>();
+				Set<ECPApplicableTester> testers = new HashSet<ECPApplicableTester>();
 
 				for (IConfigurationElement testerExtension : configurationElement.getChildren()) {
 
 					if (TEST_DYNAMIC.equals(testerExtension.getName())) {
-						testers.add((ApplicableTester) testerExtension.createExecutableExtension(CONTROL_TESTER));
+						testers.add((ECPApplicableTester) testerExtension.createExecutableExtension(CONTROL_TESTER));
 					} else if (TEST_STATIC.equals(testerExtension.getName())) {
+						boolean singleValue = Boolean.parseBoolean(testerExtension.getAttribute(TESTER_SINGLEVALUE));
 						int priority = Integer.parseInt(testerExtension.getAttribute(TESTER_PRIORITY));
 
 						String type = testerExtension.getAttribute(TESTER_CLASSTYPE);
@@ -71,17 +76,18 @@ public class ControlFactoryRegistryImpl implements Control.Factory.Registry {
 						if (eObject == null)
 							eObject = "org.eclipse.emf.ecore.EObject";
 
-						Class<? extends EObject> supportedEObject = loadClass(testerExtension.getContributor().getName(), eObject);
+						Class<? extends EObject> supportedEObject = loadClass(testerExtension.getContributor()
+							.getName(), eObject);
 
 						String supportedFeature = testerExtension.getAttribute(TESTER_FEATURE);
 
-						testers.add(new StaticApplicableTester(priority, supportedClassType, supportedEObject,
-								supportedFeature));
+						testers.add(new StaticApplicableTester(singleValue, priority, supportedClassType,
+							supportedEObject, supportedFeature));
 					}
 
 				}
 
-				controlDescriptors.add(new ControlFactoryDescriptor(id, factory, showLabel, testers, multi));
+				controlDescriptors.add(new ControlFactoryDescriptor(id, factory, showLabel, testers));
 			} catch (ClassNotFoundException e1) {
 				// TODO log exception
 				e1.printStackTrace();
@@ -97,24 +103,23 @@ public class ControlFactoryRegistryImpl implements Control.Factory.Registry {
 		Bundle bundle = Platform.getBundle(bundleName);
 		if (bundle == null) {
 			// TODO externalize strings
-			throw new ClassNotFoundException(clazz + " cannot be loaded because bundle " + bundleName + " cannot be resolved");
+			throw new ClassNotFoundException(clazz + " cannot be loaded because bundle " + bundleName
+				+ " cannot be resolved");
 		}
 		return (Class<T>) bundle.loadClass(clazz);
 	}
 
-	private ControlFactoryDescriptor getControlFactoryCandidate(EStructuralFeature feature, EObject modelElement, boolean multi) {
+	private ControlFactoryDescriptor getControlFactoryCandidate(Class<?> clazz,
+		IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement) {
 		int highestPriority = -1;
 
 		ControlFactoryDescriptor bestCandidate = null;
 
 		for (ControlFactoryDescriptor descriptor : controlDescriptors) {
-			if(descriptor.isMulti() != multi)
-				continue;
-			
 			int currentPriority = -1;
 
-			for (ApplicableTester tester : descriptor.getTesters()) {
-				int testerPriority = tester.isApplicable(feature, modelElement);
+			for (ECPApplicableTester tester : descriptor.getTesters()) {
+				int testerPriority = tester.isApplicable(itemPropertyDescriptor, modelElement);
 				if (testerPriority > currentPriority)
 					currentPriority = testerPriority;
 			}

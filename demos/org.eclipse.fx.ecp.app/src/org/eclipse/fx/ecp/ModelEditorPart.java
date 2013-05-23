@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javafx.beans.property.Property;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.VPos;
@@ -44,7 +43,6 @@ import org.eclipse.fx.ecp.ui.Control;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.Control.Factory;
 import org.eclipse.fx.ecp.ui.Control.Factory.Registry;
-import org.eclipse.fx.emf.databinding.edit.EMFEditFXProperties;
 
 
 @SuppressWarnings("restriction")
@@ -124,13 +122,12 @@ public class ModelEditorPart implements ModelElementEditor {
 			GridPane.setValignment(label, VPos.TOP);
 			gridPane.add(label, 0, i);
 
-			EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
+			Factory factory = registry.getFactory(Node.class, propertyDescriptor, modelElement);
 
-			Factory factory = registry.getFactory(feature, modelElement, feature.isMany());
+			EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 			
 			if (factory != null) {
-				Property<?> property = EMFEditFXProperties.value(modelElementContext.getEditingDomain(), modelElementContext.getModelElement(), feature);
-				Control control = factory.createControl(property, feature, modelElementContext);
+				Control control = factory.createControl(propertyDescriptor, modelElementContext);
 				Node node = (Node) control;
 				gridPane.add(node, 1, i);
 				GridPane.setHgrow(node, Priority.ALWAYS);

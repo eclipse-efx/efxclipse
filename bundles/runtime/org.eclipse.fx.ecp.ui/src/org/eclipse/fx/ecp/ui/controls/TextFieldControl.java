@@ -1,68 +1,113 @@
 package org.eclipse.fx.ecp.ui.controls;
 
-import javafx.beans.property.Property;
+import java.util.Objects;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
 
 @SuppressWarnings("restriction")
-public class TextFieldControl extends TextField implements Control {
+public class TextFieldControl extends VBox implements Control {
 
-	public TextFieldControl(final Property<Object> property, EStructuralFeature feature, ECPControlContext context) {
+	private TextField textField;
+	private ValidationMessage validationMessage = null;
+
+	public TextFieldControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
+
+		final EObject modelElement = context.getModelElement();
+		final EditingDomain editingDomain = context.getEditingDomain();
+
+		final EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 
 		final EDataTypeValueHandler valueHandler = new EDataTypeValueHandler((EDataType) feature.getEType());
 
-		setText(valueHandler.toString(property.getValue()));
+		Object value = modelElement.eGet(feature);
 
-		property.addListener(new ChangeListener<Object>() {
+		textField = new TextField(valueHandler.toString(value));
+
+		textField.textProperty().addListener(new ChangeListener<String>() {
 
 			@Override
-			public void changed(ObservableValue<? extends Object> arg0, Object arg1, Object arg2) {
-				String text = valueHandler.toString(arg2);
-				setText(text);
+			public void changed(ObservableValue<? extends String> observableValue, String oldText, String newText) {
+				final String message = valueHandler.isValid(newText);
+				ObservableList<String> styleClass = textField.getStyleClass();
+				if (message == null) {
+					styleClass.remove(IControlConstants.INVALID_CLASS);
+				} else {
+					if (!styleClass.contains(IControlConstants.INVALID_CLASS))
+						styleClass.add(IControlConstants.INVALID_CLASS);
+				}
+				validationMessage.setMessage(message);
 			}
 
 		});
 
-		textProperty().addListener(new ChangeListener<String>() {
+		textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
-			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-				try {
-					Object value = valueHandler.toValue(arg2);
-					property.setValue(value);
-				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldFocused, Boolean newFocused) {
+				if (!newFocused) {
+					Object oldValue = modelElement.eGet(feature);
+					String text = textField.getText();
+					String message = valueHandler.isValid(text);
+
+					if (message == null) {
+						Object newValue = valueHandler.toValue(text);
+
+						// only commit if the value has changed
+						if (!Objects.equals(oldValue, newValue)) {
+							Command command = SetCommand.create(editingDomain, modelElement, feature, newValue);
+							if (command.canExecute())
+								editingDomain.getCommandStack().execute(command);
+						}
+					} else {
+						System.err.println(message);
+					}
 				}
 			}
 
 		});
+
+		getChildren().add(textField);
+
+		validationMessage = new ValidationMessage();
+		getChildren().add(validationMessage);
 	}
 
 	@Override
 	public void handleValidation(Diagnostic diagnostic) {
-
+		if (diagnostic.getSeverity() != Diagnostic.OK) {
+			validationMessage.setMessage(diagnostic.getMessage());
+		} else {
+			resetValidation();
+		}
 	}
 
 	@Override
 	public void resetValidation() {
-
+		validationMessage.setMessage(null);
 	}
 
 	public static class Factory implements Control.Factory {
 
 		@Override
-		public Control createControl(Property<?> property, EStructuralFeature feature, ECPControlContext context) {
-			return new TextFieldControl((Property<Object>) property, feature, context);
+		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+			return new TextFieldControl(itemPropertyDescriptor, context);
 		}
 
 	}

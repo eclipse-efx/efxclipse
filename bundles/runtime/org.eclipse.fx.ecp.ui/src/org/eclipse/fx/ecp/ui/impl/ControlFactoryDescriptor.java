@@ -2,8 +2,8 @@ package org.eclipse.fx.ecp.ui.impl;
 
 import java.util.Set;
 
+import org.eclipse.emf.ecp.edit.util.ECPApplicableTester;
 import org.eclipse.fx.ecp.ui.Control;
-import org.eclipse.fx.ecp.ui.Control.ApplicableTester;
 import org.eclipse.fx.ecp.ui.Control.Factory;
 
 public class ControlFactoryDescriptor implements Control.Factory.Descriptor {
@@ -11,15 +11,13 @@ public class ControlFactoryDescriptor implements Control.Factory.Descriptor {
 	private final String id;
 	private final Factory factoryInstance;
 	private final boolean showLabel;
-	private final Set<ApplicableTester> applicableTesters;
-	private final boolean multi;
+	private final Set<ECPApplicableTester> applicableTesters;
 
-	public ControlFactoryDescriptor(String id, Factory factoryInstance, boolean showLabel, Set<ApplicableTester> applicableTesters, boolean multi) {
+	public ControlFactoryDescriptor(String id, Factory factoryInstance, boolean showLabel, Set<ECPApplicableTester> applicableTesters) {
 		this.id = id;
 		this.factoryInstance = factoryInstance;
 		this.showLabel = showLabel;
 		this.applicableTesters = applicableTesters;
-		this.multi = multi;
 	}
 
 	public Factory createFactory() {
@@ -34,12 +32,8 @@ public class ControlFactoryDescriptor implements Control.Factory.Descriptor {
 		return showLabel;
 	}
 
-	public Set<ApplicableTester> getTesters() {
+	public Set<ECPApplicableTester> getTesters() {
 		return applicableTesters;
-	}
-	
-	public boolean isMulti() {
-		return multi;
 	}
 
 }

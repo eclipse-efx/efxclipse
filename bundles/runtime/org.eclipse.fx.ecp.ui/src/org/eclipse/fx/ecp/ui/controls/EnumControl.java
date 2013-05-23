@@ -1,9 +1,7 @@
 package org.eclipse.fx.ecp.ui.controls;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
-import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ChoiceBox;
@@ -26,53 +24,106 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
 
 @SuppressWarnings("restriction")
-public class EnumControl extends ChoiceBox<Enumerator> implements Control {
+public class EnumControl extends VBox implements Control {
 
-	public EnumControl(final Property<Enumerator> property, Collection<Enumerator> values, ECPControlContext context) {
+	private ValidationMessage validationMessage;
 
-		getItems().addAll(values);
+	public EnumControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
+		final EObject modelElement = context.getModelElement();
+		final EditingDomain editingDomain = context.getEditingDomain();
 
-		SingleSelectionModel<Enumerator> selectionModel = getSelectionModel();
+		final EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 
-		selectionModel.select(property.getValue());
+		ChoiceBox<Enumerator> choiceBox = new ChoiceBox<>();
+
+		EClassifier type = feature.getEType();
+
+		EEnum eEnum = (EEnum) type;
+
+		EList<EEnumLiteral> enumLiterals = eEnum.getELiterals();
+
+		ArrayList<Enumerator> values = new ArrayList<Enumerator>();
+
+		if (!feature.isRequired())
+			values.add(null);
+
+		for (EEnumLiteral literal : enumLiterals)
+			values.add(literal.getInstance());
+
+		choiceBox.getItems().addAll(values);
+
+		SingleSelectionModel<Enumerator> selectionModel = choiceBox.getSelectionModel();
+
+		Enumerator val = (Enumerator) modelElement.eGet(feature);
+
+		selectionModel.select(val);
+
+		getChildren().add(choiceBox);
 
 		selectionModel.selectedItemProperty().addListener(new ChangeListener<Enumerator>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Enumerator> observableValue, Enumerator oldValue, Enumerator newValue) {
-				property.setValue(newValue);
+				Command command = SetCommand.create(editingDomain, modelElement, feature, newValue);
+				if (command.canExecute())
+					editingDomain.getCommandStack().execute(command);
+				
+				if(newValue == null) {
+					validationMessage.setMessage("A value must be selected");
+				} else {
+					validationMessage.setMessage(null);
+				}
 			}
 
 		});
 
+		validationMessage = new ValidationMessage();
+		getChildren().add(validationMessage);
 	}
 
 	@Override
 	public void handleValidation(Diagnostic diagnostic) {
-
+//		if (diagnostic.getSeverity() != Diagnostic.OK) {
+//
+//			validationMessage.setMessage(diagnostic.getMessage());
+//			
+////			validationLabel.setText(diagnostic.getMessage());
+//
+//			// Timeline timeline = new Timeline();
+//			//
+//			// timeline.getKeyFrames().addAll(
+//			// new KeyFrame(Duration.ZERO, new
+//			// KeyValue(rectangle.heightProperty(), 0, Interpolator.EASE_BOTH)),
+//			// new KeyFrame(Duration.millis(300), new
+//			// KeyValue(rectangle.heightProperty(), 50, Interpolator.EASE_BOTH))
+//			// );
+//			//
+//			// timeline.play();
+//
+//			// ScaleTransition transition = ScaleTransitionBuilder.create()
+//			// .node(validationLabel)
+//			// .duration(Duration.seconds(2))
+//			// .fromY(0)
+//			// .toY(1)
+//			// .build();
+//			// transition.play();
+//
+//		} else {
+//			resetValidation();
+//		}
 	}
 
 	@Override
 	public void resetValidation() {
-
+//		validationLabel.setText(null);
+		
 	}
 
 	public static class Factory implements Control.Factory {
 
 		@Override
-		public Control createControl(Property<?> property, EStructuralFeature feature, ECPControlContext context) {
-			EClassifier type = feature.getEType();
-			EEnum eEnum = (EEnum) type;
-			EList<EEnumLiteral> enumLiterals = eEnum.getELiterals();
-			ArrayList<Enumerator> values = new ArrayList<Enumerator>();
-
-			if (!feature.isRequired())
-				values.add(null);
-
-			for (EEnumLiteral literal : enumLiterals)
-				values.add(literal.getInstance());
-
-			return new EnumControl((Property<Enumerator>) property, values, context);
+		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+			return new EnumControl(itemPropertyDescriptor, context);
 		}
 
 	}
