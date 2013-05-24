@@ -1,5 +1,7 @@
 package org.eclipse.fx.ecp.ui.controls.multi;
 
+import java.util.function.Consumer;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -46,7 +48,7 @@ public class EnumAddControl extends HBox {
 		getChildren().add(choiceBox);
 		choiceBox.getStyleClass().add("left-pill");
 		HBox.setHgrow(choiceBox, Priority.ALWAYS);
-
+		
 		for (EEnumLiteral literal : enumLiterals)
 			choiceBox.getItems().add(literal.getInstance());
 

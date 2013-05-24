@@ -10,22 +10,34 @@
  *******************************************************************************/
 package org.eclipse.fx.ecp;
 
+import javafx.event.EventHandler;
+import javafx.scene.control.Cell;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.WindowEvent;
 
 import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.core.ECPProjectManager;
 import org.eclipse.emf.ecp.internal.core.util.ChildrenListImpl;
 import org.eclipse.emf.ecp.spi.core.InternalProvider;
 import org.eclipse.emf.ecp.spi.core.util.InternalChildrenList;
 import org.eclipse.fx.ecp.dummy.DummyWorkspace;
 import org.eclipse.fx.ecp.provider.ECPItemProviderAdapterFactory;
+import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
+import org.eclipse.fx.emf.edit.ui.AdapterFactoryCellFactory.ICellCreationListener;
+import org.eclipse.fx.emf.edit.ui.AdapterFactoryCellFactory.ICellUpdateListener;
 import org.eclipse.fx.emf.edit.ui.AdapterFactoryTreeCellFactory;
 import org.eclipse.fx.emf.edit.ui.AdapterFactoryTreeItem;
-
 
 @SuppressWarnings("restriction")
 public class ModelExplorerPart {
@@ -42,67 +54,68 @@ public class ModelExplorerPart {
 	}
 
 	@Inject
-	public ModelExplorerPart(BorderPane parent, final MApplication application, ECPProjectManager projectManager) {
+	public ModelExplorerPart(BorderPane parent, final MApplication application, ECPProjectManager projectManager,
+			final EModelService modelService, final EPartService partService, final ECPModelElementOpener modelElementOpener) {
 
-		TreeView<Object> treeView = new TreeView<>();
+		final TreeView<Object> treeView = new TreeView<>();
 
-//		TreeItem<Object> root = new TreeItem<Object>();
-//
-//		for (final ECPProject project : projectManager.getProjects()) {
-//
-//			final InternalProvider provider = (InternalProvider) project.getProvider();
-//
-//			TreeItem<Object> projectTreeItem = new TreeItem<Object>(project);
-//
-//			for (Object element : project.getElements()) {
-//				TreeItem<Object> elementTreeItem = new ModelElementTreeItem(element, provider);
-//				projectTreeItem.getChildren().add(elementTreeItem);
-//			}
-//
-//			root.getChildren().add(projectTreeItem);
-//		}
-//
-//		treeView.setRoot(root);
-		treeView.setShowRoot(false);
+		// treeView.setShowRoot(false);
 
-//		treeView.setCellFactory(new Callback<TreeView<Object>, TreeCell<Object>>() {
+		ECPItemProviderAdapterFactory adapterFactory = new ECPItemProviderAdapterFactory(DummyWorkspace.INSTANCE.getProvider());
+
+		AdapterFactoryTreeItem rootItem = new AdapterFactoryTreeItem(projectManager, treeView, adapterFactory);
+
+		treeView.setRoot(rootItem);
+
+		AdapterFactoryTreeCellFactory cellFactory = new AdapterFactoryTreeCellFactory(adapterFactory);
+
+//		cellFactory.addCellCreationListener(new ICellCreationListener() {
 //
 //			@Override
-//			public TreeCell<Object> call(TreeView<Object> arg0) {
-//				return new TreeCell<Object>() {
-//
-//					@Override
-//					protected void updateItem(Object item, boolean empty) {
-//						super.updateItem(item, empty);
-//						if (item instanceof ECPProject) {
-//							ECPProject project = (ECPProject) item;
-//							setText(project.getName());
-//						} else if (item != null) {
-//							ComposedAdapterFactory adapterFactory = DummyWorkspace.INSTANCE.getAdapterFactory();
-//							IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(item, IItemLabelProvider.class);
-//							if (labelProvider != null)
-//								setText(labelProvider.getText(item));
-//							else
-//								setText(item.toString());
-//						} else {
-//							setText(null);
-//						}
-//					}
-//
-//				};
+//			public void cellCreated(Cell<?> cell) {
+//				// TODO Auto-generated method stub
 //			}
 //
 //		});
-		
-		//ComposedAdapterFactory adapterFactory = DummyWorkspace.INSTANCE.getAdapterFactory();
-		
-		ECPItemProviderAdapterFactory adapterFactory = new ECPItemProviderAdapterFactory(DummyWorkspace.INSTANCE.getProvider());
-		
-		AdapterFactoryTreeItem rootItem = new AdapterFactoryTreeItem(projectManager, treeView, adapterFactory);
-		
-		treeView.setRoot(rootItem);
-		
-		treeView.setCellFactory(new AdapterFactoryTreeCellFactory(adapterFactory));
+
+//		cellFactory.addCellUpdateListener(new ICellUpdateListener() {
+//
+//			@Override
+//			public void updateItem(Cell<?> cell, Object item, boolean empty) {
+//				System.out.println(cell + " updated");
+//
+//				final ContextMenu contextMenu = new ContextMenu();
+//				cell.setContextMenu(contextMenu);
+//				contextMenu.getItems().add(new MenuItem());
+//				contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
+//
+//					@Override
+//					public void handle(WindowEvent arg0) {
+//						// TODO Auto-generated method stub
+//
+//					}
+//
+//				});
+//			}
+//
+//		});
+
+		treeView.setCellFactory(cellFactory);
+
+		treeView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+					if (mouseEvent.getClickCount() == 2) {
+						System.out.println("Double clicked");
+						TreeItem<Object> selectedItem = treeView.getSelectionModel().getSelectedItem();
+						Object modelElement = selectedItem.getValue();
+						if(modelElement instanceof EObject)
+							modelElementOpener.openModelElement((EObject) modelElement, application, modelService, partService);
+					}
+				}
+			}
+		});
 
 		parent.setCenter(treeView);
 

@@ -40,12 +40,10 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
-import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.Control.Factory;
 import org.eclipse.fx.ecp.ui.Control.Factory.Registry;
+import org.eclipse.fx.ecp.ui.ModelElementEditor;
 
-
-@SuppressWarnings("restriction")
 public class ModelEditorPart implements ModelElementEditor {
 
 	private ScrollPane scrollPane;
@@ -55,14 +53,6 @@ public class ModelEditorPart implements ModelElementEditor {
 	@Inject
 	public ModelEditorPart(BorderPane parent, final MApplication application, MPart part) {
 		this.part = part;
-		// part.setCloseable(true);
-
-		// ECPControlContext modelElementContext = new
-		// DummyControlContext(DummyWorkspace.INSTANCE.getPlayer());
-		// ECPControlContext modelElementContext = new
-		// DummyControlContext(DummyWorkspace.INSTANCE.getTournament());
-		// ECPControlContext modelElementContext = new
-		// DummyControlContext(DummyWorkspace.INSTANCE.getReferee());
 
 		scrollPane = new ScrollPane();
 		scrollPane.setFitToWidth(true);
@@ -100,10 +90,10 @@ public class ModelEditorPart implements ModelElementEditor {
 				Diagnostic diagnostic = Diagnostician.INSTANCE.validate(modelElementContext.getModelElement());
 				for (Diagnostic childDiagnostic : diagnostic.getChildren()) {
 					Control control = controls.get(childDiagnostic.getData().get(1));
-					if(control != null)
+					if (control != null)
 						control.handleValidation(childDiagnostic);
 				}
-				
+
 			}
 
 		});
@@ -121,18 +111,21 @@ public class ModelEditorPart implements ModelElementEditor {
 			// label.setStyle("-fx-alignment: top-left;");
 			GridPane.setValignment(label, VPos.TOP);
 			gridPane.add(label, 0, i);
+			
+			EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 
 			Factory factory = registry.getFactory(Node.class, propertyDescriptor, modelElement);
 
-			EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
-			
 			if (factory != null) {
 				Control control = factory.createControl(propertyDescriptor, modelElementContext);
 				Node node = (Node) control;
 				gridPane.add(node, 1, i);
 				GridPane.setHgrow(node, Priority.ALWAYS);
 				controls.put(feature, control);
+			} else {
+				System.out.println(":-(");
 			}
+			
 			i++;
 		}
 

@@ -119,6 +119,11 @@ public class ControlFactoryRegistryImpl implements Control.Factory.Registry {
 			int currentPriority = -1;
 
 			for (ECPApplicableTester tester : descriptor.getTesters()) {
+				if(tester instanceof StaticApplicableTester) {
+					if (((StaticApplicableTester) tester).isSingleValue() == false)
+						System.out.println();;
+				}
+				
 				int testerPriority = tester.isApplicable(itemPropertyDescriptor, modelElement);
 				if (testerPriority > currentPriority)
 					currentPriority = testerPriority;

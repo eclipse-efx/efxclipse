@@ -105,6 +105,16 @@
          <staticTest
                priority="1"
                singleValue="false"
+               supportedClassType="java.lang.Boolean">
+         </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="false"
+               supportedClassType="java.lang.Double">
+         </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="false"
                supportedClassType="java.lang.Object">
          </staticTest>
       </factory>

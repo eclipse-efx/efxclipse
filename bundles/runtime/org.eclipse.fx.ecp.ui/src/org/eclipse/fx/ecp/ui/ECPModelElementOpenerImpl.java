@@ -10,10 +10,8 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.fx.ecp.dummy.DummyControlContext;
-import org.eclipse.fx.ecp.dummy.DummyWorkspace;
 
 
-@SuppressWarnings("restriction")
 public class ECPModelElementOpenerImpl implements ECPModelElementOpener {
 
 	@Override
@@ -35,7 +33,7 @@ public class ECPModelElementOpenerImpl implements ECPModelElementOpener {
 		
 		 ModelElementEditor editor = (ModelElementEditor) part.getObject();
 		
-		 ECPControlContext modelElementContext = new DummyControlContext(DummyWorkspace.INSTANCE.getPlayer());
+		 ECPControlContext modelElementContext = new DummyControlContext(modelElement);
 		
 		 editor.setInput(modelElementContext);
 	}

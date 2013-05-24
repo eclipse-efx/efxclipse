@@ -25,6 +25,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -54,6 +55,9 @@ public class MultiControl extends VBox implements Control {
 		editingDomain = context.getEditingDomain();
 		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 		values = (EList<Object>) modelElement.eGet(feature);
+		
+		if(!(feature.getEType() instanceof EDataType))
+			return;
 
 		// TODO move to css
 		setSpacing(4);

@@ -9,7 +9,6 @@ import org.eclipse.fx.ecp.dummy.DummyWorkspace;
 import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
 
 
-@SuppressWarnings("restriction")
 public class OpenModelElementHandler {
 
 	// @Execute
