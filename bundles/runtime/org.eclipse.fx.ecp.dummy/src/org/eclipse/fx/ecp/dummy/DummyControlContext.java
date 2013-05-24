@@ -1,5 +1,7 @@
 package org.eclipse.fx.ecp.dummy;
 
+import java.util.Locale;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -52,6 +54,11 @@ public class DummyControlContext implements ECPControlContext {
 
 	@Override
 	public void openInNewContext(EObject eObject) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Locale getLocale() {
 		throw new UnsupportedOperationException();
 	}
 

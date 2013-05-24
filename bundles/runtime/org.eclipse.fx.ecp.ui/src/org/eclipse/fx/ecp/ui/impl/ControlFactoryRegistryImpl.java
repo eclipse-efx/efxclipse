@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.edit.util.ECPApplicableTester;
-import org.eclipse.emf.ecp.edit.util.StaticApplicableTester;
+import org.eclipse.emf.ecp.edit.util.ECPStaticApplicableTester;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
 import org.eclipse.fx.ecp.ui.Control.Factory;
@@ -81,7 +81,7 @@ public class ControlFactoryRegistryImpl implements Control.Factory.Registry {
 
 						String supportedFeature = testerExtension.getAttribute(TESTER_FEATURE);
 
-						testers.add(new StaticApplicableTester(singleValue, priority, supportedClassType,
+						testers.add(new ECPStaticApplicableTester(singleValue, priority, supportedClassType,
 							supportedEObject, supportedFeature));
 					}
 
@@ -119,8 +119,8 @@ public class ControlFactoryRegistryImpl implements Control.Factory.Registry {
 			int currentPriority = -1;
 
 			for (ECPApplicableTester tester : descriptor.getTesters()) {
-				if(tester instanceof StaticApplicableTester) {
-					if (((StaticApplicableTester) tester).isSingleValue() == false)
+				if(tester instanceof ECPStaticApplicableTester) {
+					if (((ECPStaticApplicableTester) tester).isSingleValue() == false)
 						System.out.println();;
 				}
 				

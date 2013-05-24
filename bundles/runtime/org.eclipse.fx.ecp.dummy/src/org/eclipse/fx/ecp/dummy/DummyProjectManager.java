@@ -7,31 +7,26 @@ import org.eclipse.emf.ecp.core.ECPProjectManager;
 import org.eclipse.emf.ecp.core.ECPProvider;
 import org.eclipse.emf.ecp.core.ECPRepository;
 import org.eclipse.emf.ecp.core.util.ECPProperties;
-import org.eclipse.emf.ecp.core.util.observer.ECPProjectManagerObserver;
 
 public class DummyProjectManager implements ECPProjectManager {
 
 	DummyWorkspace workspace = DummyWorkspace.INSTANCE;
 
 	@Override
-	public ECPProject createProject(ECPProvider provider, String name) throws ProjectWithNameExistsException {
+	public ECPProject createProject(ECPProvider provider, String name) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public ECPProject createProject(ECPProvider provider, String name, ECPProperties properties) throws ProjectWithNameExistsException {
+	public ECPProject createProject(ECPProvider provider, String name, ECPProperties properties)  {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public ECPProject createProject(ECPRepository repository, String name, ECPProperties properties) throws ProjectWithNameExistsException {
+	public ECPProject createProject(ECPRepository repository, String name, ECPProperties properties) {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public ECPProject cloneProject(ECPProject project) {
-		throw new UnsupportedOperationException();
-	}
 
 	@Override
 	public ECPProject getProject(Object adaptable) {
@@ -49,12 +44,7 @@ public class DummyProjectManager implements ECPProjectManager {
 	}
 
 	@Override
-	public void addObserver(ECPProjectManagerObserver observer) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void removeObserver(ECPProjectManagerObserver observer) {
+	public ECPProject createProject(ECPProject arg0, String arg1) {
 		throw new UnsupportedOperationException();
 	}
 

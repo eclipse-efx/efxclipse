@@ -9,7 +9,6 @@ import org.eclipse.emf.ecp.core.ECPProject;
 import org.eclipse.emf.ecp.core.ECPProvider;
 import org.eclipse.emf.ecp.core.ECPRepository;
 import org.eclipse.emf.ecp.core.util.ECPElement;
-import org.eclipse.emf.ecp.core.util.ECPModelContext;
 import org.eclipse.emf.ecp.core.util.ECPProperties;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
@@ -38,19 +37,14 @@ public class DummyProject implements ECPProject {
 	}
 
 	@Override
-	public String getType() {
-		return ECPProject.TYPE;
-	}
-
-	@Override
 	public int compareTo(ECPElement arg0) {
 		throw new UnsupportedOperationException("Not implemented yet");
 	}
 
-	@Override
-	public ECPModelContext getContext() {
-		throw new UnsupportedOperationException("Not implemented yet");
-	}
+//	@Override
+//	public ECPModelContext getContext() {
+//		throw new UnsupportedOperationException("Not implemented yet");
+//	}
 
 	@Override
 	public ECPProvider getProvider() {
@@ -97,30 +91,34 @@ public class DummyProject implements ECPProject {
 		return workspace.getEditingDomain();
 	}
 
+
+//	@Override
+//	public EList<Object> getElements() {
+//		EList<? extends Object> contents = ECollections.unmodifiableEList(resource.getContents());
+//		return (EList<Object>) contents;
+//	}
+
 	@Override
-	public Object getAdapter(Class adapter) {
-		throw new UnsupportedOperationException("Not implemented yet");
+	public void deleteElements(Collection<Object> objects) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public EList<Object> getElements() {
+	public EList<Object> getContents() {
 		EList<? extends Object> contents = ECollections.unmodifiableEList(resource.getContents());
 		return (EList<Object>) contents;
 	}
 
 	@Override
-	public void saveModel() {
-		throw new UnsupportedOperationException();
+	public void saveContents() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public boolean isModelDirty() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void deleteElements(Collection<Object> objects) {
-		throw new UnsupportedOperationException();
+	public boolean hasDirtyContents() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

@@ -31,6 +31,7 @@ import org.eclipse.emf.ecp.core.ECPProjectManager;
 import org.eclipse.emf.ecp.internal.core.util.ChildrenListImpl;
 import org.eclipse.emf.ecp.spi.core.InternalProvider;
 import org.eclipse.emf.ecp.spi.core.util.InternalChildrenList;
+import org.eclipse.fx.ecp.dummy.DummyProjectManager;
 import org.eclipse.fx.ecp.dummy.DummyWorkspace;
 import org.eclipse.fx.ecp.provider.ECPItemProviderAdapterFactory;
 import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
@@ -63,6 +64,8 @@ public class ModelExplorerPart {
 
 		ECPItemProviderAdapterFactory adapterFactory = new ECPItemProviderAdapterFactory(DummyWorkspace.INSTANCE.getProvider());
 
+		projectManager = new DummyProjectManager();
+		
 		AdapterFactoryTreeItem rootItem = new AdapterFactoryTreeItem(projectManager, treeView, adapterFactory);
 
 		treeView.setRoot(rootItem);

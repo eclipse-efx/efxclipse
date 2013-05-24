@@ -1,7 +1,6 @@
 package org.eclipse.fx.ecp.dummy;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -13,9 +12,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.core.ECPProject;
 import org.eclipse.emf.ecp.core.ECPProjectManager;
 import org.eclipse.emf.ecp.core.ECPProvider;
-import org.eclipse.emf.ecp.core.ECPRepository;
+import org.eclipse.emf.ecp.core.util.ECPContainer;
 import org.eclipse.emf.ecp.core.util.ECPElement;
-import org.eclipse.emf.ecp.core.util.ECPModelContext;
 import org.eclipse.emf.ecp.spi.core.InternalProject;
 import org.eclipse.emf.ecp.spi.core.InternalProvider;
 import org.eclipse.emf.ecp.spi.core.InternalRepository;
@@ -35,11 +33,6 @@ public class DummyProvider implements InternalProvider {
 	}
 
 	@Override
-	public String getType() {
-		return ECPProvider.TYPE;
-	}
-
-	@Override
 	public int compareTo(ECPElement arg0) {
 		throw new UnsupportedOperationException();
 	}
@@ -54,15 +47,15 @@ public class DummyProvider implements InternalProvider {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Set<ECPRepository> getRepositories() {
-		return Collections.singleton((ECPRepository) workspace.getRepository());
-	}
+//	@Override
+//	public Set<ECPRepository> getRepositories() {
+//		return Collections.singleton((ECPRepository) workspace.getRepository());
+//	}
 
-	@Override
-	public boolean canAddRepositories() {
-		return false;
-	}
+//	@Override
+//	public boolean canAddRepositories() {
+//		return false;
+//	}
 
 //	@Override
 //	public boolean hasUnsharedProjectSupport() {
@@ -74,10 +67,10 @@ public class DummyProvider implements InternalProvider {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public ECPModelContext getModelContext(Object element) {
-		throw new UnsupportedOperationException();
-	}
+//	@Override
+//	public ECPModelContext getModelContext(Object element) {
+//		throw new UnsupportedOperationException();
+//	}
 
 	@Override
 	public void setLabel(String label) {
@@ -140,14 +133,15 @@ public class DummyProvider implements InternalProvider {
 	}
 
 	@Override
-	public void fillChildren(ECPModelContext context, Object parent, InternalChildrenList childrenList) {
+	public void fillChildren(ECPContainer context, Object parent, InternalChildrenList childrenList) {
 
 		if (parent instanceof ECPProjectManager) {
 			childrenList.addChildren(((ECPProjectManager) parent).getProjects());
 		}
 
 		else if (parent instanceof ECPProject) {
-			childrenList.addChildren(((ECPProject) parent).getElements());
+			EList<Object> contents = ((ECPProject) parent).getContents();
+			childrenList.addChildren(contents);
 		}
 
 		else {
@@ -160,10 +154,10 @@ public class DummyProvider implements InternalProvider {
 		return;
 	}
 
-	@Override
-	public void handleLifecycle(ECPModelContext context, LifecycleEvent event) {
-		throw new UnsupportedOperationException();
-	}
+//	@Override
+//	public void handleLifecycle(ECPModelContext context, LifecycleEvent event) {
+//		throw new UnsupportedOperationException();
+//	}
 
 	@Override
 	public EList<? extends Object> getElements(InternalProject project) {
@@ -220,10 +214,10 @@ public class DummyProvider implements InternalProvider {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public boolean canAddOfflineProjects() {
-		return false;
-	}
+//	@Override
+//	public boolean canAddOfflineProjects() {
+//		return false;
+//	}
 
 	@Override
 	public Set<EPackage> getUnsupportedEPackages(Collection<EPackage> ePackages, InternalRepository repository) {
@@ -233,6 +227,36 @@ public class DummyProvider implements InternalProvider {
 	@Override
 	public void delete(InternalProject project, Collection<Object> objects) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean hasCreateProjectWithoutRepositorySupport() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean hasCreateRepositorySupport() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ECPContainer getModelContext(Object arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+//	@Override
+//	public void fillChildren(ECPContainer arg0, Object arg1, InternalChildrenList arg2) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+
+	@Override
+	public void handleLifecycle(ECPContainer arg0, LifecycleEvent arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

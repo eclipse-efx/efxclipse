@@ -8,17 +8,14 @@ import java.util.WeakHashMap;
 
 import javafx.scene.image.ImageView;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecp.core.ECPProject;
-import org.eclipse.emf.ecp.core.util.ECPModelContext;
 import org.eclipse.emf.ecp.internal.core.util.ChildrenListImpl;
 import org.eclipse.emf.ecp.spi.core.InternalProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.fx.ecp.dummy.DummyWorkspace;
-import org.osgi.framework.Bundle;
 
 
 @SuppressWarnings("restriction")
@@ -34,9 +31,8 @@ public class ECPProviderItemProvider extends ItemProviderAdapter implements ITre
 
 	@Override
 	public Collection<?> getChildren(Object object) {
-		ECPModelContext modelContext = getModelContext(object);
 		ChildrenListImpl childrenList = new ChildrenListImpl(object);
-		provider.fillChildren(modelContext, object, childrenList);
+		provider.fillChildren(null, object, childrenList);
 		return childrenList;
 	}
 
@@ -73,11 +69,6 @@ public class ECPProviderItemProvider extends ItemProviderAdapter implements ITre
 			return labelProvider.getImage(object);
 
 		return super.getImage(object);
-	}
-
-	protected ECPModelContext getModelContext(Object element) {
-		// TODO add proper implementation
-		return null;
 	}
 
 }
