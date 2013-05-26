@@ -117,6 +117,21 @@
                singleValue="false"
                supportedClassType="java.lang.Object">
          </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="false"
+               supportedClassType="org.eclipse.emf.ecore.EObject">
+         </staticTest>
+      </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.ReferenceControl$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.reference"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="org.eclipse.emf.ecore.EObject">
+         </staticTest>
       </factory>
       
    </extension>

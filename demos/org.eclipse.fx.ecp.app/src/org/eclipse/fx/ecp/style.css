@@ -36,6 +36,20 @@
   	-fx-pref-width: 35;
 }
 
+.editLinkButton {
+	-fx-background-image: url('link_edit.png');
+	-fx-background-repeat: no-repeat;
+  	-fx-background-position: center;
+  	-fx-pref-width: 35;
+}
+
+.deleteLinkButton {
+	-fx-background-image: url('link_delete.png');
+	-fx-background-repeat: no-repeat;
+  	-fx-background-position: center;
+  	-fx-pref-width: 35;
+}
+
 .formControl {
 	/* -fx-min-height: 20; */
 	/* -fx-pref-height: 50; works */
@@ -52,6 +66,11 @@
 
 .multiAttributeControl .list-view {
 	-fx-pref-height: 80.0;
+}
+
+.hyper-link {
+	-fx-background-radius: 3 0 0 3, 2 0 0 2;
+	-fx-max-width: 1000;
 }
 
 .text-field.left-pill, .choice-box.left-pill {

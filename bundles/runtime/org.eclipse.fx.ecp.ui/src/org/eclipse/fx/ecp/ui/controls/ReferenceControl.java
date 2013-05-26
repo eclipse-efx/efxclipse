@@ -5,11 +5,14 @@ import java.net.URL;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
@@ -17,18 +20,14 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.Control;
 
-public class ReferenceControl extends HBox {
+public class ReferenceControl extends HBox implements Control {
 
 	public ReferenceControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 
 		final EObject modelElement = context.getModelElement();
 		final EditingDomain editingDomain = context.getEditingDomain();
-
-		String displayName = propertyDescriptor.getDisplayName(modelElement);
-		Label label = new Label(displayName);
-		label.getStyleClass().add(IControlConstants.CONTROL_LABEL_CLASS);
-		getChildren().add(label);
 
 		final EReference feature = (EReference) propertyDescriptor.getFeature(modelElement);
 
@@ -38,16 +37,21 @@ public class ReferenceControl extends HBox {
 
 		IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(value, IItemLabelProvider.class);
 
-		HBox hBox = new HBox();
-
-		Label label2 = new Label(labelProvider.getText(value));
+		String text = labelProvider.getText(value);
 
 		URL image = (URL) labelProvider.getImage(value);
+		ImageView imageView = new ImageView(image.toExternalForm());
 
-		hBox.getChildren().add(new ImageView(image.toExternalForm()));
-		hBox.getChildren().add(label2);
-		Button button = new Button("...");
-		button.setOnAction(new EventHandler<ActionEvent>() {
+		Hyperlink hyperlink = new Hyperlink(text, imageView);
+		getChildren().add(hyperlink);
+		hyperlink.setMaxWidth(Double.MAX_VALUE);
+		HBox.setHgrow(hyperlink, Priority.ALWAYS);
+		
+
+		Button editButton = new Button();
+		getChildren().add(editButton);
+		editButton.getStyleClass().addAll("editLinkButton", "left-pill");
+		editButton.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -79,11 +83,28 @@ public class ReferenceControl extends HBox {
 			}
 		});
 		
-		hBox.getChildren().add(button);
+		Button deleteButton = new Button();
+		getChildren().add(deleteButton);
+		deleteButton.getStyleClass().addAll("deleteLinkButton", "right-pill");
+	}
+	
+	public static class Factory implements Control.Factory {
 
-		HBox.setHgrow(label2, Priority.ALWAYS);
+		@Override
+		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+			return new ReferenceControl(itemPropertyDescriptor, context);
+		}
 
-		getChildren().add(hBox);
+	}
+
+	@Override
+	public void handleValidation(Diagnostic diagnostic) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void resetValidation() {
+		// TODO Auto-generated method stub
 	}
 
 }

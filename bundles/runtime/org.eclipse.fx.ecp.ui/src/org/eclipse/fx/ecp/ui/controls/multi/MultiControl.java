@@ -28,6 +28,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -55,9 +56,6 @@ public class MultiControl extends VBox implements Control {
 		editingDomain = context.getEditingDomain();
 		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 		values = (EList<Object>) modelElement.eGet(feature);
-		
-		if(!(feature.getEType() instanceof EDataType))
-			return;
 
 		// TODO move to css
 		setSpacing(4);
@@ -72,10 +70,18 @@ public class MultiControl extends VBox implements Control {
 			controlsBox.getChildren().add(new ControlWrapper(propertyDescriptor, context, i));
 		}
 
+
+//		if (!(feature.getEType() instanceof EDataType))
+//			return;
+		
 		if (feature.getEType() instanceof EEnum) {
-			getChildren().add(new EnumAddControl(editingDomain, feature, modelElement));			
-		} else {
-			getChildren().add(new TextFieldAddControl(editingDomain, feature, modelElement));			
+			getChildren().add(new EnumAddControl(editingDomain, feature, modelElement));
+		}
+		// else if (feature.getEType() instanceof EObject) {
+		// getChildren().add(new EnumAddControl(editingDomain, feature, modelElement));
+		// }
+		else if (feature.getEType() instanceof EDataType) {
+			getChildren().add(new TextFieldAddControl(editingDomain, feature, modelElement));
 		}
 
 		modelElement.eAdapters().add(new AdapterImpl() {
@@ -168,7 +174,9 @@ public class MultiControl extends VBox implements Control {
 
 			setFillHeight(true);
 
-			if (feature.getEType() instanceof EEnum) {
+			if (feature instanceof EReference) {
+				embeddedControl = new EmbeddedReferenceControl(propertyDescriptor, context, initialIndex);
+			} else if (feature.getEType() instanceof EEnum) {
 				embeddedControl = new EmbeddedEnumControl(propertyDescriptor, context, initialIndex);
 			} else {
 				embeddedControl = new EmbeddedTextFieldControl(propertyDescriptor, context, initialIndex);

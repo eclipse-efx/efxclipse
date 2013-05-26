@@ -23,7 +23,6 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
 
-@SuppressWarnings("restriction")
 public class EnumControl extends VBox implements Control {
 
 	private ValidationMessage validationMessage;

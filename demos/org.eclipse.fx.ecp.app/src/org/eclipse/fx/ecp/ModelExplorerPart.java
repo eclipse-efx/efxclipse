@@ -60,7 +60,7 @@ public class ModelExplorerPart {
 
 		final TreeView<Object> treeView = new TreeView<>();
 
-		// treeView.setShowRoot(false);
+		treeView.setShowRoot(false);
 
 		ECPItemProviderAdapterFactory adapterFactory = new ECPItemProviderAdapterFactory(DummyWorkspace.INSTANCE.getProvider());
 
