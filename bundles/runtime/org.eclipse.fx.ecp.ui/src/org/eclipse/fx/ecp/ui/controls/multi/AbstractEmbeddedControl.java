@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Polygon;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
@@ -39,7 +40,23 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 
 			upButton = new Button();
 			getChildren().add(upButton);
-			upButton.getStyleClass().add("moveUpButton");
+//			upButton.getStyleClass().add("moveUpButton");
+			
+			Polygon up = new Polygon();
+			up.getPoints().addAll(new Double[]{
+			
+				-1.0,  4.0,
+				-3.0,  4.0,
+				 0.0,  8.0,
+				 3.0,  4.0,
+			     1.0,  4.0,
+			     1.0, -3.0,
+			    -1.0, -3.0
+			    
+			});
+			
+			upButton.setGraphic(up);
+			
 			upButton.setOnAction(new EventHandler<ActionEvent>() {
 
 
@@ -55,8 +72,23 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 			});
 
 			downButton = new Button();
-			downButton.getStyleClass().addAll("moveDownButton", "center-pill");
 			getChildren().add(downButton);
+			downButton.getStyleClass().add("center-pill");
+			
+			Polygon down = new Polygon();
+			down.getPoints().addAll(new Double[]{
+			
+				-1.0, -4.0,
+				-3.0, -4.0,
+				 0.0, -8.0,
+				 3.0, -4.0,
+			     1.0, -4.0,
+			     1.0, 3.0,
+			    -1.0, 3.0
+			    
+			});
+			downButton.setGraphic(down);
+			
 			downButton.setOnAction(new EventHandler<ActionEvent>() {
 
 				@Override
@@ -75,7 +107,20 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 
 		final Button deleteButton = new Button();
 		getChildren().add(deleteButton);
-		deleteButton.getStyleClass().addAll("deleteButton", "right-pill");
+		deleteButton.getStyleClass().add("right-pill");
+		
+		Polygon polygon = new Polygon();
+		polygon.getPoints().addAll(new Double[]{
+		
+			-4.0,  1.0,
+		     4.0,  1.0,
+		     4.0, -1.0,
+		    -4.0, -1.0
+		    
+		});
+		
+		deleteButton.setGraphic(polygon);
+		
 		deleteButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override

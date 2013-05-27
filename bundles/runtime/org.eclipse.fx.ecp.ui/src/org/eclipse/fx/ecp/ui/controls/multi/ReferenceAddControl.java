@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Polygon;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
@@ -30,7 +31,31 @@ public class ReferenceAddControl extends HBox {
 
 		addButton = new Button();
 		getChildren().add(addButton);
-		addButton.getStyleClass().add("addButton");
+//		addButton.getStyleClass().add("addButton");
+		
+		Polygon polygon = new Polygon();
+		polygon.getPoints().addAll(new Double[]{
+		
+			-1.0,  1.0,
+		    -1.0,  4.0,
+		     1.0,  4.0,
+		     1.0,  1.0,
+		     
+		     4.0,  1.0,
+			 4.0, -1.0,
+			 1.0, -1.0,
+			  
+			 1.0, -4.0,
+			-1.0, -4.0,
+			-1.0, -1.0,
+			
+			-4.0, -1.0,
+			-4.0,  1.0 
+			  
+		});
+		
+		addButton.setGraphic(polygon);
+		
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
