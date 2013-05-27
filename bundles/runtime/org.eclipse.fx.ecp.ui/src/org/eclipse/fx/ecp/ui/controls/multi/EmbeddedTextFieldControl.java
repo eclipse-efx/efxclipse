@@ -6,34 +6,36 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.controls.IControlConstants;
 
-public class EmbeddedTextFieldControl extends TextField implements EmbeddedControl {
+public class EmbeddedTextFieldControl extends AbstractEmbeddedControl {
 
-	private final EDataTypeValueHandler valueHandler;
-	private final EList<?> eList;
-	private int index;
+	final protected EDataTypeValueHandler valueHandler;
+	final protected TextField textField;
 
 	public EmbeddedTextFieldControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context, int initialIndex) {
+		super(propertyDescriptor, context, initialIndex);
 
-		final EObject modelElement = context.getModelElement();
-		final EditingDomain editingDomain = context.getEditingDomain();
-		final EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 		valueHandler = new EDataTypeValueHandler((EDataType) feature.getEType());
 		eList = (EList<?>) modelElement.eGet(feature);
-		setIndex(initialIndex);
 
-		textProperty().addListener(new ChangeListener<String>() {
+		upButton.getStyleClass().add("center-pill");
+
+		textField = new TextField();
+		getChildren().add(0, textField);
+		textField.getStyleClass().add("left-pill");
+		HBox.setHgrow(textField, Priority.ALWAYS);
+
+		textField.textProperty().addListener(new ChangeListener<String>() {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observableValue, String oldText, String newText) {
@@ -55,7 +57,7 @@ public class EmbeddedTextFieldControl extends TextField implements EmbeddedContr
 			public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldFocused, Boolean newFocused) {
 				if (!newFocused) {
 					Object oldValue = eList.get(index);
-					String text = getText();
+					String text = textField.getText();
 					String message = valueHandler.isValid(text);
 
 					if (message == null) {
@@ -75,16 +77,14 @@ public class EmbeddedTextFieldControl extends TextField implements EmbeddedContr
 
 		});
 
+		update();
 	}
 
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
+	@Override
+	protected void update() {
+		super.update();
 		Object value = eList.get(index);
-		setText(valueHandler.toString(value));
+		textField.setText(valueHandler.toString(value));
 	}
 
 }

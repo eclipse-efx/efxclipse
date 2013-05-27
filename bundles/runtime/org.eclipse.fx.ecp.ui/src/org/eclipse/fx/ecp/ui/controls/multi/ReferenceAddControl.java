@@ -41,8 +41,11 @@ public class ReferenceAddControl extends HBox {
 				
 			    Command command = AddCommand.create(editingDomain, modelElement, feature, obj);
 			    
-				if(command.canExecute())
+				if(command.canExecute()) {
 					editingDomain.getCommandStack().execute(command);
+					// un-focus the button
+					requestFocus();
+				}
 			}
 
 		});

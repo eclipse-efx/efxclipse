@@ -67,20 +67,17 @@ public class MultiControl extends VBox implements Control {
 		controlsBox.setSpacing(4);
 
 		for (int i = 0; i < values.size(); i++) {
-			controlsBox.getChildren().add(new ControlWrapper(propertyDescriptor, context, i));
+			controlsBox.getChildren().add(createEmbeddedControl(propertyDescriptor, context, i));
 		}
 
+		// if (!(feature.getEType() instanceof EDataType))
+		// return;
 
-//		if (!(feature.getEType() instanceof EDataType))
-//			return;
-		
 		if (feature.getEType() instanceof EEnum) {
 			getChildren().add(new EnumAddControl(editingDomain, feature, modelElement));
-		}
-		else if (feature.getEType() instanceof EDataType) {
+		} else if (feature.getEType() instanceof EDataType) {
 			getChildren().add(new TextFieldAddControl(editingDomain, feature, modelElement));
-		} 
-		else if (feature.getEType() instanceof EObject) {
+		} else if (feature.getEType() instanceof EObject) {
 			getChildren().add(new ReferenceAddControl(editingDomain, feature, modelElement));
 		}
 
@@ -96,7 +93,7 @@ public class MultiControl extends VBox implements Control {
 					ObservableList<Node> children = controlsBox.getChildren();
 					switch (msg.getEventType()) {
 					case Notification.ADD:
-						children.add(position, new ControlWrapper(propertyDescriptor, context, position));
+						controlsBox.getChildren().add(createEmbeddedControl(propertyDescriptor, context, position));
 						break;
 					case Notification.REMOVE:
 						children.remove(position);
@@ -110,9 +107,9 @@ public class MultiControl extends VBox implements Control {
 					}
 
 					for (int i = 0; i < children.size(); i++) {
-						ControlWrapper controlWrapper = (ControlWrapper) children.get(i);
-						controlWrapper.setIndex(i);
-						controlWrapper.updateButtons();
+						Node node = children.get(i);
+						if (node instanceof AbstractEmbeddedControl)
+							((AbstractEmbeddedControl) node).setIndex(i);
 					}
 
 				}
@@ -123,6 +120,19 @@ public class MultiControl extends VBox implements Control {
 
 		validationMessage = new ValidationMessage();
 		getChildren().add(validationMessage);
+	}
+
+	private AbstractEmbeddedControl createEmbeddedControl(final IItemPropertyDescriptor propertyDescriptor,
+			final ECPControlContext context, int i) {
+
+		if (feature instanceof EReference) {
+			return new EmbeddedReferenceControl(propertyDescriptor, context, i);
+		} else if (feature.getEType() instanceof EEnum) {
+			return new EmbeddedEnumControl(propertyDescriptor, context, i);
+		} else {
+			return new EmbeddedTextFieldControl(propertyDescriptor, context, i);
+		}
+
 	}
 
 	private void updateIndices(int first, int last, int offset) {

@@ -4,42 +4,50 @@ import java.net.URL;
 
 import javafx.scene.control.Hyperlink;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
-public class EmbeddedReferenceControl extends Hyperlink implements EmbeddedControl {
+public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 
-	private final EList<?> eList;
-	private int index;
+	final protected Hyperlink hyperlink;
+	final protected AdapterImpl valueAdapter;
 
 	public EmbeddedReferenceControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context, int initialIndex) {
+		super(propertyDescriptor, context, initialIndex);
+		hyperlink = new Hyperlink();
+		getChildren().add(0, hyperlink);
+		HBox.setHgrow(hyperlink, Priority.ALWAYS);
+		hyperlink.setMaxWidth(Double.MAX_VALUE);
+		upButton.getStyleClass().add("left-pill");
 
-		final EObject modelElement = context.getModelElement();
-		final EditingDomain editingDomain = context.getEditingDomain();
-		final EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
-		eList = (EList<?>) modelElement.eGet(feature);
+		valueAdapter = new AdapterImpl() {
 
-		setMaxWidth(Double.MAX_VALUE);
+			@Override
+			public void notifyChanged(Notification msg) {
+				update();
+			}
 
-		setIndex(initialIndex);
+		};
+
+		update();
 	}
 
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
+	@Override
+	protected void update() {
+		super.update();
 
 		EObject value = (EObject) eList.get(index);
-		
+
+		value.eAdapters().add(valueAdapter);
+
 		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 
 		// TODO check why this is not working:
@@ -53,9 +61,8 @@ public class EmbeddedReferenceControl extends Hyperlink implements EmbeddedContr
 		URL image = (URL) labelProvider.getImage(value);
 		ImageView imageView = new ImageView(image.toExternalForm());
 
-		setText(text);
-
-		setGraphic(imageView);
+		hyperlink.setText(text);
+		hyperlink.setGraphic(imageView);
 	}
 
 }
