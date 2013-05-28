@@ -6,31 +6,43 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitMenuButton;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
+import org.eclipse.fx.ecp.ui.controls.multi.MarkButton;
 
 public class ReferenceControl extends HBox implements Control {
 
 	protected final Hyperlink hyperlink;
-	private final EObject modelElement;
-	private final EReference reference;
+	protected final EObject modelElement;
+	protected final EReference reference;
+	protected final AdapterImpl valueAdapter;
+	protected final Button unsetButton;
+	protected final EditingDomain editingDomain;
+	protected Command unsetCommand;
 
 	public ReferenceControl(IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
 
 		modelElement = context.getModelElement();
 		reference = (EReference) propertyDescriptor.getFeature(modelElement);
+		editingDomain = context.getEditingDomain();
 
 		hyperlink = new Hyperlink();
 		getChildren().add(hyperlink);
@@ -47,47 +59,29 @@ public class ReferenceControl extends HBox implements Control {
 
 		});
 
-		Button editButton = new Button();
+		Button editButton = new MarkButton();
 		getChildren().add(editButton);
-		editButton.getStyleClass().addAll("editLinkButton", "left-pill");
-		editButton.setOnAction(new EventHandler<ActionEvent>() {
+		editButton.getStyleClass().addAll("set-reference-button", "left-pill");
 
-			@Override
-			public void handle(ActionEvent arg0) {
-				// ReferenceSelectionDialog referenceSelectionDialog = new ReferenceSelectionDialog(null,
-				// null);
-				// referenceSelectionDialog.showAndWait();
+		if (reference.isUnsettable()) {
+			unsetButton = new MarkButton();
+			getChildren().add(unsetButton);
+			unsetButton.getStyleClass().addAll("unset-reference-button", "right-pill");
+			Tooltip tooltip = new Tooltip("Remove reference");
+			unsetButton.setTooltip(tooltip);
+			unsetButton.setOnAction(new EventHandler<ActionEvent>() {
 
-				// final Stage dialog = new Stage();
-				// dialog.initModality(Modality.WINDOW_MODAL);
-				// // dialog.initOwner(primaryStage);
-				// dialog.setScene(
-				// new Scene(
-				// HBoxBuilder.create().styleClass("modal-dialog").children(
-				// LabelBuilder.create().text("Will you like this page?").build(),
-				// ButtonBuilder.create().text("Yes").defaultButton(true).onAction(new
-				// EventHandler<ActionEvent>() {
-				// @Override public void handle(ActionEvent actionEvent) {
-				// dialog.close();
-				// }
-				// }).build(),
-				// ButtonBuilder.create().text("No").cancelButton(true).onAction(new
-				// EventHandler<ActionEvent>() {
-				// @Override public void handle(ActionEvent actionEvent) {
-				// dialog.close();
-				// }
-				// }).build()
-				// ).build()
-				// , Color.TRANSPARENT
-				// )
-				// );
-				// dialog.showAndWait();
-			}
-		});
+				@Override
+				public void handle(ActionEvent arg0) {
+					if (unsetCommand.canExecute())
+						editingDomain.getCommandStack().execute(unsetCommand);
+				}
 
-		Button deleteButton = new Button();
-		getChildren().add(deleteButton);
-		deleteButton.getStyleClass().addAll("deleteLinkButton", "right-pill");
+			});
+
+		} else {
+			unsetButton = null;
+		}
 
 		final EReference feature = (EReference) propertyDescriptor.getFeature(modelElement);
 
@@ -101,6 +95,15 @@ public class ReferenceControl extends HBox implements Control {
 
 		});
 
+		valueAdapter = new AdapterImpl() {
+
+			@Override
+			public void notifyChanged(Notification msg) {
+				update();
+			}
+
+		};
+
 		update();
 	}
 
@@ -108,8 +111,17 @@ public class ReferenceControl extends HBox implements Control {
 		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 
 		Object value = modelElement.eGet(reference);
-	
+
+		if (unsetButton != null) {
+			unsetCommand = SetCommand.create(editingDomain, modelElement, reference, SetCommand.UNSET_VALUE);
+			unsetButton.setDisable(value == null || !unsetCommand.canExecute());
+		}
+
 		if (value instanceof EObject) {
+
+			EObject eObject = (EObject) value;
+
+			eObject.eAdapters().add(valueAdapter);
 
 			IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(value, IItemLabelProvider.class);
 

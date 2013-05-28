@@ -11,21 +11,14 @@
 package org.eclipse.fx.ecp;
 
 import javafx.event.EventHandler;
-import javafx.scene.control.Cell;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.WindowEvent;
 
 import javax.inject.Inject;
 
-import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
-import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.core.ECPProjectManager;
 import org.eclipse.emf.ecp.internal.core.util.ChildrenListImpl;
@@ -35,8 +28,6 @@ import org.eclipse.fx.ecp.dummy.DummyProjectManager;
 import org.eclipse.fx.ecp.dummy.DummyWorkspace;
 import org.eclipse.fx.ecp.provider.ECPItemProviderAdapterFactory;
 import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
-import org.eclipse.fx.emf.edit.ui.AdapterFactoryCellFactory.ICellCreationListener;
-import org.eclipse.fx.emf.edit.ui.AdapterFactoryCellFactory.ICellUpdateListener;
 import org.eclipse.fx.emf.edit.ui.AdapterFactoryTreeCellFactory;
 import org.eclipse.fx.emf.edit.ui.AdapterFactoryTreeItem;
 
@@ -55,8 +46,7 @@ public class ModelExplorerPart {
 	}
 
 	@Inject
-	public ModelExplorerPart(BorderPane parent, final MApplication application, ECPProjectManager projectManager,
-			final EModelService modelService, final EPartService partService, final ECPModelElementOpener modelElementOpener) {
+	public ModelExplorerPart(BorderPane parent, ECPProjectManager projectManager, final ECPModelElementOpener modelElementOpener) {
 
 		final TreeView<Object> treeView = new TreeView<>();
 

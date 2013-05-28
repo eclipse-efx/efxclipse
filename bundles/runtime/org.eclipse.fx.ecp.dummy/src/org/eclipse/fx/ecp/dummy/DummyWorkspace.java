@@ -78,32 +78,33 @@ public class DummyWorkspace {
 
 		// Create the editing domain with a special command stack.
 		editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
-		
+
 		// create the repository
 		repository = new DummyRepository();
 		repository.setName("Repository 1");
-		
+
 		// create a project
 		DummyProject project1 = createProject("Project 1");
-		
+
 		tournament = BowlingFactory.eINSTANCE.createTournament();
-		
+		project1.getResource().getContents().add(tournament);
+
 		tournament.getPriceMoney().add(1.55);
 		tournament.getPriceMoney().add(1000.0);
-		
+
 		tournament.getReceivesTrophy().add(false);
 		tournament.getReceivesTrophy().add(true);
-		
+
 		tournament.getMatchDays().add(new Date(0));
 		tournament.getMatchDays().add(new Date());
-		
+
 		Matchup matchup = BowlingFactory.eINSTANCE.createMatchup();
 		matchup.setNrSpectators(new BigInteger("21"));
 		tournament.getMatchups().add(matchup);
-		
+
 		League league = BowlingFactory.eINSTANCE.createLeague();
 		league.setName("Premier League");
-		
+
 		hans = BowlingFactory.eINSTANCE.createPlayer();
 		hans.setName("Hans Wurst");
 		hans.setDateOfBirth(new Date(0));
@@ -118,11 +119,10 @@ public class DummyWorkspace {
 		hans.setGender(Gender.MALE);
 		tournament.getPlayers().add(hans);
 		league.getPlayers().add(hans);
-		
+
 		referee = BowlingFactory.eINSTANCE.createReferee();
+		project1.getResource().getContents().add(referee);
 		referee.setLeague(league);
-		
-		project1.getResource().getContents().add(tournament);
 	}
 
 	DummyProject createProject(String projectName) {
@@ -163,15 +163,15 @@ public class DummyWorkspace {
 	public ComposedAdapterFactory getAdapterFactory() {
 		return adapterFactory;
 	}
-	
+
 	public EObject getTournament() {
 		return tournament;
 	}
-	
+
 	public EObject getPlayer() {
 		return hans;
 	}
-	
+
 	public EObject getReferee() {
 		return referee;
 	}
