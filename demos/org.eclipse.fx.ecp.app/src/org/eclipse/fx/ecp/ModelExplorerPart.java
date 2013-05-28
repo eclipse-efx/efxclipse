@@ -114,7 +114,7 @@ public class ModelExplorerPart {
 						TreeItem<Object> selectedItem = treeView.getSelectionModel().getSelectedItem();
 						Object modelElement = selectedItem.getValue();
 						if(modelElement instanceof EObject)
-							modelElementOpener.openModelElement((EObject) modelElement, application, modelService, partService);
+							modelElementOpener.openModelElement((EObject) modelElement);
 					}
 				}
 			}

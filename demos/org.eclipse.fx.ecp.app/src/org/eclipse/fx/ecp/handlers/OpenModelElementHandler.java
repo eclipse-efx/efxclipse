@@ -45,14 +45,14 @@ public class OpenModelElementHandler {
 	//
 	// modelEditorPart.setInput(modelElementContext);
 	// }
+	
 
 	
 	@Execute
-	public void open(ECPModelElementOpener modelElementOpener, MApplication application, EModelService modelService,
-			 EPartService partService) {
+	public void open(ECPModelElementOpener modelElementOpener) {
 		
 		EObject modelElement = DummyWorkspace.INSTANCE.getReferee();
-		modelElementOpener.openModelElement(modelElement, application, modelService, partService);
+		modelElementOpener.openModelElement(modelElement);
 	}
 
 }

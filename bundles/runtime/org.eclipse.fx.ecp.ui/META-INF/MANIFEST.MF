@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.fx.emf.databinding;bundle-version="0.8.1"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.fx.ecp.ui
-Service-Component: OSGI-INF/modelElementOpener.xml
+Service-Component: OSGI-INF/modelElementOpener.xml,
+ OSGI-INF/ecpmodelelementopener_function.xml
 Import-Package: javafx.animation;version="2.2.0",
  javafx.application;version="2.2.0",
  javafx.beans;version="2.2.0",
