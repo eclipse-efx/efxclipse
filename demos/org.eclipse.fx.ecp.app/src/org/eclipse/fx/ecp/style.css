@@ -106,3 +106,13 @@
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
 }
 
+.custom-node {
+    -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
+    -fx-background-insets: 0 0 -1 0, 0;
+    /* -fx-padding: 0.25em; */
+    /* -fx-shape: "M 0 0 h 7 l -3.5 4 z"; */
+    -fx-shape: "M -4 1 v -1 h 4 v -4 h 2 v 4 h 4 v 2 h -4 v 4 h -2 v -4 h -4 z";
+    -fx-pref-height: 10;
+    -fx-pref-width: 10;
+}
+

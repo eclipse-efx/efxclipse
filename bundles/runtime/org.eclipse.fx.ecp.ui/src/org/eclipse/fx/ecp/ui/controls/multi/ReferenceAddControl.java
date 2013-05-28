@@ -2,8 +2,10 @@ package org.eclipse.fx.ecp.ui.controls.multi;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Polygon;
 
 import org.eclipse.emf.common.command.Command;
@@ -33,28 +35,35 @@ public class ReferenceAddControl extends HBox {
 		getChildren().add(addButton);
 //		addButton.getStyleClass().add("addButton");
 		
-		Polygon polygon = new Polygon();
-		polygon.getPoints().addAll(new Double[]{
+		StackPane cssNode = new StackPane();
+        cssNode.getStyleClass().add("custom-node");
+//        cssNode.setPrefSize(8, 8);
+        addButton.setGraphic(new Group(cssNode)); // adding to group so root does not resize custom node
 		
-			-1.0,  1.0,
-		    -1.0,  4.0,
-		     1.0,  4.0,
-		     1.0,  1.0,
-		     
-		     4.0,  1.0,
-			 4.0, -1.0,
-			 1.0, -1.0,
-			  
-			 1.0, -4.0,
-			-1.0, -4.0,
-			-1.0, -1.0,
-			
-			-4.0, -1.0,
-			-4.0,  1.0 
-			  
-		});
+//		Polygon polygon = new Polygon();
+//		polygon.getStyleClass().add("arr");
 		
-		addButton.setGraphic(polygon);
+//		polygon.getPoints().addAll(new Double[]{
+//		
+//			-1.0,  1.0,
+//		    -1.0,  4.0,
+//		     1.0,  4.0,
+//		     1.0,  1.0,
+//		     
+//		     4.0,  1.0,
+//			 4.0, -1.0,
+//			 1.0, -1.0,
+//			  
+//			 1.0, -4.0,
+//			-1.0, -4.0,
+//			-1.0, -1.0,
+//			
+//			-4.0, -1.0,
+//			-4.0,  1.0 
+//			  
+//		});
+		
+//		addButton.setGraphic(polygon);
 		
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 
