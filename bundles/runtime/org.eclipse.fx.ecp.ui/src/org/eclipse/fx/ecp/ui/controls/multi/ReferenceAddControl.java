@@ -6,7 +6,6 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Polygon;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
@@ -33,37 +32,11 @@ public class ReferenceAddControl extends HBox {
 
 		addButton = new Button();
 		getChildren().add(addButton);
-//		addButton.getStyleClass().add("addButton");
+		addButton.getStyleClass().add("reference-add-button");
 		
 		StackPane cssNode = new StackPane();
-        cssNode.getStyleClass().add("custom-node");
-//        cssNode.setPrefSize(8, 8);
-        addButton.setGraphic(new Group(cssNode)); // adding to group so root does not resize custom node
-		
-//		Polygon polygon = new Polygon();
-//		polygon.getStyleClass().add("arr");
-		
-//		polygon.getPoints().addAll(new Double[]{
-//		
-//			-1.0,  1.0,
-//		    -1.0,  4.0,
-//		     1.0,  4.0,
-//		     1.0,  1.0,
-//		     
-//		     4.0,  1.0,
-//			 4.0, -1.0,
-//			 1.0, -1.0,
-//			  
-//			 1.0, -4.0,
-//			-1.0, -4.0,
-//			-1.0, -1.0,
-//			
-//			-4.0, -1.0,
-//			-4.0,  1.0 
-//			  
-//		});
-		
-//		addButton.setGraphic(polygon);
+        cssNode.getStyleClass().add("mark");
+        addButton.setGraphic(new Group(cssNode));
 		
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 

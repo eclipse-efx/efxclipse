@@ -4,10 +4,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
@@ -51,7 +53,13 @@ public class TextFieldAddControl extends HBox {
 
 		addButton = new Button();
 		getChildren().add(addButton);
-		addButton.getStyleClass().addAll("right-pill", "addButton");
+		addButton.setMaxHeight(Double.MAX_VALUE);
+		addButton.getStyleClass().addAll("right-pill", "text-field-add-button");
+		
+		StackPane addMark = new StackPane();
+        addMark.getStyleClass().add("mark");
+        addButton.setGraphic(new Group(addMark));
+        
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override

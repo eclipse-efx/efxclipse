@@ -2,9 +2,10 @@ package org.eclipse.fx.ecp.ui.controls.multi;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Polygon;
 
 import org.eclipse.emf.common.command.Command;
@@ -40,22 +41,13 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 
 			upButton = new Button();
 			getChildren().add(upButton);
-//			upButton.getStyleClass().add("moveUpButton");
 			
-			Polygon up = new Polygon();
-			up.getPoints().addAll(new Double[]{
+			upButton.getStyleClass().addAll("up-button");
+			upButton.setMaxHeight(Double.MAX_VALUE);
 			
-				-1.0,  4.0,
-				-3.0,  4.0,
-				 0.0,  8.0,
-				 3.0,  4.0,
-			     1.0,  4.0,
-			     1.0, -3.0,
-			    -1.0, -3.0
-			    
-			});
-			
-			upButton.setGraphic(up);
+			StackPane upMark = new StackPane();
+			upMark.getStyleClass().add("mark");
+			upButton.setGraphic(new Group(upMark));
 			
 			upButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -73,21 +65,12 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 
 			downButton = new Button();
 			getChildren().add(downButton);
-			downButton.getStyleClass().add("center-pill");
+			downButton.setMaxHeight(Double.MAX_VALUE);
+			downButton.getStyleClass().addAll("down-button", "center-pill");
 			
-			Polygon down = new Polygon();
-			down.getPoints().addAll(new Double[]{
-			
-				-1.0, -4.0,
-				-3.0, -4.0,
-				 0.0, -8.0,
-				 3.0, -4.0,
-			     1.0, -4.0,
-			     1.0, 3.0,
-			    -1.0, 3.0
-			    
-			});
-			downButton.setGraphic(down);
+			StackPane downMark = new StackPane();
+			downMark.getStyleClass().add("mark");
+	        downButton.setGraphic(new Group(downMark));
 			
 			downButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -107,19 +90,12 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 
 		final Button deleteButton = new Button();
 		getChildren().add(deleteButton);
-		deleteButton.getStyleClass().add("right-pill");
+		deleteButton.setMaxHeight(Double.MAX_VALUE);
+		deleteButton.getStyleClass().addAll("remove-button", "right-pill");
 		
-		Polygon polygon = new Polygon();
-		polygon.getPoints().addAll(new Double[]{
-		
-			-4.0,  1.0,
-		     4.0,  1.0,
-		     4.0, -1.0,
-		    -4.0, -1.0
-		    
-		});
-		
-		deleteButton.setGraphic(polygon);
+		StackPane removeMark = new StackPane();
+        removeMark.getStyleClass().add("mark");
+        deleteButton.setGraphic(new Group(removeMark));
 		
 		deleteButton.setOnAction(new EventHandler<ActionEvent>() {
 
