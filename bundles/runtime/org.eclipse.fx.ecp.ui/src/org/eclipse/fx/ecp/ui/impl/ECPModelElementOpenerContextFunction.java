@@ -5,13 +5,11 @@ import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.fx.ecp.ui.ECPModelElementOpenerImpl;
 
-public class ECPModelContextFunction extends ContextFunction {
+public class ECPModelElementOpenerContextFunction extends ContextFunction {
 
 	@Override
 	public Object compute(IEclipseContext context, String contextKey) {
-		ECPModelElementOpenerImpl make = ContextInjectionFactory.make(ECPModelElementOpenerImpl.class, context);
-		
-		return make;
+		return ContextInjectionFactory.make(ECPModelElementOpenerImpl.class, context);
 	}
 	
 }

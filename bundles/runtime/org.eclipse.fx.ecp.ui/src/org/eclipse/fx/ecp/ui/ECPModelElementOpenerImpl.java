@@ -45,7 +45,14 @@ public class ECPModelElementOpenerImpl implements ECPModelElementOpener {
 
 		ModelElementEditor editor = (ModelElementEditor) part.getObject();
 
-		ECPControlContext modelElementContext = new DummyControlContext(modelElement);
+		ECPControlContext modelElementContext = new DummyControlContext(modelElement) {
+			
+			@Override
+			public void openInNewContext(EObject eObject) {
+				openModelElement(eObject);
+			}
+			
+		};
 
 		editor.setInput(modelElementContext);
 	}

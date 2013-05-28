@@ -25,15 +25,27 @@ public class ReferenceControl extends HBox implements Control {
 
 	protected final Hyperlink hyperlink;
 	private final EObject modelElement;
+	private final EReference reference;
 
-	public ReferenceControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
+	public ReferenceControl(IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
 
 		modelElement = context.getModelElement();
+		reference = (EReference) propertyDescriptor.getFeature(modelElement);
 
 		hyperlink = new Hyperlink();
 		getChildren().add(hyperlink);
 		hyperlink.setMaxWidth(Double.MAX_VALUE);
 		HBox.setHgrow(hyperlink, Priority.ALWAYS);
+		hyperlink.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				Object value = modelElement.eGet(reference);
+				if (value instanceof EObject)
+					context.openInNewContext((EObject) value);
+			}
+
+		});
 
 		Button editButton = new Button();
 		getChildren().add(editButton);
@@ -80,6 +92,7 @@ public class ReferenceControl extends HBox implements Control {
 		final EReference feature = (EReference) propertyDescriptor.getFeature(modelElement);
 
 		modelElement.eAdapters().add(new AdapterImpl() {
+
 			@Override
 			public void notifyChanged(Notification msg) {
 				if (msg.getFeature() == feature)
@@ -94,19 +107,26 @@ public class ReferenceControl extends HBox implements Control {
 	private void update() {
 		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 
-		IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(modelElement, IItemLabelProvider.class);
+		Object value = modelElement.eGet(reference);
+	
+		if (value instanceof EObject) {
 
-		if (labelProvider != null) {
-			String text = labelProvider.getText(modelElement);
-			hyperlink.setText(text);
+			IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(value, IItemLabelProvider.class);
 
-			URL image = (URL) labelProvider.getImage(modelElement);
-			ImageView imageView = new ImageView(image.toExternalForm());
-			hyperlink.setGraphic(imageView);
-		} else {
-			hyperlink.setText(null);
-			hyperlink.setGraphic(null);
+			if (labelProvider != null) {
+				String text = labelProvider.getText(value);
+				hyperlink.setText(text);
+
+				URL image = (URL) labelProvider.getImage(value);
+				ImageView imageView = new ImageView(image.toExternalForm());
+				hyperlink.setGraphic(imageView);
+				return;
+			}
+
 		}
+
+		hyperlink.setText(null);
+		hyperlink.setGraphic(null);
 	}
 
 	public static class Factory implements Control.Factory {
