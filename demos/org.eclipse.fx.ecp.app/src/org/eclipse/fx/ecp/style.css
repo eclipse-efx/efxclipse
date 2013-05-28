@@ -110,7 +110,8 @@
     -fx-pref-width: 28;
 }
 
-.text-field-add-button .mark, .reference-add-button .mark, .set-reference-button .mark {
+.text-field-add-button .mark, .reference-add-button .mark,
+.add-enum-button .mark, .set-reference-button .mark {
     -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
     -fx-background-insets: 0 0 -1 0, 0;
     /* -fx-padding: 0.25em; */
@@ -154,4 +155,8 @@
     -fx-shape: "M -1 0 L -3 -2, -2 -3, 0 -1, 2 -3, 3 -2, 1 0, 3 2, 2 3, 0 1, -2 3, -3 2 z";
     -fx-pref-height: 8;
     -fx-pref-width: 8;
+}
+
+.enum-choice-box {
+	-fx-pref-width: 150;
 }

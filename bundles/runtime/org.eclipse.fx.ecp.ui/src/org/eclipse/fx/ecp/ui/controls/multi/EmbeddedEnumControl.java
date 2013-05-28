@@ -3,6 +3,9 @@ package org.eclipse.fx.ecp.ui.controls.multi;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
@@ -27,14 +30,22 @@ public class EmbeddedEnumControl extends AbstractEmbeddedControl {
 		final EList<EEnumLiteral> enumLiterals = eEnum.getELiterals();
 		
 		choiceBox = new ChoiceBox<>();
-
-		if (!feature.isRequired())
+		getChildren().add(0, choiceBox);
+		choiceBox.getStyleClass().add("left-pill");
+		choiceBox.setMaxWidth(Double.MAX_VALUE);
+		HBox.setHgrow(choiceBox, Priority.ALWAYS);
+		
+		upButton.getStyleClass().add("center-pill");
+		
+		if (feature.isUnsettable())
 			choiceBox.getItems().add(null);
 
 		for (EEnumLiteral literal : enumLiterals)
 			choiceBox.getItems().add(literal.getInstance());
-
-		choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Enumerator>() {
+		
+		final SingleSelectionModel<Enumerator> selectionModel = choiceBox.getSelectionModel();
+		
+		selectionModel.selectedItemProperty().addListener(new ChangeListener<Enumerator>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Enumerator> observableValue, Enumerator oldValue, Enumerator newValue) {
@@ -44,7 +55,7 @@ public class EmbeddedEnumControl extends AbstractEmbeddedControl {
 						editingDomain.getCommandStack().execute(command);
 					} else {
 						internal = true;
-						choiceBox.getSelectionModel().select(oldValue);
+						selectionModel.select(oldValue);
 						internal = false;
 					}
 				}

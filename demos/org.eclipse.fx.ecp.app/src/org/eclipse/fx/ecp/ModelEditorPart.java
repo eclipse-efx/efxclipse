@@ -30,6 +30,8 @@ import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -49,6 +51,9 @@ public class ModelEditorPart implements ModelElementEditor {
 	private ScrollPane scrollPane;
 	private MPart part;
 	private Map<EStructuralFeature, Control> controls = new HashMap<>();
+	private EObject modelElement;
+	private AdapterFactoryItemDelegator adapterFactoryItemDelegator;
+	private ComposedAdapterFactory adapterFactory;
 
 	@Inject
 	public ModelEditorPart(BorderPane parent, final MApplication application, MPart part) {
@@ -62,15 +67,11 @@ public class ModelEditorPart implements ModelElementEditor {
 	}
 
 	public void setInput(final ECPControlContext modelElementContext) {
-		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-		AdapterFactoryItemDelegator adapterFactoryItemDelegator = new AdapterFactoryItemDelegator(adapterFactory);
-		EObject modelElement = modelElementContext.getModelElement();
+		modelElement = modelElementContext.getModelElement();
+		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		adapterFactoryItemDelegator = new AdapterFactoryItemDelegator(adapterFactory);
 
-		IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(modelElement, IItemLabelProvider.class);
-		part.setLabel(labelProvider.getText(modelElement));
-		Object image = labelProvider.getImage(modelElement);
-		if (image instanceof URL)
-			part.setIconURI(((URL) image).toExternalForm());
+		update();
 
 		List<IItemPropertyDescriptor> propertyDescriptors = adapterFactoryItemDelegator.getPropertyDescriptors(modelElement);
 		// FormControlFactory controlFactory = new FormControlFactory();
@@ -122,17 +123,29 @@ public class ModelEditorPart implements ModelElementEditor {
 				gridPane.add(node, 1, i);
 				GridPane.setHgrow(node, Priority.ALWAYS);
 				controls.put(feature, control);
-			} else {
-				System.out.println(":-(");
 			}
 			
 			i++;
 		}
 
-		Label label = new Label("The End.");
-		gridPane.add(label, 0, i);
-
 		scrollPane.setContent(gridPane);
+		
+		modelElement.eAdapters().add(new AdapterImpl() {
+			
+			@Override
+			public void notifyChanged(Notification msg) {
+				update();
+			}
+			
+		});
+	}
+
+	public void update() {
+		IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(modelElement, IItemLabelProvider.class);
+		part.setLabel(labelProvider.getText(modelElement));
+		Object image = labelProvider.getImage(modelElement);
+		if (image instanceof URL)
+			part.setIconURI(((URL) image).toExternalForm());
 	}
 
 }

@@ -1,13 +1,12 @@
 package org.eclipse.fx.ecp.ui.controls.multi;
 
-import java.util.function.Consumer;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
@@ -52,7 +51,11 @@ public class EnumAddControl extends HBox {
 		for (EEnumLiteral literal : enumLiterals)
 			choiceBox.getItems().add(literal.getInstance());
 
-		choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Enumerator>() {
+		SingleSelectionModel<Enumerator> selectionModel = choiceBox.getSelectionModel();
+		
+		selectionModel.select(0);
+		
+		selectionModel.selectedItemProperty().addListener(new ChangeListener<Enumerator>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Enumerator> arg0, Enumerator arg1, Enumerator arg2) {
@@ -61,9 +64,9 @@ public class EnumAddControl extends HBox {
 
 		});
 
-		addButton = new Button();
+		addButton = new MarkButton();
 		getChildren().add(addButton);
-		addButton.getStyleClass().addAll("right-pill", "addButton");
+		addButton.getStyleClass().addAll("right-pill", "add-enum-button");
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
