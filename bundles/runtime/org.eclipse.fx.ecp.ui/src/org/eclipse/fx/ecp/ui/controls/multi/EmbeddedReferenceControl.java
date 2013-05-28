@@ -2,6 +2,8 @@ package org.eclipse.fx.ecp.ui.controls.multi;
 
 import java.net.URL;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -20,12 +22,24 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 	final protected Hyperlink hyperlink;
 	final protected AdapterImpl valueAdapter;
 
-	public EmbeddedReferenceControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context, int initialIndex) {
+	public EmbeddedReferenceControl(IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context, int initialIndex) {
 		super(propertyDescriptor, context, initialIndex);
 		hyperlink = new Hyperlink();
 		getChildren().add(0, hyperlink);
 		HBox.setHgrow(hyperlink, Priority.ALWAYS);
 		hyperlink.setMaxWidth(Double.MAX_VALUE);
+
+		hyperlink.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				Object item = eList.get(index);
+				if (item instanceof EObject)
+					context.openInNewContext((EObject) item);
+			}
+			
+		});
+
 		upButton.getStyleClass().add("left-pill");
 
 		valueAdapter = new AdapterImpl() {
