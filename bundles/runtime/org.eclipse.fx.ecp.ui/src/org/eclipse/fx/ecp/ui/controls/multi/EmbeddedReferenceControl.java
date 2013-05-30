@@ -21,6 +21,7 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 
 	final protected Hyperlink hyperlink;
 	final protected AdapterImpl valueAdapter;
+	protected EObject value;
 
 	public EmbeddedReferenceControl(IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context, int initialIndex) {
 		super(propertyDescriptor, context, initialIndex);
@@ -37,7 +38,7 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 				if (item instanceof EObject)
 					context.openInNewContext((EObject) item);
 			}
-			
+
 		});
 
 		upButton.getStyleClass().add("left-pill");
@@ -58,9 +59,14 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 	protected void update() {
 		super.update();
 
-		EObject value = (EObject) eList.get(index);
+		final EObject newValue = (EObject) eList.get(index);
 
-		value.eAdapters().add(valueAdapter);
+		if (newValue != value) {
+			if (value != null)
+				value.eAdapters().remove(valueAdapter);
+			newValue.eAdapters().add(valueAdapter);
+			value = newValue;
+		}
 
 		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 

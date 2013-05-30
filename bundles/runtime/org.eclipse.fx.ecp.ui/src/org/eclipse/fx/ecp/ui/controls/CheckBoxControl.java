@@ -14,21 +14,21 @@ import org.eclipse.fx.emf.databinding.edit.EMFEditFXProperties;
 
 public class CheckBoxControl extends VBox implements Control {
 
+	protected final Property<Boolean> property;
+	protected final CheckBox checkBox;
+
 	public CheckBoxControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		getStyleClass().add("formControl");
 
 		EObject modelElement = context.getModelElement();
 
 		EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
-		// Object val = modelElement.eGet(feature);
 
-		CheckBox checkBox = new CheckBox();
+		checkBox = new CheckBox();
 		getChildren().add(checkBox);
-		// checkBox.setSelected((Boolean) val);
 
-		Property<Boolean> property = EMFEditFXProperties.value(context.getEditingDomain(), modelElement, feature);
+		property = EMFEditFXProperties.value(context.getEditingDomain(), modelElement, feature);
 		checkBox.selectedProperty().bindBidirectional(property);
-
 	}
 
 	@Override
@@ -39,6 +39,11 @@ public class CheckBoxControl extends VBox implements Control {
 	@Override
 	public void resetValidation() {
 		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void dispose() {
+		checkBox.selectedProperty().unbindBidirectional(property);		
 	}
 
 	public static class Factory implements Control.Factory {

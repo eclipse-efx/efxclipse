@@ -1,17 +1,12 @@
 package org.eclipse.fx.ecp.ui.controls.multi;
 
 import java.net.URL;
-import java.util.Objects;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -31,7 +26,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
-import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -50,6 +44,7 @@ public class MultiControl extends VBox implements Control {
 	private EditingDomain editingDomain;
 	private EList<Object> values;
 	private VBox controlsBox;
+	protected final AdapterImpl modelElementAdapter;
 
 	public MultiControl(final IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
 		modelElement = context.getModelElement();
@@ -81,12 +76,12 @@ public class MultiControl extends VBox implements Control {
 			getChildren().add(new ReferenceAddControl(editingDomain, feature, modelElement));
 		}
 
-		modelElement.eAdapters().add(new AdapterImpl() {
+		modelElementAdapter = new AdapterImpl() {
 
 			@Override
 			public void notifyChanged(Notification msg) {
 
-				if (Objects.equals(msg.getFeature(), feature)) {
+				if (msg.getFeature() == feature) {
 
 					final int position = msg.getPosition();
 
@@ -116,7 +111,9 @@ public class MultiControl extends VBox implements Control {
 
 			}
 
-		});
+		};
+		
+		modelElement.eAdapters().add(modelElementAdapter);
 
 		validationMessage = new ValidationMessage();
 		getChildren().add(validationMessage);
@@ -263,6 +260,11 @@ public class MultiControl extends VBox implements Control {
 				downButton.setDisable(index > values.size() - 2);
 		}
 
+	}
+
+	@Override
+	public void dispose() {
+		modelElement.eAdapters().add(modelElementAdapter);
 	}
 
 }

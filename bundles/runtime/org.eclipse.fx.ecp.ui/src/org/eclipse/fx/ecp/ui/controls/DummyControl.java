@@ -13,7 +13,6 @@ import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
 
-@SuppressWarnings("restriction")
 public class DummyControl extends HBox implements Control {
 
 	public DummyControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
@@ -51,6 +50,12 @@ public class DummyControl extends HBox implements Control {
 		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new DummyControl(itemPropertyDescriptor, context);
 		}
+		
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
 		
 	}
 

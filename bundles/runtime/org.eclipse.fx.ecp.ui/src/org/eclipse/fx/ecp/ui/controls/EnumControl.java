@@ -25,13 +25,15 @@ import org.eclipse.fx.ecp.ui.Control;
 
 public class EnumControl extends ChoiceBox<Enumerator> implements Control {
 
-	private EObject modelElement;
-	private EStructuralFeature feature;
+	protected final EObject modelElement;
+	protected final EStructuralFeature feature;
+	protected final AdapterImpl modelElementAdapter;
 
 	public EnumControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		modelElement = context.getModelElement();
-		final EditingDomain editingDomain = context.getEditingDomain();
 		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
+		
+		final EditingDomain editingDomain = context.getEditingDomain();
 		final EClassifier type = feature.getEType();
 		final EEnum eEnum = (EEnum) type;
 		final EList<EEnumLiteral> enumLiterals = eEnum.getELiterals();
@@ -59,7 +61,7 @@ public class EnumControl extends ChoiceBox<Enumerator> implements Control {
 
 		});
 		
-		modelElement.eAdapters().add(new AdapterImpl() {
+		modelElementAdapter = new AdapterImpl() {
 			
 			@Override
 			public void notifyChanged(Notification msg) {
@@ -67,7 +69,9 @@ public class EnumControl extends ChoiceBox<Enumerator> implements Control {
 					update();
 			}
 			
-		});
+		};
+		
+		modelElement.eAdapters().add(modelElementAdapter);
 
 		update();
 	}
@@ -93,6 +97,11 @@ public class EnumControl extends ChoiceBox<Enumerator> implements Control {
 			return new EnumControl(itemPropertyDescriptor, context);
 		}
 
+	}
+
+	@Override
+	public void dispose() {
+		modelElement.eAdapters().remove(modelElementAdapter);		
 	}
 
 }

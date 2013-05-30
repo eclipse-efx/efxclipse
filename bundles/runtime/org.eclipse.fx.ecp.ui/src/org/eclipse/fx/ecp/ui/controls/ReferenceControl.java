@@ -6,8 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -37,6 +35,7 @@ public class ReferenceControl extends HBox implements Control {
 	protected final Button unsetButton;
 	protected final EditingDomain editingDomain;
 	protected Command unsetCommand;
+	protected final AdapterImpl modelElementAdapter;
 
 	public ReferenceControl(IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
 
@@ -85,7 +84,7 @@ public class ReferenceControl extends HBox implements Control {
 
 		final EReference feature = (EReference) propertyDescriptor.getFeature(modelElement);
 
-		modelElement.eAdapters().add(new AdapterImpl() {
+		modelElementAdapter = new AdapterImpl() {
 
 			@Override
 			public void notifyChanged(Notification msg) {
@@ -93,7 +92,9 @@ public class ReferenceControl extends HBox implements Control {
 					update();
 			}
 
-		});
+		};
+		
+		modelElement.eAdapters().add(modelElementAdapter);
 
 		valueAdapter = new AdapterImpl() {
 
@@ -158,6 +159,11 @@ public class ReferenceControl extends HBox implements Control {
 	@Override
 	public void resetValidation() {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void dispose() {
+		modelElement.eAdapters().remove(modelElementAdapter);		
 	}
 
 }

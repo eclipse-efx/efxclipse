@@ -14,6 +14,8 @@ public interface Control {
 	void handleValidation(Diagnostic diagnostic);
 	
 	void resetValidation();
+	
+	void dispose();
 
 	interface Factory {
 		

@@ -9,6 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -21,24 +23,25 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
 
-@SuppressWarnings("restriction")
 public class TextFieldControl extends VBox implements Control {
 
-	private TextField textField;
-	private ValidationMessage validationMessage = null;
+	protected final TextField textField;
+	protected final EObject modelElement;
+	protected final EStructuralFeature feature;
+	protected final EDataTypeValueHandler valueHandler;
+	protected final AdapterImpl modelElementAdapter;
 
 	public TextFieldControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 
-		final EObject modelElement = context.getModelElement();
+		modelElement = context.getModelElement();
 		final EditingDomain editingDomain = context.getEditingDomain();
 
-		final EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
+		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 
-		final EDataTypeValueHandler valueHandler = new EDataTypeValueHandler((EDataType) feature.getEType());
+		valueHandler = new EDataTypeValueHandler((EDataType) feature.getEType());
 
-		Object value = modelElement.eGet(feature);
-
-		textField = new TextField(valueHandler.toString(value));
+		textField = new TextField();
+		getChildren().add(textField);
 
 		textField.textProperty().addListener(new ChangeListener<String>() {
 
@@ -52,7 +55,6 @@ public class TextFieldControl extends VBox implements Control {
 					if (!styleClass.contains(IControlConstants.INVALID_CLASS))
 						styleClass.add(IControlConstants.INVALID_CLASS);
 				}
-				validationMessage.setMessage(message);
 			}
 
 		});
@@ -83,24 +85,43 @@ public class TextFieldControl extends VBox implements Control {
 
 		});
 
-		getChildren().add(textField);
+		modelElementAdapter = new AdapterImpl() {
 
-		validationMessage = new ValidationMessage();
-		getChildren().add(validationMessage);
+			@Override
+			public void notifyChanged(Notification msg) {
+				if (msg.getFeature() == feature)
+					update();
+			}
+
+		};
+
+		modelElement.eAdapters().add(modelElementAdapter);
+
+		update();
+	}
+
+	public void update() {
+		Object value = modelElement.eGet(feature);
+		textField.setText(valueHandler.toString(value));
 	}
 
 	@Override
 	public void handleValidation(Diagnostic diagnostic) {
-		if (diagnostic.getSeverity() != Diagnostic.OK) {
-			validationMessage.setMessage(diagnostic.getMessage());
-		} else {
-			resetValidation();
-		}
+		// if (diagnostic.getSeverity() != Diagnostic.OK) {
+		// validationMessage.setMessage(diagnostic.getMessage());
+		// } else {
+		// resetValidation();
+		// }
 	}
 
 	@Override
 	public void resetValidation() {
-		validationMessage.setMessage(null);
+		// validationMessage.setMessage(null);
+	}
+	
+	@Override
+	public void dispose() {
+		modelElement.eAdapters().remove(modelElementAdapter);
 	}
 
 	public static class Factory implements Control.Factory {
