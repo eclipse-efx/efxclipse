@@ -51,7 +51,7 @@ public class EmbeddedTextFieldControl extends AbstractEmbeddedControl {
 
 		});
 
-		focusedProperty().addListener(new ChangeListener<Boolean>() {
+		textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldFocused, Boolean newFocused) {
