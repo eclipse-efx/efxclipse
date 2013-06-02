@@ -266,7 +266,7 @@ public abstract class AdapterFactoryCellFactory {
 		}
 	}
 
-	Node graphicFromObject(Object object) {
+	public static Node graphicFromObject(Object object) {
 		if (object instanceof Node) {
 			return (Node) object;
 		} else if (object instanceof URL) {

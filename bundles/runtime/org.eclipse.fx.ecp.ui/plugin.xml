@@ -105,7 +105,27 @@
          <staticTest
                priority="1"
                singleValue="false"
+               supportedClassType="java.math.BigDecimal">
+         </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="false"
+               supportedClassType="java.math.BigInteger">
+         </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="false"
                supportedClassType="java.lang.Boolean">
+         </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="false"
+               supportedClassType="java.lang.Character">
+         </staticTest>   
+         <staticTest
+               priority="1"
+               singleValue="false"
+               supportedClassType="java.util.Date">
          </staticTest>
          <staticTest
                priority="1"
@@ -115,12 +135,42 @@
          <staticTest
                priority="1"
                singleValue="false"
-               supportedClassType="java.lang.Object">
+               supportedClassType="java.lang.Enum">
+         </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="false"
+               supportedClassType="java.lang.Float">
+         </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="false"
+               supportedClassType="java.lang.Integer">
+         </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="java.lang.Long">
+         </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="false"
+               supportedClassType="java.lang.Short">
+         </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="false"
+               supportedClassType="java.lang.String">
          </staticTest>
          <staticTest
                priority="1"
                singleValue="false"
                supportedClassType="org.eclipse.emf.ecore.EObject">
+         </staticTest>
+         <staticTest
+               priority="1"
+               singleValue="false"
+               supportedClassType="java.lang.Integer">
          </staticTest>
       </factory>
       <factory

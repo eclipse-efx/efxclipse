@@ -18,7 +18,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecp.core.ECPProject;
-import org.eclipse.emf.ecp.core.ECPProvider;
 import org.eclipse.emf.ecp.core.util.observer.ECPProvidersChangedObserver;
 import org.eclipse.emf.ecp.spi.core.InternalProvider;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -103,6 +102,7 @@ public class DummyWorkspace {
 		tournament.getMatchups().add(matchup);
 
 		League league = BowlingFactory.eINSTANCE.createLeague();
+		project1.getResource().getContents().add(league);
 		league.setName("Premier League");
 
 		hans = BowlingFactory.eINSTANCE.createPlayer();
@@ -117,7 +117,7 @@ public class DummyWorkspace {
 		hans.getPlayedTournamentTypes().add(TournamentType.PRO);
 		hans.setWinLossRatio(new BigDecimal(0.6));
 		hans.setGender(Gender.MALE);
-		tournament.getPlayers().add(hans);
+		
 		league.getPlayers().add(hans);
 
 		referee = BowlingFactory.eINSTANCE.createReferee();

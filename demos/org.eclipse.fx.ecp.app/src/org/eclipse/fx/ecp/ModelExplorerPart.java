@@ -11,6 +11,7 @@
 package org.eclipse.fx.ecp;
 
 import javafx.event.EventHandler;
+import javafx.scene.control.Cell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
@@ -21,29 +22,27 @@ import javax.inject.Inject;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.core.ECPProjectManager;
-import org.eclipse.emf.ecp.internal.core.util.ChildrenListImpl;
-import org.eclipse.emf.ecp.spi.core.InternalProvider;
-import org.eclipse.emf.ecp.spi.core.util.InternalChildrenList;
 import org.eclipse.fx.ecp.dummy.DummyProjectManager;
 import org.eclipse.fx.ecp.dummy.DummyWorkspace;
 import org.eclipse.fx.ecp.provider.ECPItemProviderAdapterFactory;
 import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
 import org.eclipse.fx.emf.edit.ui.AdapterFactoryTreeCellFactory;
 import org.eclipse.fx.emf.edit.ui.AdapterFactoryTreeItem;
+import org.eclipse.fx.emf.edit.ui.dnd.CellDragAdapter;
 
 @SuppressWarnings("restriction")
 public class ModelExplorerPart {
 
-	static class ModelElementTreeItem extends TreeItem<Object> {
-		ModelElementTreeItem(Object item, InternalProvider provider) {
-			super(item);
-			InternalChildrenList childrenList = new ChildrenListImpl(item);
-			provider.fillChildren(null, item, childrenList);
-			for (Object child : childrenList.getChildren()) {
-				getChildren().add(new ModelElementTreeItem(child, provider));
-			}
-		}
-	}
+//	static class ModelElementTreeItem extends TreeItem<Object> {
+//		ModelElementTreeItem(Object item, InternalProvider provider) {
+//			super(item);
+//			InternalChildrenList childrenList = new ChildrenListImpl(item);
+//			provider.fillChildren(null, item, childrenList);
+//			for (Object child : childrenList.getChildren()) {
+//				getChildren().add(new ModelElementTreeItem(child, provider));
+//			}
+//		}
+//	}
 
 	@Inject
 	public ModelExplorerPart(BorderPane parent, ECPProjectManager projectManager, final ECPModelElementOpener modelElementOpener) {
@@ -62,14 +61,7 @@ public class ModelExplorerPart {
 
 		AdapterFactoryTreeCellFactory cellFactory = new AdapterFactoryTreeCellFactory(adapterFactory);
 
-//		cellFactory.addCellCreationListener(new ICellCreationListener() {
-//
-//			@Override
-//			public void cellCreated(Cell<?> cell) {
-//				// TODO Auto-generated method stub
-//			}
-//
-//		});
+		cellFactory.addCellCreationListener(new CellDragAdapter());
 
 //		cellFactory.addCellUpdateListener(new ICellUpdateListener() {
 //

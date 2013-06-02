@@ -83,23 +83,23 @@ public class ModelEditorPart implements ModelElementEditor {
 		// VBox vBox = new VBox();
 		// vBox.getStyleClass().add("theForm");
 
-		Button button = new Button("validate");
-		button.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				Diagnostic diagnostic = Diagnostician.INSTANCE.validate(modelElementContext.getModelElement());
-				for (Diagnostic childDiagnostic : diagnostic.getChildren()) {
-					Control control = controls.get(childDiagnostic.getData().get(1));
-					if (control != null)
-						control.handleValidation(childDiagnostic);
-				}
-
-			}
-
-		});
-
-		gridPane.add(button, 1, 0);
+//		Button button = new Button("validate");
+//		button.setOnAction(new EventHandler<ActionEvent>() {
+//
+//			@Override
+//			public void handle(ActionEvent arg0) {
+//				Diagnostic diagnostic = Diagnostician.INSTANCE.validate(modelElementContext.getModelElement());
+//				for (Diagnostic childDiagnostic : diagnostic.getChildren()) {
+//					Control control = controls.get(childDiagnostic.getData().get(1));
+//					if (control != null)
+//						control.handleValidation(childDiagnostic);
+//				}
+//
+//			}
+//
+//		});
+//
+//		gridPane.add(button, 1, 0);
 
 		Registry registry = Control.Factory.Registry.INSTANCE;
 

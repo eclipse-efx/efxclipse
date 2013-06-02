@@ -1,13 +1,15 @@
 package org.eclipse.fx.ecp.ui.controls;
 
-import java.net.URL;
+import java.util.Collection;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
@@ -25,6 +27,8 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.Control;
 import org.eclipse.fx.ecp.ui.controls.multi.MarkButton;
+import org.eclipse.fx.emf.edit.ui.AdapterFactoryCellFactory;
+import org.eclipse.fx.emf.edit.ui.dnd.LocalTransfer;
 
 public class ReferenceControl extends HBox implements Control {
 
@@ -34,6 +38,7 @@ public class ReferenceControl extends HBox implements Control {
 	protected final AdapterImpl valueAdapter;
 	protected final Button unsetButton;
 	protected final EditingDomain editingDomain;
+	protected Command setCommand;
 	protected Command unsetCommand;
 	protected final AdapterImpl modelElementAdapter;
 
@@ -58,14 +63,47 @@ public class ReferenceControl extends HBox implements Control {
 
 		});
 
-		Button editButton = new MarkButton();
-		getChildren().add(editButton);
-		editButton.getStyleClass().addAll("set-reference-button", "left-pill");
+		hyperlink.setOnDragOver(new EventHandler<DragEvent>() {
+
+
+			@Override
+			public void handle(DragEvent event) {
+				Object object = LocalTransfer.INSTANCE.getObject();
+				
+				if(object instanceof Collection<?>) {
+					Collection<?> collection = (Collection<?>) object;
+					object = collection.size() == 1 ? collection.iterator().next() : null;
+				}
+				
+				Command command = SetCommand.create(editingDomain, modelElement, reference, object);
+				if(command.canExecute()) {
+					setCommand = command;
+					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+
+//					event.acceptTransferModes(TransferMode.LINK);
+//					event.acceptTransferModes(TransferMode.ANY);
+					System.out.println("accepted2");
+				} else {
+					setCommand = null;
+				}
+			}
+
+		});
+		
+		hyperlink.setOnDragDropped(new EventHandler<DragEvent>() {
+
+			@Override
+			public void handle(DragEvent arg0) {
+				if(setCommand != null)
+					editingDomain.getCommandStack().execute(setCommand);
+			}
+			
+		});
 
 		if (reference.isUnsettable()) {
 			unsetButton = new MarkButton();
 			getChildren().add(unsetButton);
-			unsetButton.getStyleClass().addAll("unset-reference-button", "right-pill");
+			unsetButton.getStyleClass().add("unset-reference-button");
 			Tooltip tooltip = new Tooltip("Remove reference");
 			unsetButton.setTooltip(tooltip);
 			unsetButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -93,7 +131,7 @@ public class ReferenceControl extends HBox implements Control {
 			}
 
 		};
-		
+
 		modelElement.eAdapters().add(modelElementAdapter);
 
 		valueAdapter = new AdapterImpl() {
@@ -130,9 +168,9 @@ public class ReferenceControl extends HBox implements Control {
 				String text = labelProvider.getText(value);
 				hyperlink.setText(text);
 
-				URL image = (URL) labelProvider.getImage(value);
-				ImageView imageView = new ImageView(image.toExternalForm());
-				hyperlink.setGraphic(imageView);
+				Object image = labelProvider.getImage(value);
+				Node graphic = AdapterFactoryCellFactory.graphicFromObject(image);
+				hyperlink.setGraphic(graphic);
 				return;
 			}
 
@@ -163,7 +201,7 @@ public class ReferenceControl extends HBox implements Control {
 
 	@Override
 	public void dispose() {
-		modelElement.eAdapters().remove(modelElementAdapter);		
+		modelElement.eAdapters().remove(modelElementAdapter);
 	}
 
 }

@@ -34,9 +34,11 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				Object item = eList.get(index);
-				if (item instanceof EObject)
-					context.openInNewContext((EObject) item);
+				if (eList.size() > index) {
+					Object item = eList.get(index);
+					if (item instanceof EObject)
+						context.openInNewContext((EObject) item);
+				}
 			}
 
 		});
@@ -59,30 +61,35 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 	protected void update() {
 		super.update();
 
-		final EObject newValue = (EObject) eList.get(index);
+		if (eList.size() > index) {
+			final EObject newValue = (EObject) eList.get(index);
 
-		if (newValue != value) {
-			if (value != null)
-				value.eAdapters().remove(valueAdapter);
-			newValue.eAdapters().add(valueAdapter);
-			value = newValue;
+			if (newValue != value) {
+				if (value != null)
+					value.eAdapters().remove(valueAdapter);
+				newValue.eAdapters().add(valueAdapter);
+				value = newValue;
+			}
+
+			ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+
+			// TODO check why this is not working:
+			// IItemLabelProvider labelProvider =
+			// ComposedAdapterFactory.Descriptor.Registry.INSTANCE//(IItemLabelProvider)
+			// EcoreUtil.getRegisteredAdapter(value, IItemLabelProvider.class);
+			IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(value, IItemLabelProvider.class);
+
+			String text = labelProvider.getText(value);
+
+			URL image = (URL) labelProvider.getImage(value);
+			ImageView imageView = new ImageView(image.toExternalForm());
+
+			hyperlink.setText(text);
+			hyperlink.setGraphic(imageView);
+		} else {
+			hyperlink.setText(null);
+			hyperlink.setGraphic(null);
 		}
-
-		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-
-		// TODO check why this is not working:
-		// IItemLabelProvider labelProvider =
-		// ComposedAdapterFactory.Descriptor.Registry.INSTANCE//(IItemLabelProvider)
-		// EcoreUtil.getRegisteredAdapter(value, IItemLabelProvider.class);
-		IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(value, IItemLabelProvider.class);
-
-		String text = labelProvider.getText(value);
-
-		URL image = (URL) labelProvider.getImage(value);
-		ImageView imageView = new ImageView(image.toExternalForm());
-
-		hyperlink.setText(text);
-		hyperlink.setGraphic(imageView);
 	}
 
 }

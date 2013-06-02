@@ -73,7 +73,11 @@ public class MultiControl extends VBox implements Control {
 		} else if (feature.getEType() instanceof EDataType) {
 			getChildren().add(new TextFieldAddControl(editingDomain, feature, modelElement));
 		} else if (feature.getEType() instanceof EObject) {
-			getChildren().add(new ReferenceAddControl(editingDomain, feature, modelElement));
+			EReference reference = (EReference) feature;
+			if (reference.isContainment())
+				getChildren().add(new ReferenceAddControl(editingDomain, reference, modelElement));
+			else
+				getChildren().add(new ReferenceDropControl(editingDomain, reference, modelElement));
 		}
 
 		modelElementAdapter = new AdapterImpl() {
@@ -112,7 +116,7 @@ public class MultiControl extends VBox implements Control {
 			}
 
 		};
-		
+
 		modelElement.eAdapters().add(modelElementAdapter);
 
 		validationMessage = new ValidationMessage();
