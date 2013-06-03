@@ -61,7 +61,6 @@ public class TextFieldAddControl extends HBox {
 				if (arg2) {
 					addTextField.requestFocus();
 					addTextField.selectAll();
-					System.out.println("seleted");
 				}
 			}
 
