@@ -29,6 +29,12 @@
   </children>
   <handlers xmi:id="_RAYmUKNJEeKrxsf5nYgbOA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.OpenModelElementHandler" command="_R-d_MKNJEeKrxsf5nYgbOA"/>
   <handlers xmi:id="_38AGYKNJEeKrxsf5nYgbOA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.ExitHandler" command="_zREoUKNJEeKrxsf5nYgbOA"/>
+  <handlers xmi:id="_oRThoMwmEeKbUKCytQcqrw" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.UndoHandler" command="_TIft8KddEeKa-q0jml1KAw"/>
+  <handlers xmi:id="_sHLYQMwsEeKbUKCytQcqrw" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.RedoHandler" command="_UvMmAKddEeKa-q0jml1KAw"/>
+  <bindingTables xmi:id="_x_4z4MwzEeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.bindingtable.0" bindingContext="_wIZNwJO_EeK1DMHyA2N3yA">
+    <bindings xmi:id="_w4Q9IMw2EeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.handlers.undo" keySequence="CTRL+Z" command="_TIft8KddEeKa-q0jml1KAw"/>
+    <bindings xmi:id="_q9qwgMxCEeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.handlers.redo" keySequence="CTRL+Y" command="_UvMmAKddEeKa-q0jml1KAw"/>
+  </bindingTables>
   <rootContext xmi:id="_wIZNwJO_EeK1DMHyA2N3yA" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
     <children xmi:id="_wIZ00JO_EeK1DMHyA2N3yA" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
     <children xmi:id="_wIZ00ZO_EeK1DMHyA2N3yA" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
