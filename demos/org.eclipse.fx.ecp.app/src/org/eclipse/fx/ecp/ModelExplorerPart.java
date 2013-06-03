@@ -10,15 +10,19 @@
  *******************************************************************************/
 package org.eclipse.fx.ecp;
 
+import java.net.URL;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Cell;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -26,11 +30,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 import javax.inject.Inject;
 
-import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EPackage.Registry;
@@ -46,20 +52,21 @@ import org.eclipse.fx.emf.edit.ui.AdapterFactoryCellFactory.ICellUpdateListener;
 import org.eclipse.fx.emf.edit.ui.AdapterFactoryTreeCellFactory;
 import org.eclipse.fx.emf.edit.ui.AdapterFactoryTreeItem;
 import org.eclipse.fx.emf.edit.ui.dnd.CellDragAdapter;
+import org.osgi.framework.Bundle;
 
 @SuppressWarnings("restriction")
 public class ModelExplorerPart {
 
-//	static class ModelElementTreeItem extends TreeItem<Object> {
-//		ModelElementTreeItem(Object item, InternalProvider provider) {
-//			super(item);
-//			InternalChildrenList childrenList = new ChildrenListImpl(item);
-//			provider.fillChildren(null, item, childrenList);
-//			for (Object child : childrenList.getChildren()) {
-//				getChildren().add(new ModelElementTreeItem(child, provider));
-//			}
-//		}
-//	}
+	// static class ModelElementTreeItem extends TreeItem<Object> {
+	// ModelElementTreeItem(Object item, InternalProvider provider) {
+	// super(item);
+	// InternalChildrenList childrenList = new ChildrenListImpl(item);
+	// provider.fillChildren(null, item, childrenList);
+	// for (Object child : childrenList.getChildren()) {
+	// getChildren().add(new ModelElementTreeItem(child, provider));
+	// }
+	// }
+	// }
 
 	@Inject
 	public ModelExplorerPart(BorderPane parent, ECPProjectManager projectManager, final ECPModelElementOpener modelElementOpener) {
@@ -71,7 +78,7 @@ public class ModelExplorerPart {
 		ECPItemProviderAdapterFactory adapterFactory = new ECPItemProviderAdapterFactory(DummyWorkspace.INSTANCE.getProvider());
 
 		projectManager = new DummyProjectManager();
-		
+
 		AdapterFactoryTreeItem rootItem = new AdapterFactoryTreeItem(projectManager, treeView, adapterFactory);
 
 		treeView.setRoot(rootItem);
@@ -89,55 +96,98 @@ public class ModelExplorerPart {
 				cell.setContextMenu(contextMenu);
 				MenuItem menuItem = new MenuItem("new element");
 				contextMenu.getItems().add(menuItem);
-				
+
 				menuItem.setOnAction(new EventHandler<ActionEvent>() {
-					
+
 					@Override
 					public void handle(ActionEvent arg0) {
 						Stage dialog = new Stage();
 						dialog.initModality(Modality.APPLICATION_MODAL);
-//						dialog.initStyle(StageStyle.UTILITY);
-						
+						// dialog.initStyle(StageStyle.UTILITY);
+
 						VBox group = new VBox();
-						
+
 						Text text = new Text(25, 25, "Hello World!");
 						group.getChildren().add(text);
-						
-						TreeView<Object> treeView2 = new TreeView<>();
+
+						TreeView<ENamedElement> treeView2 = new TreeView<>();
 						group.getChildren().add(treeView2);
 						treeView2.setShowRoot(false);
-						
+
 						ItemProvider rootItem = new ItemProvider();
-						
+
+						TreeItem<ENamedElement> root = new TreeItem<>();
+
+						Bundle bundle = Platform.getBundle("org.eclipse.fx.ecp.app");
+						URL entry = bundle.getEntry("icons/EPackage.gif");
+						Image image = new Image(entry.toExternalForm());
+
 						for (String nsURI : Registry.INSTANCE.keySet()) {
 							EPackage ePackage = Registry.INSTANCE.getEPackage(nsURI);
 							rootItem.getChildren().add(ePackage);
+							TreeItem<ENamedElement> ePackageItem = new TreeItem<ENamedElement>(ePackage, new ImageView(image));
+							root.getChildren().add(ePackageItem);
+
+							for (EClassifier eClassifier : ePackage.getEClassifiers()) {
+								ePackageItem.getChildren().add(new TreeItem<ENamedElement>(eClassifier));
+							}
+
 						}
-						
+
 						ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory();
 						composedAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-						composedAdapterFactory.addAdapterFactory(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
-						
-						treeView2.setRoot(new AdapterFactoryTreeItem(rootItem, treeView, composedAdapterFactory));
-						AdapterFactoryTreeCellFactory treeCellFactory = new AdapterFactoryTreeCellFactory(composedAdapterFactory);
-						treeView2.setCellFactory(treeCellFactory);
-						
+						composedAdapterFactory.addAdapterFactory(new ComposedAdapterFactory(
+								ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+
+						treeView2.setRoot(root);
+
+						treeView2.setCellFactory(new Callback<TreeView<ENamedElement>, TreeCell<ENamedElement>>() {
+
+							@Override
+							public TreeCell<ENamedElement> call(TreeView<ENamedElement> arg0) {
+								TreeCell<ENamedElement> treeCell = new TreeCell<ENamedElement>() {
+									@Override
+									protected void updateItem(ENamedElement namedElement, boolean empty) {
+										super.updateItem(namedElement, empty);
+
+										if (empty) {
+											setText(null);
+											setGraphic(null);
+										} else {
+											setText(namedElement.getName());
+											setGraphic(getTreeItem().getGraphic());
+										}
+									}
+								};
+
+								return treeCell;
+							}
+
+						});
+
+						// treeView2.setRoot(new AdapterFactoryTreeItem(rootItem, treeView,
+						// composedAdapterFactory));
+
+						// AdapterFactoryTreeCellFactory treeCellFactory = new
+						// AdapterFactoryTreeCellFactory(composedAdapterFactory);
+						// treeView2.setCellFactory(treeCellFactory);
+
 						Scene scene = new Scene(group);
 						dialog.setScene(scene);
 						dialog.showAndWait();
 					}
-					
+
 				});
-				
-//				contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
-//
-//					@Override
-//					public void handle(WindowEvent arg0) {
-//						// TODO Auto-generated method stub
-//
-//					}
-//
-//				});
+
+				// contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
+				//
+				// @Override
+				// public void handle(WindowEvent arg0) {
+				// // TODO Auto-generated method stub
+				//
+				// }
+				//
+				// });
 			}
 
 		});
@@ -152,7 +202,7 @@ public class ModelExplorerPart {
 						System.out.println("Double clicked");
 						TreeItem<Object> selectedItem = treeView.getSelectionModel().getSelectedItem();
 						Object modelElement = selectedItem.getValue();
-						if(modelElement instanceof EObject)
+						if (modelElement instanceof EObject)
 							modelElementOpener.openModelElement((EObject) modelElement);
 					}
 				}
