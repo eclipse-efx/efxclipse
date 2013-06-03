@@ -32,7 +32,7 @@ public class EnumControl extends ChoiceBox<Enumerator> implements Control {
 	public EnumControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		modelElement = context.getModelElement();
 		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
-		
+
 		final EditingDomain editingDomain = context.getEditingDomain();
 		final EClassifier type = feature.getEType();
 		final EEnum eEnum = (EEnum) type;
@@ -40,7 +40,7 @@ public class EnumControl extends ChoiceBox<Enumerator> implements Control {
 		final ArrayList<Enumerator> values = new ArrayList<Enumerator>();
 
 		getStyleClass().add("enum-choice-box");
-		
+
 		if (feature.isUnsettable())
 			values.add(null);
 
@@ -49,36 +49,45 @@ public class EnumControl extends ChoiceBox<Enumerator> implements Control {
 
 		getItems().addAll(values);
 
+		// select the current value before adding the listeners
+		update();
 
 		getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Enumerator>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Enumerator> observableValue, Enumerator oldValue, Enumerator newValue) {
-				Command command = SetCommand.create(editingDomain, modelElement, feature, newValue);
-				if (command.canExecute())
-					editingDomain.getCommandStack().execute(command);
+				final Object currentValue = modelElement.eGet(feature);
+				
+				// only execute the command if the value has changed
+				if (newValue != currentValue) {
+					final Command command = SetCommand.create(editingDomain, modelElement, feature, newValue);
+					if (command.canExecute())
+						editingDomain.getCommandStack().execute(command);
+				}
 			}
 
 		});
-		
+
 		modelElementAdapter = new AdapterImpl() {
-			
+
 			@Override
 			public void notifyChanged(Notification msg) {
-				if(msg.getFeature() == feature)
+				if (msg.getFeature() == feature)
 					update();
 			}
-			
-		};
-		
-		modelElement.eAdapters().add(modelElementAdapter);
 
-		update();
+		};
+
+		modelElement.eAdapters().add(modelElementAdapter);
 	}
 
 	public void update() {
-		Enumerator value = (Enumerator) modelElement.eGet(feature);
-		getSelectionModel().select(value);
+		final Enumerator selectedItem = getSelectionModel().getSelectedItem();
+		final Enumerator value = (Enumerator) modelElement.eGet(feature);
+		
+		// only update the selection if the value has changed
+		if (selectedItem != value)
+			getSelectionModel().select(value);
 	}
 
 	@Override
@@ -101,7 +110,7 @@ public class EnumControl extends ChoiceBox<Enumerator> implements Control {
 
 	@Override
 	public void dispose() {
-		modelElement.eAdapters().remove(modelElementAdapter);		
+		modelElement.eAdapters().remove(modelElementAdapter);
 	}
 
 }
