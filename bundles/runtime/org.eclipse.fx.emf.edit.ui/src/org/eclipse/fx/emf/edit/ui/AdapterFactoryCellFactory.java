@@ -271,6 +271,8 @@ public abstract class AdapterFactoryCellFactory {
 			return (Node) object;
 		} else if (object instanceof URL) {
 			return new ImageView(((URL) object).toExternalForm());
+		} else if (object instanceof URI) {
+			return new ImageView(((URI) object).toString());
 		} else if (object instanceof ComposedImage) {
 			Pane pane = new Pane();
 

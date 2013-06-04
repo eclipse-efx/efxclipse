@@ -14,7 +14,6 @@ import java.net.URL;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.Cell;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -40,10 +39,13 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EPackage.Registry;
+import org.eclipse.emf.ecp.core.ECPProject;
 import org.eclipse.emf.ecp.core.ECPProjectManager;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ItemProvider;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
+import org.eclipse.fx.ecp.dialogs.EClassSelectionDialog;
 import org.eclipse.fx.ecp.dummy.DummyProjectManager;
 import org.eclipse.fx.ecp.dummy.DummyWorkspace;
 import org.eclipse.fx.ecp.provider.ECPItemProviderAdapterFactory;
@@ -54,7 +56,6 @@ import org.eclipse.fx.emf.edit.ui.AdapterFactoryTreeItem;
 import org.eclipse.fx.emf.edit.ui.dnd.CellDragAdapter;
 import org.osgi.framework.Bundle;
 
-@SuppressWarnings("restriction")
 public class ModelExplorerPart {
 
 	// static class ModelElementTreeItem extends TreeItem<Object> {
@@ -69,7 +70,7 @@ public class ModelExplorerPart {
 	// }
 
 	@Inject
-	public ModelExplorerPart(BorderPane parent, ECPProjectManager projectManager, final ECPModelElementOpener modelElementOpener) {
+	public ModelExplorerPart(BorderPane parent, ECPProjectManager projectManager_, final ECPModelElementOpener modelElementOpener) {
 
 		final TreeView<Object> treeView = new TreeView<>();
 
@@ -77,7 +78,7 @@ public class ModelExplorerPart {
 
 		ECPItemProviderAdapterFactory adapterFactory = new ECPItemProviderAdapterFactory(DummyWorkspace.INSTANCE.getProvider());
 
-		projectManager = new DummyProjectManager();
+		final ECPProjectManager projectManager = new DummyProjectManager();
 
 		AdapterFactoryTreeItem rootItem = new AdapterFactoryTreeItem(projectManager, treeView, adapterFactory);
 
@@ -121,6 +122,11 @@ public class ModelExplorerPart {
 						Bundle bundle = Platform.getBundle("org.eclipse.fx.ecp.app");
 						URL entry = bundle.getEntry("icons/EPackage.gif");
 						Image image = new Image(entry.toExternalForm());
+						
+						ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory();
+						composedAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+						composedAdapterFactory.addAdapterFactory(new ComposedAdapterFactory(
+								ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
 
 						for (String nsURI : Registry.INSTANCE.keySet()) {
 							EPackage ePackage = Registry.INSTANCE.getEPackage(nsURI);
@@ -134,12 +140,7 @@ public class ModelExplorerPart {
 
 						}
 
-						ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory();
-						composedAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-						composedAdapterFactory.addAdapterFactory(new ComposedAdapterFactory(
-								ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
-
-						treeView2.setRoot(root);
+						treeView2.setRoot(ECPUtil.getConcreteClasses());
 
 						treeView2.setCellFactory(new Callback<TreeView<ENamedElement>, TreeCell<ENamedElement>>() {
 
@@ -172,9 +173,15 @@ public class ModelExplorerPart {
 						// AdapterFactoryTreeCellFactory(composedAdapterFactory);
 						// treeView2.setCellFactory(treeCellFactory);
 
-						Scene scene = new Scene(group);
-						dialog.setScene(scene);
-						dialog.showAndWait();
+//						Scene scene = new Scene(group);						
+//						dialog.setScene(scene);
+//						dialog.showAndWait();
+						
+						ECPProject proj = projectManager.getProjects().iterator().next();
+						EditingDomain editingDomain = DummyWorkspace.INSTANCE.getEditingDomain();
+						
+						EClassSelectionDialog diag = new EClassSelectionDialog(proj, editingDomain);
+						diag.showAndWait();
 					}
 
 				});

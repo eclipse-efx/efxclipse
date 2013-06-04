@@ -11,16 +11,16 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
+@SuppressWarnings("restriction")
 public class ECPItemProviderAdapterFactory implements AdapterFactory {
 
-	protected InternalProvider provider;
+	protected final InternalProvider provider;
 
 	/**
 	 * This keeps track of all the supported types checked by
 	 * {@link #isFactoryForType isFactoryForType}.
 	 */
-	protected Collection<Object> supportedTypes = new ArrayList<Object>();
-	protected ECPProviderItemProvider modelElementItemProvider;
+	protected final Collection<Object> supportedTypes = new ArrayList<Object>();
 
 	public ECPItemProviderAdapterFactory(InternalProvider provider) {
 		this.provider = provider;
@@ -36,7 +36,7 @@ public class ECPItemProviderAdapterFactory implements AdapterFactory {
 
 	@Override
 	public Adapter adapt(Notifier target, Object type) {
-		return adapt(target, type);
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

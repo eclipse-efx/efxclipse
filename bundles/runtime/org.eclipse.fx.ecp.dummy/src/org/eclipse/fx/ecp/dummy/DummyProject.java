@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecp.core.ECPProject;
 import org.eclipse.emf.ecp.core.ECPProvider;
@@ -104,8 +105,9 @@ public class DummyProject implements ECPProject {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public EList<Object> getContents() {
-		EList<? extends Object> contents = ECollections.unmodifiableEList(resource.getContents());
+		EList<?> contents = resource.getContents();
 		return (EList<Object>) contents;
 	}
 
