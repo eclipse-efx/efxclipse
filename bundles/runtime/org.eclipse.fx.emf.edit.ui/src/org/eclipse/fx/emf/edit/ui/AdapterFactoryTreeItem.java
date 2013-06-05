@@ -74,7 +74,7 @@ public class AdapterFactoryTreeItem extends TreeItem<Object> {
 	 * Recreates the child tree items using the {@link ITreeItemContentProvider} and restores the selection
 	 * and expanded state of the tree items.
 	 */
-	void updateChildren() {
+	public void updateChildren() {
 		ObservableList<TreeItem<Object>> childTreeItems = super.getChildren();
 
 		MultipleSelectionModel<?> selectionModel = CellUtil.getSelectionModel(view);

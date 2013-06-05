@@ -11,6 +11,7 @@
 package org.eclipse.fx.ecp;
 
 import java.net.URL;
+import java.util.Collection;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -41,6 +42,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EPackage.Registry;
 import org.eclipse.emf.ecp.core.ECPProject;
 import org.eclipse.emf.ecp.core.ECPProjectManager;
+import org.eclipse.emf.ecp.core.util.observer.ECPProjectContentChangedObserver;
+import org.eclipse.emf.ecp.internal.core.util.observer.ECPObserverBusImpl;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ItemProvider;
@@ -56,6 +59,7 @@ import org.eclipse.fx.emf.edit.ui.AdapterFactoryTreeItem;
 import org.eclipse.fx.emf.edit.ui.dnd.CellDragAdapter;
 import org.osgi.framework.Bundle;
 
+@SuppressWarnings("restriction")
 public class ModelExplorerPart {
 
 	// static class ModelElementTreeItem extends TreeItem<Object> {
@@ -80,7 +84,19 @@ public class ModelExplorerPart {
 
 		final ECPProjectManager projectManager = new DummyProjectManager();
 
-		AdapterFactoryTreeItem rootItem = new AdapterFactoryTreeItem(projectManager, treeView, adapterFactory);
+		final AdapterFactoryTreeItem rootItem = new AdapterFactoryTreeItem(projectManager, treeView, adapterFactory);
+		
+		ECPObserverBusImpl.getInstance().register(new ECPProjectContentChangedObserver() {
+			
+			@Override
+			public Collection<Object> objectsChanged(ECPProject project, Collection<Object> objects) {
+				for (TreeItem<Object> child : rootItem.getChildren()) {
+					((AdapterFactoryTreeItem)child).updateChildren();
+				}
+				return objects;
+			}
+			
+		});
 
 		treeView.setRoot(rootItem);
 

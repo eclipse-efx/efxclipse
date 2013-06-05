@@ -76,76 +76,84 @@ public class ModelEditorPart implements ModelElementEditor {
 		List<IItemPropertyDescriptor> propertyDescriptors = adapterFactoryItemDelegator.getPropertyDescriptors(modelElement);
 		// FormControlFactory controlFactory = new FormControlFactory();
 
-		GridPane gridPane = new GridPane();
-		gridPane.getStyleClass().add("theForm");
-		// gridPane.setStyle("-fx-alignment: top-left;");
+		if (propertyDescriptors != null) {
 
-		// VBox vBox = new VBox();
-		// vBox.getStyleClass().add("theForm");
+			GridPane gridPane = new GridPane();
+			gridPane.getStyleClass().add("theForm");
+			// gridPane.setStyle("-fx-alignment: top-left;");
 
-//		Button button = new Button("validate");
-//		button.setOnAction(new EventHandler<ActionEvent>() {
-//
-//			@Override
-//			public void handle(ActionEvent arg0) {
-//				Diagnostic diagnostic = Diagnostician.INSTANCE.validate(modelElementContext.getModelElement());
-//				for (Diagnostic childDiagnostic : diagnostic.getChildren()) {
-//					Control control = controls.get(childDiagnostic.getData().get(1));
-//					if (control != null)
-//						control.handleValidation(childDiagnostic);
-//				}
-//
-//			}
-//
-//		});
-//
-//		gridPane.add(button, 1, 0);
+			// VBox vBox = new VBox();
+			// vBox.getStyleClass().add("theForm");
 
-		Registry registry = Control.Factory.Registry.INSTANCE;
+			// Button button = new Button("validate");
+			// button.setOnAction(new EventHandler<ActionEvent>() {
+			//
+			// @Override
+			// public void handle(ActionEvent arg0) {
+			// Diagnostic diagnostic = Diagnostician.INSTANCE.validate(modelElementContext.getModelElement());
+			// for (Diagnostic childDiagnostic : diagnostic.getChildren()) {
+			// Control control = controls.get(childDiagnostic.getData().get(1));
+			// if (control != null)
+			// control.handleValidation(childDiagnostic);
+			// }
+			//
+			// }
+			//
+			// });
+			//
+			// gridPane.add(button, 1, 0);
 
-		int i = 1;
-		for (IItemPropertyDescriptor propertyDescriptor : propertyDescriptors) {
+			Registry registry = Control.Factory.Registry.INSTANCE;
 
-			String displayName = propertyDescriptor.getDisplayName(modelElement);
-			Label label = new Label(displayName);
-			label.getStyleClass().add("controlLabel");
-			// label.setStyle("-fx-alignment: top-left;");
-			GridPane.setValignment(label, VPos.TOP);
-			gridPane.add(label, 0, i);
-			
-			EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
+			int i = 1;
+			for (IItemPropertyDescriptor propertyDescriptor : propertyDescriptors) {
 
-			Factory factory = registry.getFactory(Node.class, propertyDescriptor, modelElement);
+				String displayName = propertyDescriptor.getDisplayName(modelElement);
+				Label label = new Label(displayName);
+				label.getStyleClass().add("controlLabel");
+				// label.setStyle("-fx-alignment: top-left;");
+				GridPane.setValignment(label, VPos.TOP);
+				gridPane.add(label, 0, i);
 
-			if (factory != null) {
-				Control control = factory.createControl(propertyDescriptor, modelElementContext);
-				Node node = (Node) control;
-				gridPane.add(node, 1, i);
-				GridPane.setHgrow(node, Priority.ALWAYS);
-				controls.put(feature, control);
+				EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
+
+				Factory factory = registry.getFactory(Node.class, propertyDescriptor, modelElement);
+
+				if (factory != null) {
+					Control control = factory.createControl(propertyDescriptor, modelElementContext);
+					Node node = (Node) control;
+					gridPane.add(node, 1, i);
+					GridPane.setHgrow(node, Priority.ALWAYS);
+					controls.put(feature, control);
+				}
+
+				i++;
 			}
-			
-			i++;
-		}
 
-		scrollPane.setContent(gridPane);
+			scrollPane.setContent(gridPane);
+		}
 		
 		modelElement.eAdapters().add(new AdapterImpl() {
-			
+
 			@Override
 			public void notifyChanged(Notification msg) {
 				update();
 			}
-			
+
 		});
+
 	}
 
 	public void update() {
 		IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(modelElement, IItemLabelProvider.class);
-		part.setLabel(labelProvider.getText(modelElement));
-		Object image = labelProvider.getImage(modelElement);
-		if (image instanceof URL)
-			part.setIconURI(((URL) image).toExternalForm());
+		if (labelProvider != null) {
+			part.setLabel(labelProvider.getText(modelElement));
+			Object image = labelProvider.getImage(modelElement);
+			if (image instanceof URL)
+				part.setIconURI(((URL) image).toExternalForm());
+		} else {
+			part.setLabel("Model Editor");
+		}
 	}
 
 }

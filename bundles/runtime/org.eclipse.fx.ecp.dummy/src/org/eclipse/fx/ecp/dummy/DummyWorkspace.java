@@ -14,11 +14,15 @@ import java.util.Map;
 
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecp.core.ECPProject;
+import org.eclipse.emf.ecp.core.util.observer.ECPProjectContentChangedObserver;
 import org.eclipse.emf.ecp.core.util.observer.ECPProvidersChangedObserver;
+import org.eclipse.emf.ecp.internal.core.util.observer.ECPObserverBusImpl;
 import org.eclipse.emf.ecp.spi.core.InternalProvider;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -35,6 +39,7 @@ import org.eclipse.emf.emfstore.bowling.Tournament;
 import org.eclipse.emf.emfstore.bowling.TournamentType;
 import org.eclipse.emf.emfstore.bowling.provider.BowlingItemProviderAdapterFactory;
 
+@SuppressWarnings("restriction")
 public class DummyWorkspace {
 
 	public static DummyWorkspace INSTANCE = new DummyWorkspace();
@@ -126,11 +131,22 @@ public class DummyWorkspace {
 	}
 
 	DummyProject createProject(String projectName) {
-		DummyProject project = new DummyProject();
-		Resource resource = editingDomain.getResourceSet().createResource(URI.createURI(""));
+		final DummyProject project = new DummyProject();
+		final Resource resource = editingDomain.getResourceSet().createResource(URI.createURI(""));
 		project.setName(projectName);
 		project.setResource(resource);
 		projects.put(projectName, project);
+		
+		resource.eAdapters().add(new AdapterImpl() {
+			
+			@Override
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			public void notifyChanged(Notification msg) {
+				ECPObserverBusImpl.getInstance().notify(ECPProjectContentChangedObserver.class).objectsChanged(project, (Collection)resource.getContents());
+			}
+			
+		});
+		
 		return project;
 	}
 
