@@ -65,7 +65,7 @@ RobotTask {
 				}
 				requiredBundles = {
 					"org.eclipse.fx.javafx",
-					"org.eclipse.fx.ui.application",
+					"org.eclipse.fx.osgi.util",
 					"org.eclipse.fx.core.databinding",
 					"org.eclipse.fx.ui.databinding",
 					"org.eclipse.fx.ui.di" excluded-if "javascript" /# !EclipseDI; #/,
@@ -212,9 +212,7 @@ RobotTask {
 					"${BundleProject_bundleId}",
 					fragment "org.eclipse.fx.osgi",
 					"org.eclipse.fx.javafx",
-					"org.eclipse.fx.ui.application",
 					"org.eclipse.fx.core.databinding",
-					"org.eclipse.fx.ui.application",
 					"org.eclipse.fx.ui.di" excluded-if "javascript" /# !EclipseDI; #/,
 					"org.eclipse.fx.core" excluded-if "javascript" /# !EclipseDI; #/,
 					"org.eclipse.fx.osgi.util" excluded-if "javascript" /# !EclipseDI; #/,
@@ -323,7 +321,7 @@ RobotTask {
 					"org.jemmy.timing" 				[3.0.0,]
 				}
 				requiredBundles = {
-					"org.junit4",
+					"org.junit",
 					"org.eclipse.fx.jemmy"
 				}
 			}
@@ -475,7 +473,7 @@ RobotTask {
 						## modules
 						STRING "modules" default "../${BundleProject_projectName};../${BundleProject_projectName}.feature;../${BundleProject_projectName}.product;../${BundleProject_projectName}.jemmy",
 						## repos
-						STRING "repos" default "juno@http://download.eclipse.org/releases/juno;efxclipse-repo@releases/juno;efxclipse-repo@http://www.efxclipse.org/p2-repos/releases/latest"
+						STRING "repos" default "efxclipse-repo@http://downloads.efxclipse.org/p2-repos/runtime/releases/latest"
 					},
 				DynamicFile "build.xml" 
 					generated-from "bundleclass://org.eclipse.fx.ide.pde.ui.e4/org.eclipse.fx.ide.pde.ui.e4.project.template.NativeLaunchGenerator" by "java"
