@@ -7,6 +7,9 @@
           <menus xmi:id="_m34iIKwdEeKOacGlVFA1Xw" elementId="org.eclipse.fx.ecp.app.menu.0" label="Bla">
             <children xsi:type="menu:HandledMenuItem" xmi:id="_vPnCEKwdEeKOacGlVFA1Xw" elementId="org.eclipse.fx.ecp.app.handledmenuitem.0" label="Blub" command="_zREoUKNJEeKrxsf5nYgbOA"/>
           </menus>
+          <menus xsi:type="menu:PopupMenu" xmi:id="_B-mKwM6OEeKID4BbLaKRLg" elementId="org.eclipse.fx.ecp.app.modelexplorer.popupmenu">
+            <children xsi:type="menu:HandledMenuItem" xmi:id="_IwhxkM6OEeKID4BbLaKRLg" elementId="org.eclipse.fx.ecp.app.handledmenuitem.1" label="New Model Element" command="_WD7E0M6PEeKID4BbLaKRLg"/>
+          </menus>
         </children>
       </children>
       <children xsi:type="basic:PartSashContainer" xmi:id="_pMxkkJRxEeK6bNllnvSnhw" elementId="org.eclipse.fx.ecp.app.partsashcontainer.1">
@@ -31,6 +34,7 @@
   <handlers xmi:id="_38AGYKNJEeKrxsf5nYgbOA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.ExitHandler" command="_zREoUKNJEeKrxsf5nYgbOA"/>
   <handlers xmi:id="_oRThoMwmEeKbUKCytQcqrw" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.UndoHandler" command="_TIft8KddEeKa-q0jml1KAw"/>
   <handlers xmi:id="_sHLYQMwsEeKbUKCytQcqrw" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.RedoHandler" command="_UvMmAKddEeKa-q0jml1KAw"/>
+  <handlers xmi:id="_e7SHEM6PEeKID4BbLaKRLg" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.NewModelElementHandler" command="_WD7E0M6PEeKID4BbLaKRLg"/>
   <bindingTables xmi:id="_x_4z4MwzEeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.bindingtable.0" bindingContext="_wIZNwJO_EeK1DMHyA2N3yA">
     <bindings xmi:id="_w4Q9IMw2EeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.handlers.undo" keySequence="CTRL+Z" command="_TIft8KddEeKa-q0jml1KAw"/>
     <bindings xmi:id="_q9qwgMxCEeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.handlers.redo" keySequence="CTRL+Y" command="_UvMmAKddEeKa-q0jml1KAw"/>
@@ -45,6 +49,7 @@
   <commands xmi:id="_zREoUKNJEeKrxsf5nYgbOA" elementId="org.eclipse.fx.ecp.app.commands.exit" commandName="Exit"/>
   <commands xmi:id="_TIft8KddEeKa-q0jml1KAw" elementId="org.eclipse.fx.ecp.app.commands.undo" commandName="Undo"/>
   <commands xmi:id="_UvMmAKddEeKa-q0jml1KAw" elementId="org.eclipse.fx.ecp.app.commands.redo" commandName="Redo"/>
+  <commands xmi:id="_WD7E0M6PEeKID4BbLaKRLg" elementId="org.eclipse.fx.ecp.app.commands.newModelElement" commandName="New Model Element"/>
   <addons xmi:id="_XGB3wPZlEd-XstlTZ6nTXg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_XGB3wPZlEd-XstlTZ6nTXh" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_ViIQQBnuEeKroetix5qA3A" elementId="org.eclipse.fx.demo.contacts.addon.0" contributionURI="bundleclass://org.eclipse.fx.ui.keybindings.e4/org.eclipse.fx.ui.keybindings.e4.BindingServiceAddon"/>

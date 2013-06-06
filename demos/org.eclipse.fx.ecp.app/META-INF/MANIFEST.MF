@@ -26,7 +26,8 @@ Require-Bundle: org.eclipse.e4.ui.model.workbench,
  org.eclipse.fx.ui.theme;bundle-version="0.8.1",
  org.eclipse.fx.ecp.dummy;bundle-version="1.0.0",
  org.eclipse.fx.ecp.ui;bundle-version="1.0.0",
- org.eclipse.emf.ecp.edit;bundle-version="1.0.0"
+ org.eclipse.emf.ecp.edit;bundle-version="1.0.0",
+ org.eclipse.fx.ui.services;bundle-version="0.8.1"
 Import-Package: javax.inject;version="1.0.0",
  javax.annotation;version="1.0.0",
  javafx.animation;version="2.0.0",

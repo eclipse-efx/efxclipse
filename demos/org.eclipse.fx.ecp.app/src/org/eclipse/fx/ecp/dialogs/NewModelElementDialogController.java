@@ -2,11 +2,14 @@ package org.eclipse.fx.ecp.dialogs;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -29,13 +32,11 @@ public class NewModelElementDialogController {
 
 	Stage stage;
 	ECPProject project;
-	EditingDomain editingDomain;
 
-	public NewModelElementDialogController(Stage stage, ECPProject project, EditingDomain editingDomain) {
+	public NewModelElementDialogController(Stage stage, ECPProject project) {
 		super();
 		this.stage = stage;
 		this.project = project;
-		this.editingDomain = editingDomain;
 	}
 
 	@FXML
@@ -77,6 +78,14 @@ public class NewModelElementDialogController {
 			}
 
 		});
+
+		treeView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2)
+					doCreate();
+			}
+		});
 	}
 
 	@FXML
@@ -86,14 +95,22 @@ public class NewModelElementDialogController {
 
 	@FXML
 	public void doCreate() {
+		
 		TreeItem<ENamedElement> selectedItem = treeView.getSelectionModel().getSelectedItem();
-		EClass eClass = (EClass) selectedItem.getValue();
-		EPackage ePackage = eClass.getEPackage();
-		EObject instance = ePackage.getEFactoryInstance().create(eClass);
-		AddCommand command = new AddCommand(editingDomain, project.getContents(), instance);
-		if(command.canExecute())
-			editingDomain.getCommandStack().execute(command);
-		stage.close();
+		
+		if (selectedItem != null && selectedItem.getValue() instanceof EClass) {
+			EClass eClass = (EClass) selectedItem.getValue();
+			EPackage ePackage = eClass.getEPackage();
+			EObject instance = ePackage.getEFactoryInstance().create(eClass);
+			EditingDomain editingDomain = project.getEditingDomain();
+			
+			AddCommand command = new AddCommand(editingDomain, project.getContents(), instance);
+			if (command.canExecute())
+				editingDomain.getCommandStack().execute(command);
+			
+			stage.close();
+		}
+		
 	}
 
 }

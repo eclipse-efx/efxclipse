@@ -89,7 +89,7 @@ public class DummyProject implements ECPProject {
 
 	@Override
 	public EditingDomain getEditingDomain() {
-		return workspace.getEditingDomain();
+		return DummyWorkspace.INSTANCE.getEditingDomain();
 	}
 
 
