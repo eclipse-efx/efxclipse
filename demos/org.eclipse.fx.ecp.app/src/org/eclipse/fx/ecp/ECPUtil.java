@@ -1,6 +1,8 @@
 package org.eclipse.fx.ecp;
 
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
@@ -33,15 +35,38 @@ public class ECPUtil {
 		PACKAGE_IMAGE_URL = entry.toExternalForm();
 	}
 
+	/**
+	 * Helper class to sort the entries for the EClass selection alphabetically
+	 */
+	public static class ENamedElementTreeItemComparator implements Comparator<TreeItem<ENamedElement>> {
+
+		@Override
+		public int compare(TreeItem<ENamedElement> o1, TreeItem<ENamedElement> o2) {
+			ENamedElement value1 = o1.getValue();
+			ENamedElement value2 = o2.getValue();
+
+			if (value1 instanceof EPackage && !(value2 instanceof EPackage))
+				return -1;
+			else if (!(value1 instanceof EPackage) && value2 instanceof EPackage)
+				return +1;
+			else {
+				String name1 = value1.getName();
+				String name2 = value2.getName();
+				return name1.compareTo(name2);
+			}
+		}
+	}
+
 	public static TreeItem<ENamedElement> getConcreteClasses() {
 
 		TreeItem<ENamedElement> root = new TreeItem<>();
 
 		for (String nsURI : Registry.INSTANCE.keySet()) {
 			EPackage ePackage = Registry.INSTANCE.getEPackage(nsURI);
-
 			addPackage(root, ePackage);
 		}
+
+		Collections.sort(root.getChildren(), new ENamedElementTreeItemComparator());
 
 		return root;
 	}
@@ -54,18 +79,22 @@ public class ECPUtil {
 			addPackage(ePackageItem, eSubpackage);
 
 		addConcreteClasses(ePackage, ePackageItem);
+		
+		Collections.sort(ePackageItem.getChildren(), new ENamedElementTreeItemComparator());
 	}
 
 	private static void addConcreteClasses(EPackage ePackage, TreeItem<ENamedElement> ePackageItem) {
+
 		for (EClassifier eClassifier : ePackage.getEClassifiers()) {
 			if (eClassifier instanceof EClass) {
 				EClass eClass = (EClass) eClassifier;
 				if (!eClass.isAbstract() && !eClass.isInterface()) {
 					Node graphic = getIconForEClass(eClass);
-					ePackageItem.getChildren().add(new TreeItem<ENamedElement>(eClassifier, graphic));
+					ePackageItem.getChildren().add(new TreeItem<ENamedElement>(eClass, graphic));
 				}
 			}
 		}
+
 	}
 
 	private static Node getIconForEClass(EClass eClass) {
