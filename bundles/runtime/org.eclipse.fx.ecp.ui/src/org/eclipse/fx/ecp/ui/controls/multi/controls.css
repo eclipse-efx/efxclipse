@@ -1,0 +1,15 @@
+.plus {
+    -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
+    -fx-background-insets: 0 0 -1 0, 0;
+    -fx-shape: "M -4 1 v -1 h 4 v -4 h 2 v 4 h 4 v 2 h -4 v 4 h -2 v -4 h -4 z";
+    -fx-pref-height: 10;
+    -fx-pref-width: 10;
+}
+
+.enum-add-control {
+	-fx-min-height: 30;
+}
+
+.enum-add-control .choice-box {
+	-fx-min-width: 200;
+}

@@ -6,10 +6,10 @@ import javafx.scene.layout.StackPane;
 
 public class MarkButton extends Button {
 	
-	{
-		setMaxHeight(Double.MAX_VALUE);
+	public MarkButton(String styleClass) {
+		super();
 		StackPane upMark = new StackPane();
-		upMark.getStyleClass().add("mark");
+		upMark.getStyleClass().add(styleClass);
 		setGraphic(new Group(upMark));
 	}
 

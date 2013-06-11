@@ -10,11 +10,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.edit.util.ECPApplicableTester;
 import org.eclipse.emf.ecp.edit.util.ECPStaticApplicableTester;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.Control;
-import org.eclipse.fx.ecp.ui.Control.Factory;
+import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.ECPControl.Factory;
 import org.osgi.framework.Bundle;
 
-public class ControlFactoryRegistryImpl implements Control.Factory.Registry {
+public class ControlFactoryRegistryImpl implements ECPControl.Factory.Registry {
 
 	private static final String CONTROL_EXTENSION = "org.eclipse.fx.ecp.ui.controls";
 
@@ -52,7 +52,7 @@ public class ControlFactoryRegistryImpl implements Control.Factory.Registry {
 		for (IConfigurationElement configurationElement : configurationElements) {
 			try {
 				String id = configurationElement.getAttribute(CONTROL_ID);
-				Control.Factory factory = (Control.Factory) configurationElement
+				ECPControl.Factory factory = (ECPControl.Factory) configurationElement
 					.createExecutableExtension(CLASS_ATTRIBUTE);
 				boolean showLabel = Boolean.parseBoolean(configurationElement.getAttribute(LABEL_ATTRIBUTE));
 				String controlClass = configurationElement.getAttribute(CONTROL_CLASS_ATTRIBUTE);

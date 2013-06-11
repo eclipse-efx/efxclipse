@@ -15,9 +15,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.ui.workbench;bundle-version="0.0.0",
  org.eclipse.fx.emf.databinding;bundle-version="0.8.1"
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.fx.ecp.ui
+Export-Package: org.eclipse.fx.ecp.ui,
+ org.eclipse.fx.ecp.ui.controls
 Service-Component: OSGI-INF/modelElementOpener.xml
-Import-Package: javafx.animation;version="2.2.0",
+Import-Package: com.sun.javafx.scene.control.behavior;version="2.2.0",
+ javafx.animation;version="2.2.0",
  javafx.application;version="2.2.0",
  javafx.beans;version="2.2.0",
  javafx.beans.binding;version="2.2.0",

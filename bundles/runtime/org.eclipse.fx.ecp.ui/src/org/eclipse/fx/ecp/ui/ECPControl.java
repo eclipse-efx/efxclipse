@@ -9,7 +9,7 @@ import org.eclipse.emf.ecp.edit.util.ECPApplicableTester;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.impl.ControlFactoryRegistryImpl;
 
-public interface Control {
+public interface ECPControl {
 	
 	void handleValidation(Diagnostic diagnostic);
 	
@@ -19,7 +19,7 @@ public interface Control {
 
 	interface Factory {
 		
-		Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context);
+		ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context);
 		
 		interface Descriptor {
 			

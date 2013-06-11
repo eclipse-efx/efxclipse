@@ -1,1 +1,16 @@
 /* Main CSS-File */
+
+.scroll-pane,
+.split-pane,
+.list-view,
+.tree-view,
+.table-view, 
+.tree-table-view {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0, 0;
+    -fx-padding: 0;
+}
+
+.menu-bar {
+	-fx-use-system-menu-bar: true;
+}

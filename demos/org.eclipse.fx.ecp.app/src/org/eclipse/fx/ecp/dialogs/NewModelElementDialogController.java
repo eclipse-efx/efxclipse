@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecp.core.ECPProject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.fx.ecp.ECPUtil;
+import org.eclipse.fx.ecp.ui.ECPUtil;
 
 public class NewModelElementDialogController {
 

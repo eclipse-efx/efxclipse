@@ -21,15 +21,15 @@ import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.Control;
+import org.eclipse.fx.ecp.ui.ECPControl;
 
-public class EnumControl extends ChoiceBox<Enumerator> implements Control {
+public class EnumChoiceBox extends ChoiceBox<Enumerator> implements ECPControl {
 
 	protected final EObject modelElement;
 	protected final EStructuralFeature feature;
 	protected final AdapterImpl modelElementAdapter;
 
-	public EnumControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
+	public EnumChoiceBox(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		modelElement = context.getModelElement();
 		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 
@@ -48,6 +48,8 @@ public class EnumControl extends ChoiceBox<Enumerator> implements Control {
 			values.add(literal.getInstance());
 
 		getItems().addAll(values);
+		
+		getChildren();
 
 		// select the current value before adding the listeners
 		update();
@@ -98,12 +100,17 @@ public class EnumControl extends ChoiceBox<Enumerator> implements Control {
 	public void resetValidation() {
 
 	}
+	
+	@Override
+	protected String getUserAgentStylesheet() {
+		return getClass().getResource("ECPControls.css").toExternalForm();
+	}
 
-	public static class Factory implements Control.Factory {
+	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
-			return new EnumControl(itemPropertyDescriptor, context);
+		public ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+			return new EnumChoiceBox(itemPropertyDescriptor, context);
 		}
 
 	}

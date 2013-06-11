@@ -89,7 +89,7 @@
             
       </factory>
       <factory
-            class="org.eclipse.fx.ecp.ui.controls.EnumControl$Factory"
+            class="org.eclipse.fx.ecp.ui.controls.EnumChoiceBox$Factory"
             id="org.eclipse.fx.ecp.ui.controls.enumCombo"
             showLabel="true">
          <staticTest

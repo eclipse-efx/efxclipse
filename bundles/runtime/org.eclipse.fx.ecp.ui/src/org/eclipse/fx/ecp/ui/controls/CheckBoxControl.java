@@ -9,10 +9,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.Control;
+import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.emf.databinding.edit.EMFEditFXProperties;
 
-public class CheckBoxControl extends VBox implements Control {
+public class CheckBoxControl extends VBox implements ECPControl {
 
 	protected final Property<Boolean> property;
 	protected final CheckBox checkBox;
@@ -46,10 +46,10 @@ public class CheckBoxControl extends VBox implements Control {
 		checkBox.selectedProperty().unbindBidirectional(property);		
 	}
 
-	public static class Factory implements Control.Factory {
+	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new CheckBoxControl(itemPropertyDescriptor, context);
 		}
 

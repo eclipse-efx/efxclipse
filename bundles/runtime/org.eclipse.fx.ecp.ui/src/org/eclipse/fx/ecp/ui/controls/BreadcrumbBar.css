@@ -18,3 +18,24 @@
 .breadcrumb-item .body {
     -fx-fill: -fx-body-color; 
 }
+
+.breadcrumb-item .left-cap .outer-border {
+    -fx-background-color: -fx-outer-border;
+    -fx-shape: "m0 0 h 14 v 28 h -14 l 10 -14 z";
+    -fx-pref-height: 28;
+    -fx-pref-width: 14; 
+}
+
+.breadcrumb-item .left-cap .inner-border {
+    -fx-background-color: -fx-inner-border;
+    -fx-shape: "m0 0 h 14 v 28 h -14 l 10 -14 z";
+    -fx-pref-height: 28;
+    -fx-pref-width: 14; 
+}
+
+.breadcrumb-item .left-cap .body {
+    -fx-background-color: -fx-body-color;
+    -fx-shape: "m0 0 h 13 v 26 h -13 l 10 -13 z";
+    -fx-pref-height: 28;
+    -fx-pref-width: 14; 
+}

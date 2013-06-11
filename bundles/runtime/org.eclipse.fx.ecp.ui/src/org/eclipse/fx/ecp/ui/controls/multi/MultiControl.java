@@ -7,6 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
+import javafx.scene.control.SkinBase;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -30,33 +32,43 @@ import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.Control;
+import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.ECPUIPlugin;
 import org.eclipse.fx.ecp.ui.controls.ValidationMessage;
 import org.osgi.framework.Bundle;
 
 @SuppressWarnings("all")
-public class MultiControl extends VBox implements Control {
+public class MultiControl extends Control implements ECPControl {
 
-	private ValidationMessage validationMessage = null;
 	private EStructuralFeature feature;
 	private EObject modelElement;
 	private EditingDomain editingDomain;
 	private EList<Object> values;
 	private VBox controlsBox;
 	protected final AdapterImpl modelElementAdapter;
+	
+	class Skin extends SkinBase<MultiControl> {
+
+		protected Skin(MultiControl multiControl) {
+			super(multiControl);
+		}
+		
+	}
 
 	public MultiControl(final IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
+		setSkin(new Skin(this));
+		
 		modelElement = context.getModelElement();
 		editingDomain = context.getEditingDomain();
 		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 		values = (EList<Object>) modelElement.eGet(feature);
-
-		// TODO move to css
-		setSpacing(4);
+		
+		VBox vBox = new VBox();
+		getChildren().add(vBox);
+		vBox.setSpacing(4);
 
 		controlsBox = new VBox();
-		getChildren().add(controlsBox);
+		vBox.getChildren().add(controlsBox);
 
 		// TODO move to css
 		controlsBox.setSpacing(4);
@@ -65,19 +77,16 @@ public class MultiControl extends VBox implements Control {
 			controlsBox.getChildren().add(createEmbeddedControl(propertyDescriptor, context, i));
 		}
 
-		// if (!(feature.getEType() instanceof EDataType))
-		// return;
-
 		if (feature.getEType() instanceof EEnum) {
-			getChildren().add(new EnumAddControl(editingDomain, feature, modelElement));
+			vBox.getChildren().add(new EnumAddControl(editingDomain, feature, modelElement));
 		} else if (feature.getEType() instanceof EDataType) {
-			getChildren().add(new TextFieldAddControl(editingDomain, feature, modelElement));
+			vBox.getChildren().add(new TextFieldAddControl(editingDomain, feature, modelElement));
 		} else if (feature.getEType() instanceof EObject) {
 			EReference reference = (EReference) feature;
 			if (reference.isContainment())
-				getChildren().add(new ReferenceAddControl(editingDomain, reference, modelElement));
+				vBox.getChildren().add(new ReferenceAddControl(editingDomain, reference, modelElement));
 			else
-				getChildren().add(new ReferenceDropControl(editingDomain, reference, modelElement));
+				vBox.getChildren().add(new ReferenceDropControl(editingDomain, reference, modelElement));
 		}
 
 		modelElementAdapter = new AdapterImpl() {
@@ -118,9 +127,6 @@ public class MultiControl extends VBox implements Control {
 		};
 
 		modelElement.eAdapters().add(modelElementAdapter);
-
-		validationMessage = new ValidationMessage();
-		getChildren().add(validationMessage);
 	}
 
 	private AbstractEmbeddedControl createEmbeddedControl(final IItemPropertyDescriptor propertyDescriptor,
@@ -152,22 +158,18 @@ public class MultiControl extends VBox implements Control {
 
 	@Override
 	public void handleValidation(Diagnostic diagnostic) {
-		if (diagnostic.getSeverity() != Diagnostic.OK) {
-			validationMessage.setMessage(diagnostic.getMessage());
-		} else {
-			resetValidation();
-		}
+		
 	}
 
 	@Override
 	public void resetValidation() {
-		validationMessage.setMessage(null);
+
 	}
 
-	public static class Factory implements Control.Factory {
+	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new MultiControl(itemPropertyDescriptor, context);
 		}
 

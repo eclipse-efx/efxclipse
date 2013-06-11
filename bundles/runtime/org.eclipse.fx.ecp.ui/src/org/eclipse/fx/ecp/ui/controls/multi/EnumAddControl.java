@@ -6,9 +6,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
@@ -23,38 +25,42 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
-public class EnumAddControl extends HBox {
+public class EnumAddControl extends Control {
 
-	final private ChoiceBox<Enumerator> choiceBox;
-	final private Button addButton;
-	final private EditingDomain editingDomain;
-	final private EStructuralFeature feature;
-	final private EObject modelElement;
-	private Command addCommand;
+	final protected ChoiceBox<Enumerator> choiceBox;
+	final protected Button addButton;
+	final protected EditingDomain editingDomain;
+	final protected EStructuralFeature feature;
+	final protected EObject modelElement;
+	protected Command addCommand;
 
 	public EnumAddControl(final EditingDomain editingDomain, final EStructuralFeature feature, EObject modelElement) {
 		this.editingDomain = editingDomain;
 		this.feature = feature;
 		this.modelElement = modelElement;
-
 		EClassifier type = feature.getEType();
-
 		EEnum eEnum = (EEnum) type;
-
 		EList<EEnumLiteral> enumLiterals = eEnum.getELiterals();
 
-		choiceBox = new ChoiceBox<Enumerator>();
-		getChildren().add(choiceBox);
-		choiceBox.getStyleClass().add("left-pill");
-		HBox.setHgrow(choiceBox, Priority.ALWAYS);
+		getStyleClass().add("enum-add-control");
 		
+		final HBox hBox = new HBox();
+		getChildren().add(hBox);
+		hBox.setPrefWidth(Double.MAX_VALUE);
+
+		choiceBox = new ChoiceBox<Enumerator>();
+		hBox.getChildren().add(choiceBox);
+		choiceBox.getStyleClass().add("left-pill");
+		choiceBox.setPrefWidth(Double.MAX_VALUE);
+		HBox.setHgrow(choiceBox, Priority.ALWAYS);
+
 		for (EEnumLiteral literal : enumLiterals)
 			choiceBox.getItems().add(literal.getInstance());
 
 		SingleSelectionModel<Enumerator> selectionModel = choiceBox.getSelectionModel();
-		
+
 		selectionModel.select(0);
-		
+
 		selectionModel.selectedItemProperty().addListener(new ChangeListener<Enumerator>() {
 
 			@Override
@@ -64,8 +70,8 @@ public class EnumAddControl extends HBox {
 
 		});
 
-		addButton = new MarkButton();
-		getChildren().add(addButton);
+		addButton = new MarkButton("plus");
+		hBox.getChildren().add(addButton);
 		addButton.getStyleClass().addAll("right-pill", "add-enum-button");
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -88,6 +94,12 @@ public class EnumAddControl extends HBox {
 		});
 
 		updateAddButton();
+
+	}
+
+	@Override
+	protected String getUserAgentStylesheet() {
+		return ReferenceAddControl.class.getResource("controls.css").toExternalForm();
 	}
 
 	private void updateAddButton() {

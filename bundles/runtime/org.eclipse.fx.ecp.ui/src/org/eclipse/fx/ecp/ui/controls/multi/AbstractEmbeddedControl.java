@@ -2,11 +2,8 @@ package org.eclipse.fx.ecp.ui.controls.multi;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Polygon;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
@@ -29,6 +26,9 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 	protected EObject modelElement;
 
 	public AbstractEmbeddedControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context, int initialIndex) {
+		
+		getStyleClass().add("embedded-control");
+		
 		index = initialIndex;
 		modelElement = context.getModelElement();
 		editingDomain = context.getEditingDomain();
@@ -39,18 +39,12 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 
 		if (feature.isOrdered()) {
 
-			upButton = new Button();
+			upButton = new MarkButton("up-arrow");
 			getChildren().add(upButton);
-			
 			upButton.getStyleClass().addAll("up-button");
 			upButton.setMaxHeight(Double.MAX_VALUE);
 			
-			StackPane upMark = new StackPane();
-			upMark.getStyleClass().add("mark");
-			upButton.setGraphic(new Group(upMark));
-			
 			upButton.setOnAction(new EventHandler<ActionEvent>() {
-
 
 				@Override
 				public void handle(ActionEvent arg0) {
@@ -63,14 +57,9 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 
 			});
 
-			downButton = new Button();
+			downButton = new MarkButton("down-arrow");
 			getChildren().add(downButton);
-			downButton.setMaxHeight(Double.MAX_VALUE);
 			downButton.getStyleClass().addAll("down-button", "center-pill");
-			
-			StackPane downMark = new StackPane();
-			downMark.getStyleClass().add("mark");
-	        downButton.setGraphic(new Group(downMark));
 			
 			downButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -88,14 +77,9 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 
 		}
 
-		final Button deleteButton = new Button();
+		final Button deleteButton = new MarkButton("minus");
 		getChildren().add(deleteButton);
-		deleteButton.setMaxHeight(Double.MAX_VALUE);
 		deleteButton.getStyleClass().addAll("remove-button", "right-pill");
-		
-		StackPane removeMark = new StackPane();
-        removeMark.getStyleClass().add("mark");
-        deleteButton.setGraphic(new Group(removeMark));
 		
 		deleteButton.setOnAction(new EventHandler<ActionEvent>() {
 

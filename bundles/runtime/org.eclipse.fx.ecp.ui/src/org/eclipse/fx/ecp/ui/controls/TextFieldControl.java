@@ -21,9 +21,9 @@ import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.Control;
+import org.eclipse.fx.ecp.ui.ECPControl;
 
-public class TextFieldControl extends VBox implements Control {
+public class TextFieldControl extends VBox implements ECPControl {
 
 	protected final TextField textField;
 	protected final EObject modelElement;
@@ -124,10 +124,10 @@ public class TextFieldControl extends VBox implements Control {
 		modelElement.eAdapters().remove(modelElementAdapter);
 	}
 
-	public static class Factory implements Control.Factory {
+	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new TextFieldControl(itemPropertyDescriptor, context);
 		}
 

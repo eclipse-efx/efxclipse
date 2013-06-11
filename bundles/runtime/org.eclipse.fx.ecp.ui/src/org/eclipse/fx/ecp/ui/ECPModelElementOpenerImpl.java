@@ -3,8 +3,11 @@ package org.eclipse.fx.ecp.ui;
 import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.MContribution;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
 import org.eclipse.e4.ui.model.application.ui.basic.MInputPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -30,31 +33,54 @@ public class ECPModelElementOpenerImpl implements ECPModelElementOpener {
 
 	@Override
 	public void openModelElement(EObject modelElement) {
-		MPartStack stack = (MPartStack) modelService.find("org.eclipse.fx.ecp.app.partstacks.editors", application);
+		MUIElement uiElement = modelService.find("org.eclipse.fx.ecp.app.parts.modelEditor", application);
 
-		MInputPart part = MBasicFactory.INSTANCE.createInputPart();
-		part.setContributionURI("bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.ModelEditorPart");
-
-		// part.setIconURI("platform:/plugin/de.vogella.rcp.e4.todo/icons/sample.gif");
-		part.setCloseable(true);
-
-		stack.getChildren().add(part);
-		partService.showPart(part, PartState.ACTIVATE);
-
-		part.getContext().set(EObject.class, modelElement);
-
-		ModelElementEditor editor = (ModelElementEditor) part.getObject();
-
-		ECPControlContext modelElementContext = new DummyControlContext(modelElement) {
+		if (uiElement instanceof MPart) {
+			MPart part = (MPart) uiElement;
+			Object object = part.getObject();
 			
-			@Override
-			public void openInNewContext(EObject eObject) {
-				openModelElement(eObject);
+			if (object instanceof ModelElementEditor) {
+				
+				ECPControlContext modelElementContext = new DummyControlContext(modelElement) {
+					
+					@Override
+					public void openInNewContext(EObject eObject) {
+						openModelElement(eObject);
+					}
+					
+				};
+				
+				((ModelElementEditor) object).setInput(modelElementContext);
 			}
 			
-		};
+		}
 
-		editor.setInput(modelElementContext);
+		// MPartStack stack = (MPartStack) modelService.find("org.eclipse.fx.ecp.app.partstacks.editors",
+		// application);
+		//
+		// MInputPart part = MBasicFactory.INSTANCE.createInputPart();
+		// part.setContributionURI("bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.ModelEditorPart");
+		//
+		// // part.setIconURI("platform:/plugin/de.vogella.rcp.e4.todo/icons/sample.gif");
+		// part.setCloseable(true);
+		//
+		// stack.getChildren().add(part);
+		// partService.showPart(part, PartState.ACTIVATE);
+		//
+		// part.getContext().set(EObject.class, modelElement);
+		//
+		// ModelElementEditor editor = (ModelElementEditor) part.getObject();
+		//
+		// ECPControlContext modelElementContext = new DummyControlContext(modelElement) {
+		//
+		// @Override
+		// public void openInNewContext(EObject eObject) {
+		// openModelElement(eObject);
+		// }
+		//
+		// };
+		//
+		// editor.setInput(modelElementContext);
 	}
 
 }

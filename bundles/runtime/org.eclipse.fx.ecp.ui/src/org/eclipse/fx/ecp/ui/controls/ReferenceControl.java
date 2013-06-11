@@ -25,12 +25,12 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.Control;
+import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.controls.multi.MarkButton;
 import org.eclipse.fx.emf.edit.ui.AdapterFactoryCellFactory;
 import org.eclipse.fx.emf.edit.ui.dnd.LocalTransfer;
 
-public class ReferenceControl extends HBox implements Control {
+public class ReferenceControl extends HBox implements ECPControl {
 
 	protected final Hyperlink hyperlink;
 	protected final EObject modelElement;
@@ -101,7 +101,7 @@ public class ReferenceControl extends HBox implements Control {
 		});
 
 		if (reference.isUnsettable()) {
-			unsetButton = new MarkButton();
+			unsetButton = new MarkButton("plus");
 			getChildren().add(unsetButton);
 			unsetButton.getStyleClass().add("unset-reference-button");
 			Tooltip tooltip = new Tooltip("Remove reference");
@@ -180,10 +180,10 @@ public class ReferenceControl extends HBox implements Control {
 		hyperlink.setGraphic(null);
 	}
 
-	public static class Factory implements Control.Factory {
+	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public Control createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new ReferenceControl(itemPropertyDescriptor, context);
 		}
 

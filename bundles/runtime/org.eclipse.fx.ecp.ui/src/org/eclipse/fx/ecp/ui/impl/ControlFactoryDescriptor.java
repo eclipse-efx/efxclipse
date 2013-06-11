@@ -3,10 +3,10 @@ package org.eclipse.fx.ecp.ui.impl;
 import java.util.Set;
 
 import org.eclipse.emf.ecp.edit.util.ECPApplicableTester;
-import org.eclipse.fx.ecp.ui.Control;
-import org.eclipse.fx.ecp.ui.Control.Factory;
+import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.ECPControl.Factory;
 
-public class ControlFactoryDescriptor implements Control.Factory.Descriptor {
+public class ControlFactoryDescriptor implements ECPControl.Factory.Descriptor {
 
 	private final String id;
 	private final Factory factoryInstance;

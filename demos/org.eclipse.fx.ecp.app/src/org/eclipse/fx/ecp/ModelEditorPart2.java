@@ -12,98 +12,69 @@ package org.eclipse.fx.ecp;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
 import javax.inject.Inject;
-
-import jfxtras.labs.scene.control.BigDecimalField;
-import jfxtras.labs.scene.control.CalendarPicker;
-import jfxtras.labs.scene.control.CalendarTextField;
-import jfxtras.labs.scene.control.LocalDatePicker;
-import jfxtras.labs.scene.control.SlideLock;
-import jfxtras.labs.scene.control.gauge.Battery;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.DummyControlFactory;
 import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.ECPControl.Factory;
+import org.eclipse.fx.ecp.ui.ECPControl.Factory.Registry;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.controls.BreadcrumbBar;
+import org.eclipse.fx.ecp.ui.controls.DummyControl;
 import org.eclipse.fx.ecp.ui.controls.ModelElementForm;
 
-public class ModelEditorPart implements ModelElementEditor {
+public class ModelEditorPart2 implements ModelElementEditor {
 
 	private ScrollPane scrollPane;
 	private MPart part;
-	private Map<EStructuralFeature, ECPControl> controls = new HashMap<>();
 	private EObject modelElement;
 	private AdapterFactoryItemDelegator adapterFactoryItemDelegator;
 	private ComposedAdapterFactory adapterFactory;
 	private BorderPane parent;
 
 	@Inject
-	public ModelEditorPart(BorderPane parent, final MApplication application, MPart part) {
+	public ModelEditorPart2(BorderPane parent, final MApplication application, MPart part) {
 		this.part = part;
 		this.parent = parent;
 		scrollPane = new ScrollPane();
-		scrollPane.setFitToWidth(true);
-		scrollPane.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-
-		// DummyControl dummyControl = new DummyControl(null, null);
-		// dummyControl.setPrefWidth(Double.MAX_VALUE);
-		// parent.setTop(dummyControl);
-
 		parent.setCenter(scrollPane);
-
-//		VBox vBox = new VBox();
-//		parent.setBottom(vBox);
-//
-//		vBox.getChildren().add(new CalendarTextField());
-//		vBox.getChildren().add(new SlideLock());
+		scrollPane.setFitToWidth(true);
 	}
 
 	public void setInput(final ECPControlContext modelElementContext) {
 		modelElement = modelElementContext.getModelElement();
 		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		adapterFactoryItemDelegator = new AdapterFactoryItemDelegator(adapterFactory);
-
+		
 		parent.setTop(new BreadcrumbBar(modelElement));
-
 		scrollPane.setContent(new ModelElementForm(modelElementContext));
-
-		modelElement.eAdapters().add(new AdapterImpl() {
-
-			@Override
-			public void notifyChanged(Notification msg) {
-				update();
-			}
-
-		});
-
-		update();
-	}
-
-	public void update() {
-		IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(modelElement, IItemLabelProvider.class);
-		if (labelProvider != null) {
-			part.setLabel(labelProvider.getText(modelElement));
-			Object image = labelProvider.getImage(modelElement);
-			if (image instanceof URL)
-				part.setIconURI(((URL) image).toExternalForm());
-		} else {
-			part.setLabel("Model Editor");
-		}
 	}
 
 }

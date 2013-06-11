@@ -1,0 +1,55 @@
+.dummy-control .label {
+	/*-fx-background: red;
+	-fx-pref-height: 200;*/
+}
+
+
+.breadcrumbitem {
+    -fx-skin: "jfxtras.labs.internal.scene.control.skin.BreadcrumbItemSkin";
+}
+
+.breadcrumbitem-ui {
+	/*
+    -fx-fill: linear-gradient(gray 0%, #3c3c3c 100%);
+    -fx-background-color: -fx-fill;
+    */
+    -fx-fill: -fx-outer-border; 
+    -fx-text-fill: -fx-text-base-color;
+}
+
+.breadcrumbitem-ui-middle {
+    -fx-fill: -fx-inner-border; 
+}
+
+.breadcrumbitem-ui-top {
+    -fx-fill: -fx-body-color; 
+}
+
+.breadcrumbitem-text {
+    -fx-fill: transparent;
+    -fx-text-fill: -fx-text-base-color;
+}
+
+.breadcrumbitem-text:hover, .breadcrumbitem-text-hover {
+    -fx-text-fill: gray;
+}
+
+/*********** Bar ****************/
+
+.breadcrumbbar {
+    -fx-skin: "jfxtras.labs.internal.scene.control.skin.BreadcrumbBarSkin";
+}
+
+.breadcrumbbar-ui {
+	/*
+    -fx-background-color: linear-gradient(white 0%, gray 100%);
+    -fx-spacing: 0;
+    */
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; 
+    -fx-background-insets: 0, 1, 2;
+    -fx-text-fill: -fx-text-base-color;
+}
+
+.breadcrumbbar-home-icon {
+    -fx-background-image: url("home.png");
+}

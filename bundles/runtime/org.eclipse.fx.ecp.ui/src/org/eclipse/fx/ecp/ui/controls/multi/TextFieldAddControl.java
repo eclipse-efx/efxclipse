@@ -66,14 +66,10 @@ public class TextFieldAddControl extends HBox {
 
 		});
 
-		addButton = new Button();
+		addButton = new MarkButton("plus");
 		getChildren().add(addButton);
 		addButton.setMaxHeight(Double.MAX_VALUE);
 		addButton.getStyleClass().addAll("right-pill", "text-field-add-button");
-
-		StackPane addMark = new StackPane();
-		addMark.getStyleClass().add("mark");
-		addButton.setGraphic(new Group(addMark));
 
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 
