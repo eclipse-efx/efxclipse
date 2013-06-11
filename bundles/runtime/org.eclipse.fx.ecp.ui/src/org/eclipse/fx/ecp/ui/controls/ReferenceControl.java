@@ -101,7 +101,7 @@ public class ReferenceControl extends HBox implements ECPControl {
 		});
 
 		if (reference.isUnsettable()) {
-			unsetButton = new MarkButton("plus");
+			unsetButton = new MarkButton("cross");
 			getChildren().add(unsetButton);
 			unsetButton.getStyleClass().add("unset-reference-button");
 			Tooltip tooltip = new Tooltip("Remove reference");

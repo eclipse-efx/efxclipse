@@ -37,6 +37,14 @@
     -fx-pref-width: 8;
 }
 
+.unset-reference-button .cross {
+    -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
+    -fx-background-insets: 0 0 -1 0, 0;
+    -fx-shape: "M -1 0 L -3 -2, -2 -3, 0 -1, 2 -3, 3 -2, 1 0, 3 2, 2 3, 0 1, -2 3, -3 2 z";
+    -fx-pref-height: 8;
+    -fx-pref-width: 8;
+}
+
 .text-field-add-button, .reference-add-button, .unset-reference-button {
     -fx-pref-width: 28;
 }

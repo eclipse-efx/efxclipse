@@ -7,6 +7,9 @@ import javafx.scene.control.SkinBase;
 import javafx.scene.layout.HBox;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.fx.ecp.ui.controls.BreadcrumbItem.Position;
+
+import com.sun.xml.internal.bind.v2.runtime.BridgeContextImpl;
 
 public class BreadcrumbBar extends Control {
 
@@ -37,9 +40,19 @@ public class BreadcrumbBar extends Control {
 		EObject eObject = modelElement;
 
 		while (eObject != null) {
-			hBox.getChildren().add(0, new BreadcrumbItem(eObject));
+			BreadcrumbItem.Position position = Position.Middle;
+
+			if(eObject == modelElement && eObject.eContainer() == null)
+				position = Position.Only;
+			else if(eObject.eContainer() == null) 
+				position = Position.First;
+			else if(eObject == modelElement)
+				position = Position.Last;
+			
+			hBox.getChildren().add(0, new BreadcrumbItem(eObject, position));
 			eObject = eObject.eContainer();
 		}
+		
 	}
 
 	@Override
