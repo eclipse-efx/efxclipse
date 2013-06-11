@@ -53,3 +53,13 @@
 	-fx-background-radius: 3 0 0 3, 2 0 0 2;
 	-fx-max-width: 1000;
 }
+
+.model-element-form .control-label {
+	-fx-alignment: top-left;
+	-fx-min-height: 20.0;
+	-fx-padding: 5;
+	-fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}

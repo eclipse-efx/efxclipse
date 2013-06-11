@@ -59,7 +59,7 @@ public class ModelElementForm extends Control {
 
 					String displayName = propertyDescriptor.getDisplayName(modelElement);
 					Label label = new Label(displayName);
-					label.getStyleClass().add("controlLabel");
+					label.getStyleClass().add("control-label");
 					GridPane.setValignment(label, VPos.TOP);
 					gridPane.add(label, 0, i);
 
