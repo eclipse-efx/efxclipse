@@ -3,11 +3,12 @@
   <children xsi:type="basic:TrimmedWindow" xmi:id="_BinB4JPAEeK1DMHyA2N3yA" elementId="org.eclipse.fx.ecp.app.trimmedwindow.0" label="EMF Client Platform Demo" x="20" y="20" width="1500" height="1000">
     <children xsi:type="basic:PartSashContainer" xmi:id="_K08kYJPKEeK1DMHyA2N3yA" elementId="org.eclipse.fx.ecp.app.partsashcontainer.0" horizontal="true">
       <children xsi:type="basic:Part" xmi:id="_zTgCYJPAEeK1DMHyA2N3yA" elementId="org.eclipse.fx.ecp.app.part.0" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.ModelExplorerPart" label="Model Explorer">
-        <menus xmi:id="_m34iIKwdEeKOacGlVFA1Xw" elementId="org.eclipse.fx.ecp.app.menu.0" label="Bla">
-          <children xsi:type="menu:HandledMenuItem" xmi:id="_vPnCEKwdEeKOacGlVFA1Xw" elementId="org.eclipse.fx.ecp.app.handledmenuitem.0" label="Blub" command="_zREoUKNJEeKrxsf5nYgbOA"/>
-        </menus>
         <menus xsi:type="menu:PopupMenu" xmi:id="_B-mKwM6OEeKID4BbLaKRLg" elementId="org.eclipse.fx.ecp.app.modelexplorer.popupmenu">
           <children xsi:type="menu:HandledMenuItem" xmi:id="_IwhxkM6OEeKID4BbLaKRLg" elementId="org.eclipse.fx.ecp.app.handledmenuitem.1" label="New Model Element" command="_WD7E0M6PEeKID4BbLaKRLg"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_5GGvENLKEeK0tPbq2df1cA" elementId="" label="Cut" command="_G3JSgNLKEeK0tPbq2df1cA"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_8akwgNLKEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.handledmenuitem.3" label="Copy" command="_L5pjENLKEeK0tPbq2df1cA"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="__KJ8MNLKEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.handledmenuitem.4" label="Paste" command="_O4nOkNLKEeK0tPbq2df1cA"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_hhN-sNKZEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.handledmenuitem.2" label="Delete" command="_n5cFANKZEeK0tPbq2df1cA"/>
         </menus>
       </children>
       <children xsi:type="basic:Part" xmi:id="_i7NC8NH1EeKExcV1BFn7NA" elementId="org.eclipse.fx.ecp.app.parts.modelEditor" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.ModelEditorPart2" label="Model Editor"/>
@@ -18,8 +19,13 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_0g9PwJSLEeK6bNllnvSnhw" elementId="" label="Exit" command="_zREoUKNJEeKrxsf5nYgbOA"/>
       </children>
       <children xsi:type="menu:Menu" xmi:id="_fKWWQKddEeKa-q0jml1KAw" elementId="org.eclipse.fx.ecp.app.menu.0" label="Edit">
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_i3jn0KddEeKa-q0jml1KAw" elementId="" label="Undo" command="_TIft8KddEeKa-q0jml1KAw"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_i3jn0KddEeKa-q0jml1KAw" elementId="" label="Undo" mnemonics="" command="_TIft8KddEeKa-q0jml1KAw"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_myz8cKddEeKa-q0jml1KAw" elementId="" label="Redo" command="_UvMmAKddEeKa-q0jml1KAw"/>
+        <children xsi:type="menu:MenuSeparator" xmi:id="_zY2ooNLbEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.menuseparator.0"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_z0GsINLZEeK0tPbq2df1cA" elementId="" label="Cut" command="_G3JSgNLKEeK0tPbq2df1cA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_0gzaENLZEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.handledmenuitem.3" label="Copy" command="_L5pjENLKEeK0tPbq2df1cA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_1K_mkNLZEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.handledmenuitem.4" label="Paste" command="_O4nOkNLKEeK0tPbq2df1cA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_wLLywNLbEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.handledmenuitem.2" label="Delete" command="_n5cFANKZEeK0tPbq2df1cA"/>
       </children>
     </mainMenu>
   </children>
@@ -28,6 +34,10 @@
   <handlers xmi:id="_oRThoMwmEeKbUKCytQcqrw" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.UndoHandler" command="_TIft8KddEeKa-q0jml1KAw"/>
   <handlers xmi:id="_sHLYQMwsEeKbUKCytQcqrw" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.RedoHandler" command="_UvMmAKddEeKa-q0jml1KAw"/>
   <handlers xmi:id="_e7SHEM6PEeKID4BbLaKRLg" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.NewModelElementHandler" command="_WD7E0M6PEeKID4BbLaKRLg"/>
+  <handlers xmi:id="_YPkXsNKaEeK0tPbq2df1cA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.DeleteModelElementHandler" command="_n5cFANKZEeK0tPbq2df1cA"/>
+  <handlers xmi:id="_UlstMNLKEeK0tPbq2df1cA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.CutModelElementsHandler" command="_G3JSgNLKEeK0tPbq2df1cA"/>
+  <handlers xmi:id="_X9o5YNLKEeK0tPbq2df1cA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.CopyModelElementsHandler" command="_L5pjENLKEeK0tPbq2df1cA"/>
+  <handlers xmi:id="_bk57ANLKEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.handler.0" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.PasteModelElementsHandler" command="_O4nOkNLKEeK0tPbq2df1cA"/>
   <bindingTables xmi:id="_x_4z4MwzEeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.bindingtable.0" bindingContext="_wIZNwJO_EeK1DMHyA2N3yA">
     <bindings xmi:id="_w4Q9IMw2EeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.handlers.undo" keySequence="CTRL+Z" command="_TIft8KddEeKa-q0jml1KAw"/>
     <bindings xmi:id="_q9qwgMxCEeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.handlers.redo" keySequence="CTRL+Y" command="_UvMmAKddEeKa-q0jml1KAw"/>
@@ -43,6 +53,10 @@
   <commands xmi:id="_TIft8KddEeKa-q0jml1KAw" elementId="org.eclipse.fx.ecp.app.commands.undo" commandName="Undo"/>
   <commands xmi:id="_UvMmAKddEeKa-q0jml1KAw" elementId="org.eclipse.fx.ecp.app.commands.redo" commandName="Redo"/>
   <commands xmi:id="_WD7E0M6PEeKID4BbLaKRLg" elementId="org.eclipse.fx.ecp.app.commands.newModelElement" commandName="New Model Element"/>
+  <commands xmi:id="_G3JSgNLKEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.commands.cutModelElements" commandName="Cut Model Elements"/>
+  <commands xmi:id="_L5pjENLKEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.commands.copyModelElements" commandName="Copy Model Elements"/>
+  <commands xmi:id="_O4nOkNLKEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.commands.pasteModelElements" commandName="Paste Model Elements"/>
+  <commands xmi:id="_n5cFANKZEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.commands.deleteModelElements" commandName="Delete Model Elements"/>
   <addons xmi:id="_XGB3wPZlEd-XstlTZ6nTXg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_XGB3wPZlEd-XstlTZ6nTXh" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_ViIQQBnuEeKroetix5qA3A" elementId="org.eclipse.fx.demo.contacts.addon.0" contributionURI="bundleclass://org.eclipse.fx.ui.keybindings.e4/org.eclipse.fx.ui.keybindings.e4.BindingServiceAddon"/>

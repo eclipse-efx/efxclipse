@@ -60,6 +60,12 @@ public class DummyWorkspace {
 
 	private Referee referee;
 
+	private DummyProject project;
+	
+	public DummyProject getProject() {
+		return project;
+	}
+
 	public DummyWorkspace() {
 		// Create an adapter factory that yields item providers.
 		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -131,7 +137,7 @@ public class DummyWorkspace {
 	}
 
 	DummyProject createProject(String projectName) {
-		final DummyProject project = new DummyProject();
+		project = new DummyProject();
 		final Resource resource = editingDomain.getResourceSet().createResource(URI.createURI(""));
 		project.setName(projectName);
 		project.setResource(resource);

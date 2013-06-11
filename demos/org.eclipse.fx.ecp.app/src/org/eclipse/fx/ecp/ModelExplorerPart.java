@@ -11,9 +11,12 @@
 package org.eclipse.fx.ecp;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.Control;
 import javafx.scene.control.TreeItem;
@@ -80,6 +83,18 @@ public class ModelExplorerPart {
 				application.getContext().set(ECPProject.class,
 						(arg2 != null && arg2.getValue() instanceof ECPProject) ? (ECPProject) arg2.getValue() : null);
 
+			}
+
+		});
+
+		treeView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<TreeItem<Object>>() {
+
+			@Override
+			public void onChanged(ListChangeListener.Change<? extends TreeItem<Object>> arg0) {
+				Set<Object> selectedItems = new HashSet<>();
+				for (TreeItem<Object> treeItem : arg0.getList())
+					selectedItems.add(treeItem.getValue());
+				application.getContext().set("modelExplorer.selectedItems", selectedItems);
 			}
 
 		});
