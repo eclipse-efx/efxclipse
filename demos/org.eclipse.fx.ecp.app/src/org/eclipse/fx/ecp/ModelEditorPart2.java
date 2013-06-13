@@ -25,8 +25,6 @@ import javax.inject.Inject;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
-import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.controls.BreadcrumbBar;
 import org.eclipse.fx.ecp.ui.controls.ModelElementForm;
@@ -34,10 +32,7 @@ import org.eclipse.fx.ecp.ui.controls.ModelElementForm;
 public class ModelEditorPart2 implements ModelElementEditor {
 
 	private ScrollPane scrollPane;
-	private MPart part;
 	private ECPControlContext controlContext;
-	private AdapterFactoryItemDelegator adapterFactoryItemDelegator;
-	private ComposedAdapterFactory adapterFactory;
 	private BorderPane parent;
 	private final Stack<ECPControlContext> prevModelElements = new Stack<>();
 	private final Stack<ECPControlContext> nextModelElements = new Stack<>();
@@ -54,39 +49,28 @@ public class ModelEditorPart2 implements ModelElementEditor {
 
 	@Inject
 	public ModelEditorPart2(BorderPane parent, final MApplication application, MPart part) {
-		this.part = part;
 		this.parent = parent;
 		scrollPane = new ScrollPane();
 		parent.setCenter(scrollPane);
 		scrollPane.setFitToWidth(true);
-	}
-
-	public void setInput(final ECPControlContext modelElementContext) {
-		if (controlContext != null)
-			prevModelElements.push(controlContext);
-
-		controlContext = modelElementContext;
 		
-		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-		adapterFactoryItemDelegator = new AdapterFactoryItemDelegator(adapterFactory);
-
 		HBox hBox = new HBox();
-
+		
 		backButton = new Button();
 		hBox.getChildren().add(backButton);
 		backButton.getStyleClass().add("back-button");
 		ECPUtil.addMark(backButton, "arrow");
 		backButton.setOnAction(new EventHandler<ActionEvent>() {
-
+			
 			@Override
 			public void handle(ActionEvent arg0) {
 				nextModelElements.push(controlContext);
 				controlContext = prevModelElements.pop();
 				updateControls();
 			}
-
+			
 		});
-
+		
 		forwardButton = new Button();
 		hBox.getChildren().add(forwardButton);
 		forwardButton.getStyleClass().add("forward-button");
@@ -94,21 +78,30 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		// why is this not working?
 		// forwardButton.disabledProperty().isEqualTo(nextModelElements.emptyProperty());
 		forwardButton.setOnAction(new EventHandler<ActionEvent>() {
-
+			
 			@Override
 			public void handle(ActionEvent arg0) {
 				prevModelElements.push(controlContext);
 				controlContext = nextModelElements.pop();
 				updateControls();
 			}
-
+			
 		});
-
-		breadcrumbBar = new BreadcrumbBar(modelElementContext.getModelElement());
+		
+		breadcrumbBar = new BreadcrumbBar();
 		HBox.setHgrow(breadcrumbBar, Priority.ALWAYS);
 		hBox.getChildren().add(breadcrumbBar);
-
+		
 		parent.setTop(hBox);
+	}
+
+	public void setInput(final ECPControlContext modelElementContext) {
+		if (controlContext != null)
+			prevModelElements.push(controlContext);
+
+		controlContext = modelElementContext;
+
+		nextModelElements.clear();
 		
 		updateControls();
 	}

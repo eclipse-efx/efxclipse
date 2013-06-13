@@ -78,8 +78,6 @@ public class ModelEditorPart implements ModelElementEditor {
 		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		adapterFactoryItemDelegator = new AdapterFactoryItemDelegator(adapterFactory);
 
-		parent.setTop(new BreadcrumbBar(modelElement));
-
 		scrollPane.setContent(new ModelElementForm(modelElementContext));
 
 		modelElement.eAdapters().add(new AdapterImpl() {

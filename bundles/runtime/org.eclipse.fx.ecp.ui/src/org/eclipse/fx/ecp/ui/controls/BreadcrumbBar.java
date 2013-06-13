@@ -10,7 +10,6 @@ import org.eclipse.fx.ecp.ui.controls.BreadcrumbItem.Position;
 public class BreadcrumbBar extends Control {
 
 	private HBox hBox;
-
 	private EObject modelElement;
 
 	public static class Skin extends SkinBase<BreadcrumbBar> {
@@ -21,15 +20,12 @@ public class BreadcrumbBar extends Control {
 
 	}
 
-	public BreadcrumbBar(EObject modelElement) {
+	public BreadcrumbBar() {
 		setSkin(new Skin(this));
 		getStyleClass().add("breadcrumb-bar");
-
 		hBox = new HBox();
-
 		getChildren().add(hBox);
 		hBox.setSpacing(-9);
-
 	}
 
 	public void setModelElement(EObject modelElement) {
