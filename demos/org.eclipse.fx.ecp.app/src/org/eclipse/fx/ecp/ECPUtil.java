@@ -4,9 +4,12 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EClass;
@@ -110,6 +113,12 @@ public class ECPUtil {
 			// TODO maybe log this?
 		}
 		return null;
+	}
+
+	public static void addMark(Button backButton, String styleClass) {
+		StackPane mark = new StackPane();
+		mark.getStyleClass().add(styleClass);
+		backButton.setGraphic(new Group(mark));
 	}
 
 }

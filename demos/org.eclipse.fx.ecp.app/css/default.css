@@ -14,3 +14,33 @@
 .menu-bar {
 	-fx-use-system-menu-bar: true;
 }
+
+/*
+ * 
+.back-button, .forward-button {
+	-fx-background-radius: 0;
+}
+ */
+
+.back-button, .forward-button {
+	-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; 
+    -fx-background-insets: 0, 1 0 1 1, 2 1 2 2;
+    -fx-background-radius: 0, 0, 0;
+ 	-fx-max-height: 100;
+}
+
+.back-button .arrow {
+    -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
+    -fx-background-insets: 0 0 -1 0, 0;
+    -fx-shape: "m 0 0 l 6 -6 v 4 h 7 v 4 h -7 v 4 z";
+    -fx-pref-height: 12;
+    -fx-pref-width: 13;
+}
+
+.forward-button .arrow {
+    -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
+    -fx-background-insets: 0 0 -1 0, 0;
+    -fx-shape: "m 0 0 l -6 -6 v 4 h -7 v 4 h 7 v 4 z";
+    -fx-pref-height: 12;
+    -fx-pref-width: 13;
+}

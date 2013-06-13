@@ -1,7 +1,5 @@
 package org.eclipse.fx.ecp.ui.controls;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.HBox;
@@ -9,11 +7,11 @@ import javafx.scene.layout.HBox;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.fx.ecp.ui.controls.BreadcrumbItem.Position;
 
-import com.sun.xml.internal.bind.v2.runtime.BridgeContextImpl;
-
 public class BreadcrumbBar extends Control {
 
 	private HBox hBox;
+
+	private EObject modelElement;
 
 	public static class Skin extends SkinBase<BreadcrumbBar> {
 
@@ -28,13 +26,18 @@ public class BreadcrumbBar extends Control {
 		getStyleClass().add("breadcrumb-bar");
 
 		hBox = new HBox();
+
 		getChildren().add(hBox);
 		hBox.setSpacing(-9);
 
-		update(modelElement);
 	}
 
-	public void update(EObject modelElement) {
+	public void setModelElement(EObject modelElement) {
+		this.modelElement = modelElement;
+		updateItems();
+	}
+
+	private void updateItems() {
 		hBox.getChildren().clear();
 
 		EObject eObject = modelElement;
@@ -42,17 +45,16 @@ public class BreadcrumbBar extends Control {
 		while (eObject != null) {
 			BreadcrumbItem.Position position = Position.Middle;
 
-			if(eObject == modelElement && eObject.eContainer() == null)
+			if (eObject == modelElement && eObject.eContainer() == null)
 				position = Position.Only;
-			else if(eObject.eContainer() == null) 
+			else if (eObject.eContainer() == null)
 				position = Position.First;
-			else if(eObject == modelElement)
+			else if (eObject == modelElement)
 				position = Position.Last;
-			
+
 			hBox.getChildren().add(0, new BreadcrumbItem(eObject, position));
 			eObject = eObject.eContainer();
 		}
-		
 	}
 
 	@Override
