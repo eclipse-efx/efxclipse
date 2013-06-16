@@ -115,10 +115,4 @@ public class ECPUtil {
 		return null;
 	}
 
-	public static void addMark(Button backButton, String styleClass) {
-		StackPane mark = new StackPane();
-		mark.getStyleClass().add(styleClass);
-		backButton.setGraphic(new Group(mark));
-	}
-
 }

@@ -2,9 +2,12 @@ package org.eclipse.fx.ecp.ui;
 
 import java.net.URL;
 
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EClass;
@@ -22,15 +25,15 @@ import org.osgi.framework.Bundle;
 public class ECPUtil {
 
 	public static final ComposedAdapterFactory DEFAULT_ADAPTER_FACTORY;
-	private static final String PACKAGE_IMAGE_URL;
+	private static final String PACKAGE_IMAGE_URL = null;
 
 	static {
 		DEFAULT_ADAPTER_FACTORY = new ComposedAdapterFactory();
 		DEFAULT_ADAPTER_FACTORY.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		DEFAULT_ADAPTER_FACTORY.addAdapterFactory(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
-		Bundle bundle = Platform.getBundle("org.eclipse.fx.ecp.app");
-		URL entry = bundle.getEntry("icons/EPackage.gif");
-		PACKAGE_IMAGE_URL = entry.toExternalForm();
+//		Bundle bundle = Platform.getBundle("org.eclipse.fx.ecp.app");
+//		URL entry = bundle.getEntry("icons/EPackage.gif");
+//		PACKAGE_IMAGE_URL = entry.toExternalForm();
 	}
 
 	public static TreeItem<ENamedElement> getConcreteClasses() {
@@ -90,13 +93,19 @@ public class ECPUtil {
 
 	public static Node getGraphic(Object object) {
 		IItemLabelProvider labelProvider = (IItemLabelProvider) DEFAULT_ADAPTER_FACTORY.adapt(object, IItemLabelProvider.class);
-		
+
 		if (labelProvider != null) {
 			Object image = labelProvider.getImage(object);
 			return AdapterFactoryCellFactory.graphicFromObject(image);
 		}
 
 		return null;
+	}
+
+	public static void addMark(Labeled backButton, String styleClass) {
+		StackPane mark = new StackPane();
+		mark.getStyleClass().add(styleClass);
+		backButton.setGraphic(new Group(mark));
 	}
 
 }

@@ -53,3 +53,36 @@
 .breadcrumbbar-home-icon {
     -fx-background-image: url("home.png");
 }
+
+.text-field.left-pill {
+	-fx-background-radius: 3 0 0 3, 2 0 0 2;
+	-fx-max-width: 1000;
+}
+
+.top-right-pill {
+    -fx-background-color: -fx-outer-border, 
+    	linear-gradient(to bottom, derive(-fx-color,75%), derive(-fx-color,38%)),
+    	linear-gradient(to bottom, derive(-fx-color,10%) ,derive(-fx-color,2%)); 
+    -fx-background-insets: 0, 1 1 0 0, 2 2 1 1;
+    -fx-background-radius: 0 5 0 0 0, 0 4 0 0 0, 0 3 0 0;
+    -fx-min-height: 3;
+	-fx-pref-height: 13;
+}
+
+.bottom-right-pill {
+    -fx-background-color: -fx-outer-border, 
+    	linear-gradient(to bottom, derive(-fx-color,38%), derive(-fx-color,2%)),
+    	linear-gradient(to bottom, derive(-fx-color,2%) ,derive(-fx-color,-6%)); 
+    -fx-background-insets: 0 0 0 0, 1 1 1 0, 2 2 2 1;
+	-fx-background-radius: 0 0 5 0, 0 0 4 0, 0 0 3 0;
+	-fx-min-height: 1;
+	-fx-pref-height: 14;
+}
+
+
+
+.my-button {
+	/*-fx-background-color: red, green, blue;*/ 
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 5, 4, 3;
+}

@@ -61,7 +61,7 @@ public class DummyControl extends Control implements ECPControl {
 
 	@Override
 	protected String getUserAgentStylesheet() {
-		return DummyControl.class.getResource("dummy.css").toExternalForm();
+		return getClass().getResource("dummy.css").toExternalForm();
 	}
 
 	public static class Factory implements ECPControl.Factory {

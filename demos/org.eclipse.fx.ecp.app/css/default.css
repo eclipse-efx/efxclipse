@@ -28,7 +28,7 @@
     -fx-background-radius: 0, 0, 0;
  	-fx-max-height: 100;
  	-fx-pref-width: 30;
- 	-fx-pref-height: 30;
+ 	-fx-pref-height: 10;
 }
 
 .back-button .arrow {

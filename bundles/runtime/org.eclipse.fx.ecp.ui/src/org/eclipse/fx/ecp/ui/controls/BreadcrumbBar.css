@@ -3,9 +3,36 @@
     -fx-background-insets: 0, 1, 2;
 }
 
+.polygon {
+	-fx-fill: blue;
+	-fx-background-color: green;
+}
+
 .breadcrumb-item {
 	/*-fx-base: -fx-default-button;*/
+	/*
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0, 1, 2;
+    */ 
     -fx-text-fill: -fx-text-base-color;
+}
+
+.breadcrumbitem-text {
+	/*-fx-background-color: rgba(255,0,0,0.5); /*-fx-default-button;*/
+	-fx-padding: 7 10 7 10;
+	/*-fx-pref-height: 40;*/
+}
+
+.last, .only {
+	-fx-base: -fx-default-button;
+}
+
+.breadcrumb-item:hover {
+    -fx-color: -fx-hover-base;
+}
+
+.breadcrumb-item:pressed {
+    -fx-color: -fx-pressed-base;
 }
 
 .breadcrumb-item .outer-border {

@@ -69,11 +69,6 @@
          <staticTest
                priority="1"
                singleValue="true"
-               supportedClassType="java.lang.Integer">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
                supportedClassType="java.lang.Long">
          </staticTest>
          <staticTest
@@ -181,6 +176,16 @@
                priority="1"
                singleValue="true"
                supportedClassType="org.eclipse.emf.ecore.EObject">
+         </staticTest>
+      </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.IntegerControl$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.integerField"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="java.lang.Integer">
          </staticTest>
       </factory>
       
