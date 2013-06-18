@@ -10,6 +10,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Adapter;
@@ -82,6 +83,9 @@ public class IntegerControl extends Control implements ECPControl {
 
 			};
 			hBox.getChildren().add(textField);
+//			textField.setMinWidth(10);
+//			textField.setPrefWidth(100);
+//			textField.setMaxWidth(110);
 //			textField.setAlignment(Pos.BASELINE_RIGHT);
 			textField.getStyleClass().add("center-pill");
 
@@ -153,6 +157,7 @@ public class IntegerControl extends Control implements ECPControl {
 		editingDomain = context.getEditingDomain();
 		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 		setSkin(new Skin(this));
+		getStyleClass().add("integer-control");
 	}
 
 	@Override

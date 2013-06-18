@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.fx.ecp;
 
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.List;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -29,6 +32,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Window;
+import javafx.util.Duration;
 
 import javax.inject.Inject;
 
@@ -42,13 +46,15 @@ import org.eclipse.fx.ecp.ui.controls.ModelElementForm;
 
 public class ModelEditorPart2 implements ModelElementEditor {
 
-	private ScrollPane scrollPane;
+	private final ScrollPane scrollPane;
 	private ECPControlContext controlContext;
-	private final Stack<ECPControlContext> prevModelElements = new Stack<>();
-	private final Stack<ECPControlContext> nextModelElements = new Stack<>();
-	private Button forwardButton;
-	private Button backButton;
-	private BreadcrumbBar breadcrumbBar;
+	private final LinkedList<ECPControlContext> prevModelElements = new LinkedList<>();
+	private final LinkedList<ECPControlContext> nextModelElements = new LinkedList<>();
+	private final Button forwardButton;
+	private final Button backButton;
+	private final BreadcrumbBar breadcrumbBar;
+	private final ContextMenu contextMenu = new ContextMenu();
+	private Timeline contextMenuTimeline;
 
 	@Inject
 	public ModelEditorPart2(BorderPane parent, final MApplication application, MPart part) {
@@ -68,18 +74,31 @@ public class ModelEditorPart2 implements ModelElementEditor {
 			public void handle(ActionEvent arg0) {
 				nextModelElements.push(controlContext);
 				controlContext = prevModelElements.pop();
+				if (contextMenuTimeline != null)
+					contextMenuTimeline.stop();
+				if (contextMenu != null)
+					contextMenu.hide();
 				updateControls();
 			}
 
 		});
-		
+
 		backButton.setOnMousePressed(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent arg0) {
-				show(backButton, prevModelElements);
+				contextMenuTimeline = new Timeline(new KeyFrame(Duration.millis(250), new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent event) {
+						showContextMenu(backButton, true);
+					}
+
+				}));
+
+				contextMenuTimeline.play();
 			}
-			
+
 		});
 
 		forwardButton = new Button();
@@ -88,12 +107,35 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		org.eclipse.fx.ecp.ui.ECPUtil.addMark(forwardButton, "arrow");
 		// why is this not working?
 		// forwardButton.disabledProperty().isEqualTo(nextModelElements.emptyProperty());
+
+		forwardButton.setOnMousePressed(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent arg0) {
+				contextMenuTimeline = new Timeline(new KeyFrame(Duration.millis(250), new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent event) {
+						showContextMenu(backButton, false);
+					}
+
+				}));
+
+				contextMenuTimeline.play();
+			}
+
+		});
+
 		forwardButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
 				prevModelElements.push(controlContext);
 				controlContext = nextModelElements.pop();
+				if (contextMenuTimeline != null)
+					contextMenuTimeline.stop();
+				if (contextMenu != null)
+					contextMenu.hide();
 				updateControls();
 			}
 
@@ -104,7 +146,7 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		hBox.getChildren().add(breadcrumbBar);
 
 		parent.setTop(hBox);
-		
+
 		StackPane stackPane = new StackPane();
 		stackPane.getChildren().add(new TextField());
 		stackPane.getChildren().add(new Button("x"));
@@ -129,32 +171,56 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		breadcrumbBar.setModelElement(controlContext.getModelElement());
 		scrollPane.setContent(new ModelElementForm(controlContext));
 	}
-	
-	public void show(Node node, Stack<ECPControlContext> modelElements) {
-		ContextMenu contextMenu = new ContextMenu();
-		
-		for (final ECPControlContext controlContext : modelElements) {
+
+	public void showContextMenu(Node node, boolean back) {
+		contextMenu.getItems().clear();
+
+		List<ECPControlContext> modelElements = back ? prevModelElements : nextModelElements;
+
+		for (int i = 0; i < modelElements.size(); i++) {
+			final int j = back ? -i-1 : i+1;
+			ECPControlContext controlContext = modelElements.get(i);
 			EObject modelElement = controlContext.getModelElement();
 			String text = org.eclipse.fx.ecp.ui.ECPUtil.getText(modelElement);
 			Node graphic = org.eclipse.fx.ecp.ui.ECPUtil.getGraphic(modelElement);
 			MenuItem menuItem = new MenuItem(text, graphic);
 			contextMenu.getItems().add(menuItem);
 			menuItem.setOnAction(new EventHandler<ActionEvent>() {
-				
+
 				@Override
 				public void handle(ActionEvent event) {
-					setInput(controlContext);
+					go(j);
 				}
-				
+
 			});
 		}
-		
+
 		Point2D position = node.localToScene(0.0, 0.0);
 		Scene scene = node.getScene();
 		Window window = scene.getWindow();
 		double x = position.getX() + scene.getX() + window.getX();
 		double y = position.getY() + scene.getY() + window.getY() + node.getLayoutBounds().getHeight() + 5;
 		contextMenu.show(node, x, y);
+	}
+
+	
+	/**
+	 * Go back and forward in history
+	 */
+	private void go(int position) {
+		while (position < 0) {
+			nextModelElements.push(controlContext);
+			controlContext = prevModelElements.pop();
+			position++;
+		}
+
+		while (position > 0) {
+			prevModelElements.push(controlContext);
+			controlContext = nextModelElements.pop();
+			position--;
+		}
+
+		updateControls();
 	}
 
 }

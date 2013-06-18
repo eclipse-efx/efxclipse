@@ -177,7 +177,7 @@ public class BreadcrumbItem extends Control {
 		private void updateBackground() {
 			final double w = label.getWidth();
 			final double h = label.getHeight();
-			final double s = 7;//h / 2 - 5;
+			final double s = 9;//h / 2 - 5;
 
 			if (position == Position.First) {
 				outerBorder.getPoints().setAll(0.0, 0.0, w-s, 0.0, w, h/2, w-s, h, 0.0, h);

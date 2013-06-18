@@ -1,5 +1,9 @@
 .enum-choice-box {
-	-fx-min-width: 120;
+	-fx-max-width: 200;
+}
+
+.integer-control {
+	-fx-max-width: 200;
 }
 
 .model-element-form .grid {

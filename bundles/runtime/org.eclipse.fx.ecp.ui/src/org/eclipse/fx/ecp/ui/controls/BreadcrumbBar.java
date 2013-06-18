@@ -25,7 +25,7 @@ public class BreadcrumbBar extends Control {
 		getStyleClass().add("breadcrumb-bar");
 		hBox = new HBox();
 		getChildren().add(hBox);
-		hBox.setSpacing(-7);
+		hBox.setSpacing(-9);
 	}
 
 	public void setModelElement(EObject modelElement) {
