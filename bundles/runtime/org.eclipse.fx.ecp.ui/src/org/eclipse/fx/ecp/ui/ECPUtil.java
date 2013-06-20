@@ -2,12 +2,16 @@ package org.eclipse.fx.ecp.ui;
 
 import java.net.URL;
 
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Window;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EClass;
@@ -106,6 +110,15 @@ public class ECPUtil {
 		StackPane mark = new StackPane();
 		mark.getStyleClass().add(styleClass);
 		backButton.setGraphic(new Group(mark));
+	}
+	
+	public static void showContextMenu(ContextMenu contextMenu, Node node) {
+		Point2D position = node.localToScene(0.0, 0.0);
+		Scene scene = node.getScene();
+		Window window = scene.getWindow();
+		double x = position.getX() + scene.getX() + window.getX();
+		double y = position.getY() + scene.getY() + window.getY() + node.getLayoutBounds().getHeight() + 5;
+		contextMenu.show(node, x, y);
 	}
 
 }

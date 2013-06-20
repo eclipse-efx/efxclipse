@@ -1,6 +1,6 @@
 .breadcrumb-bar {
     -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; 
-    -fx-background-insets: 0, 1, 2;
+    -fx-background-insets: 0, 1 0 1 1, 2 1 2 2;
 }
 
 .polygon {

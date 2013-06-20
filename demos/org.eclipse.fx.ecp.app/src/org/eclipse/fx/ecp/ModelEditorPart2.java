@@ -18,19 +18,17 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Window;
 import javafx.util.Duration;
 
@@ -38,8 +36,11 @@ import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
+import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.controls.BreadcrumbBar;
 import org.eclipse.fx.ecp.ui.controls.ModelElementForm;
@@ -55,14 +56,22 @@ public class ModelEditorPart2 implements ModelElementEditor {
 	private final BreadcrumbBar breadcrumbBar;
 	private final ContextMenu contextMenu = new ContextMenu();
 	private Timeline contextMenuTimeline;
+	private ModelElementForm modelElementForm;
 
 	@Inject
 	public ModelEditorPart2(BorderPane parent, final MApplication application, MPart part) {
 		scrollPane = new ScrollPane();
 		parent.setCenter(scrollPane);
 		scrollPane.setFitToWidth(true);
-
+		scrollPane.getStyleClass().add("my-scroll-pane");
+		
+		// workaround for 1px border bug in e4 container control
+		Parent grandParent = parent.getParent();
+		Parent grandGrandParent = grandParent.getParent();
+		grandGrandParent.setStyle("-fx-padding: 0 -1 -1 0; ");
+		
 		HBox hBox = new HBox();
+		parent.setTop(hBox);
 
 		backButton = new Button();
 		hBox.getChildren().add(backButton);
@@ -144,14 +153,37 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		breadcrumbBar = new BreadcrumbBar();
 		HBox.setHgrow(breadcrumbBar, Priority.ALWAYS);
 		hBox.getChildren().add(breadcrumbBar);
-
-		parent.setTop(hBox);
-
-		StackPane stackPane = new StackPane();
-		stackPane.getChildren().add(new TextField());
-		stackPane.getChildren().add(new Button("x"));
-		stackPane.setAlignment(Pos.CENTER_RIGHT);
-		parent.setBottom(stackPane);
+		
+		final Button moreButton = new Button();
+		hBox.getChildren().add(moreButton);
+		moreButton.getStyleClass().addAll("more-button");
+		ECPUtil.addMark(moreButton, "lines");
+		
+		moreButton.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				ContextMenu contextMenu2 = new ContextMenu();
+				MenuItem menuItem = new MenuItem("Validate");
+				contextMenu2.getItems().add(menuItem);
+				menuItem.setOnAction(new EventHandler<ActionEvent>() {
+					
+					@Override
+					public void handle(ActionEvent arg0) {
+						validate();
+					}
+					
+				});
+				ECPUtil.showContextMenu(contextMenu2, moreButton);
+			}
+			
+		});
+		
+//		StackPane stackPane = new StackPane();
+//		stackPane.getChildren().add(new TextField());
+//		stackPane.getChildren().add(new Button("x"));
+//		stackPane.setAlignment(Pos.CENTER_RIGHT);
+//		parent.setBottom(stackPane);
 	}
 
 	public void setInput(final ECPControlContext modelElementContext) {
@@ -169,7 +201,8 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		backButton.setDisable(prevModelElements.isEmpty());
 		forwardButton.setDisable(nextModelElements.isEmpty());
 		breadcrumbBar.setModelElement(controlContext.getModelElement());
-		scrollPane.setContent(new ModelElementForm(controlContext));
+		modelElementForm = new ModelElementForm(controlContext);
+		scrollPane.setContent(modelElementForm);
 	}
 
 	public void showContextMenu(Node node, boolean back) {
@@ -178,7 +211,7 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		List<ECPControlContext> modelElements = back ? prevModelElements : nextModelElements;
 
 		for (int i = 0; i < modelElements.size(); i++) {
-			final int j = back ? -i-1 : i+1;
+			final int j = back ? -i - 1 : i + 1;
 			ECPControlContext controlContext = modelElements.get(i);
 			EObject modelElement = controlContext.getModelElement();
 			String text = org.eclipse.fx.ecp.ui.ECPUtil.getText(modelElement);
@@ -202,8 +235,12 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		double y = position.getY() + scene.getY() + window.getY() + node.getLayoutBounds().getHeight() + 5;
 		contextMenu.show(node, x, y);
 	}
-
 	
+	private void validate() {
+		Diagnostic diagnostic = Diagnostician.INSTANCE.validate(controlContext.getModelElement());
+		modelElementForm.validate(diagnostic);
+	}
+
 	/**
 	 * Go back and forward in history
 	 */

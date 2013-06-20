@@ -31,6 +31,15 @@
  	-fx-pref-height: 10;
 }
 
+.more-button {
+	-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; 
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0, 0, 0;
+ 	-fx-max-height: 100;
+ 	-fx-pref-width: 30;
+ 	-fx-pref-height: 10;
+}
+
 .back-button .arrow {
     -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
     -fx-background-insets: 0 0 -1 0, 0;
@@ -45,4 +54,16 @@
     -fx-shape: "m 0 0 l -10 -6 v 12 z";
     -fx-pref-height: 10;
     -fx-pref-width: 10;
+}
+
+.more-button .lines {
+    -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
+    -fx-background-insets: 0 0 -1 0, 0;
+    -fx-shape: "M 0 0 h 6 v 2 h -6 z M 0 4 h 6 v 2 h -6 z M 0 8 h 6 v 2 h -6 z";
+    -fx-pref-height: 10;
+    -fx-pref-width: 11;
+}
+
+.my-scroll-pane {
+	-fx-background-image: url('noisy-texture-100x100-o3-d15-c-ececec-t1.png'); 
 }
