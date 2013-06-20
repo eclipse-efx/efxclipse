@@ -9,9 +9,9 @@ import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecp.core.ECPProject;
+import org.eclipse.emf.ecp.core.ECPProjectManager;
 import org.eclipse.emf.edit.command.CopyToClipboardCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.fx.ecp.dummy.DummyWorkspace;
 
 
 public class CopyModelElementsHandler {
@@ -20,9 +20,11 @@ public class CopyModelElementsHandler {
 	private EditingDomain editingDomain;
 
 	@CanExecute
-	public boolean canAddNewElement(@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems) {
+	public boolean canAddNewElement(@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems, ECPProjectManager projectManager) {
 		// TODO: get this from ECPWorkspaceManager.getProject()
-		ECPProject project = DummyWorkspace.INSTANCE.getProject();
+		ECPProject project = projectManager.getProject(null);
+		
+		//ECPProject project = DummyWorkspace.INSTANCE.getProject();
 		editingDomain = project.getEditingDomain();
 		
 		command = CopyToClipboardCommand.create(editingDomain, selectedItems);

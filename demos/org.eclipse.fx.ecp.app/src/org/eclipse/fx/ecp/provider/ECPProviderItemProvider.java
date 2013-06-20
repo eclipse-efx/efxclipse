@@ -11,7 +11,7 @@ import org.eclipse.emf.ecp.spi.core.InternalProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-import org.eclipse.fx.ecp.dummy.DummyWorkspace;
+import org.eclipse.fx.ecp.ui.ECPUtil;
 
 @SuppressWarnings("restriction")
 public class ECPProviderItemProvider extends ItemProviderAdapter implements ITreeItemContentProvider, IItemLabelProvider {
@@ -37,8 +37,10 @@ public class ECPProviderItemProvider extends ItemProviderAdapter implements ITre
 			return project.getName();
 		}
 
-		IItemLabelProvider labelProvider = (IItemLabelProvider) DummyWorkspace.INSTANCE.getAdapterFactory().adapt(object,
+		IItemLabelProvider labelProvider = (IItemLabelProvider) ECPUtil.DEFAULT_ADAPTER_FACTORY.adapt(object,
 				IItemLabelProvider.class);
+//				DummyWorkspace.INSTANCE.getAdapterFactory().adapt(object,
+//				IItemLabelProvider.class);
 		if (labelProvider != null)
 			return labelProvider.getText(object);
 
@@ -51,8 +53,10 @@ public class ECPProviderItemProvider extends ItemProviderAdapter implements ITre
 			return new ImageView("platform:/plugin/org.eclipse.fx.ecp.app/icons/project_open.gif");
 		}
 
-		IItemLabelProvider labelProvider = (IItemLabelProvider) DummyWorkspace.INSTANCE.getAdapterFactory().adapt(object,
-				IItemLabelProvider.class);
+//		IItemLabelProvider labelProvider = (IItemLabelProvider) DummyWorkspace.INSTANCE.getAdapterFactory().adapt(object,
+//				IItemLabelProvider.class);
+		IItemLabelProvider labelProvider = (IItemLabelProvider) ECPUtil.DEFAULT_ADAPTER_FACTORY.adapt(object, IItemLabelProvider.class);
+		
 		if (labelProvider != null)
 			return labelProvider.getImage(object);
 

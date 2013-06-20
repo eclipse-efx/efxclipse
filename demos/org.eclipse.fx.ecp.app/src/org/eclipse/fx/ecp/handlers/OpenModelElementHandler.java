@@ -1,11 +1,7 @@
 package org.eclipse.fx.ecp.handlers;
 
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
-import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.fx.ecp.dummy.DummyWorkspace;
 import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
 
 
@@ -51,7 +47,7 @@ public class OpenModelElementHandler {
 	@Execute
 	public void open(ECPModelElementOpener modelElementOpener) {
 		
-		EObject modelElement = DummyWorkspace.INSTANCE.getReferee();
+		EObject modelElement = null; //DummyWorkspace.INSTANCE.getReferee();
 		modelElementOpener.openModelElement(modelElement);
 	}
 

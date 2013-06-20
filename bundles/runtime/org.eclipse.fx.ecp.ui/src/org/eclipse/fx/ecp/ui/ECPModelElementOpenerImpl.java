@@ -1,20 +1,20 @@
 package org.eclipse.fx.ecp.ui;
 
+import java.util.Locale;
+
 import javax.inject.Inject;
 
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.model.application.MContribution;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
-import org.eclipse.e4.ui.model.application.ui.basic.MInputPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
-import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
-import org.eclipse.fx.ecp.dummy.DummyControlContext;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.edit.domain.EditingDomain;
 
 public class ECPModelElementOpenerImpl implements ECPModelElementOpener {
 
@@ -32,7 +32,7 @@ public class ECPModelElementOpenerImpl implements ECPModelElementOpener {
 	}
 
 	@Override
-	public void openModelElement(EObject modelElement) {
+	public void openModelElement(final EObject modelElement) {
 		MUIElement uiElement = modelService.find("org.eclipse.fx.ecp.app.parts.modelEditor", application);
 
 		if (uiElement instanceof MPart) {
@@ -41,14 +41,63 @@ public class ECPModelElementOpenerImpl implements ECPModelElementOpener {
 			
 			if (object instanceof ModelElementEditor) {
 				
-				ECPControlContext modelElementContext = new DummyControlContext(modelElement) {
+				
+				ECPControlContext modelElementContext = new ECPControlContext() {
 					
 					@Override
 					public void openInNewContext(EObject eObject) {
 						openModelElement(eObject);
 					}
 					
+					@Override
+					public boolean isRunningAsWebApplication() {
+						throw new UnsupportedOperationException();
+					}
+					
+					@Override
+					public EObject getNewElementFor(EReference eReference) {
+						throw new UnsupportedOperationException();
+					}
+					
+					@Override
+					public EObject getModelElement() {
+						return modelElement;
+					}
+					
+					@Override
+					public Locale getLocale() {
+						throw new UnsupportedOperationException();
+					}
+					
+					@Override
+					public EObject getExistingElementFor(EReference eReference) {
+						throw new UnsupportedOperationException();
+					}
+					
+					@Override
+					public EditingDomain getEditingDomain() {
+						return AdapterFactoryEditingDomain.getEditingDomainFor(modelElement);
+					}
+					
+					@Override
+					public DataBindingContext getDataBindingContext() {
+						throw new UnsupportedOperationException();
+					}
+					
+					@Override
+					public void addModelElement(EObject eObject, EReference eReference) {
+						throw new UnsupportedOperationException();
+					}
 				};
+				
+				//new DummyControlContext(modelElement) {
+//					
+//					@Override
+//					public void openInNewContext(EObject eObject) {
+//						openModelElement(eObject);
+//					}
+//					
+//				};
 				
 				((ModelElementEditor) object).setInput(modelElementContext);
 			}

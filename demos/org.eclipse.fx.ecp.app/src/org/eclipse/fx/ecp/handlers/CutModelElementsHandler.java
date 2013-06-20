@@ -11,7 +11,6 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecp.core.ECPProject;
 import org.eclipse.emf.edit.command.CutToClipboardCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.fx.ecp.dummy.DummyWorkspace;
 
 
 public class CutModelElementsHandler {
@@ -22,7 +21,7 @@ public class CutModelElementsHandler {
 	@CanExecute
 	public boolean canAddNewElement(@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems) {
 		// TODO: get this from ECPWorkspaceManager.getProject()
-		ECPProject project = DummyWorkspace.INSTANCE.getProject();
+		ECPProject project = null; //DummyWorkspace.INSTANCE.getProject();
 		editingDomain = project.getEditingDomain();
 		
 		command = CutToClipboardCommand.create(editingDomain, selectedItems);

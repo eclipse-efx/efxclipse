@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.fx.ecp;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,13 +31,26 @@ import javafx.scene.layout.BorderPane;
 import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.core.ECPProject;
 import org.eclipse.emf.ecp.core.ECPProjectManager;
+import org.eclipse.emf.ecp.core.ECPProvider;
+import org.eclipse.emf.ecp.core.ECPProviderRegistry;
+import org.eclipse.emf.ecp.core.exceptions.ECPProjectWithNameExistsException;
+import org.eclipse.emf.ecp.core.util.ECPProperties;
+import org.eclipse.emf.ecp.core.util.ECPUtil;
 import org.eclipse.emf.ecp.core.util.observer.ECPProjectContentChangedObserver;
 import org.eclipse.emf.ecp.internal.core.util.observer.ECPObserverBusImpl;
-import org.eclipse.fx.ecp.dummy.DummyProjectManager;
-import org.eclipse.fx.ecp.dummy.DummyWorkspace;
+import org.eclipse.emf.ecp.spi.core.InternalProvider;
+import org.eclipse.emf.emfstore.bowling.BowlingFactory;
+import org.eclipse.emf.emfstore.bowling.Gender;
+import org.eclipse.emf.emfstore.bowling.League;
+import org.eclipse.emf.emfstore.bowling.Matchup;
+import org.eclipse.emf.emfstore.bowling.Player;
+import org.eclipse.emf.emfstore.bowling.Referee;
+import org.eclipse.emf.emfstore.bowling.Tournament;
+import org.eclipse.emf.emfstore.bowling.TournamentType;
 import org.eclipse.fx.ecp.provider.ECPItemProviderAdapterFactory;
 import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
 import org.eclipse.fx.emf.edit.ui.AdapterFactoryTreeCellFactory;
@@ -46,8 +62,8 @@ import org.eclipse.fx.ui.services.PopupMenuService;
 public class ModelExplorerPart {
 
 	@Inject
-	public ModelExplorerPart(BorderPane parent, ECPProjectManager projectManager_, final MApplication application,
-			final ECPModelElementOpener modelElementOpener, PopupMenuService<Control> popupMenuService) {
+	public ModelExplorerPart(BorderPane parent, ECPProjectManager projectManager, final MApplication application,
+			final ECPModelElementOpener modelElementOpener, PopupMenuService<Control> popupMenuService, ECPProviderRegistry providerRegistry) throws ECPProjectWithNameExistsException {
 
 		final TreeView<Object> treeView = new TreeView<>();
 
@@ -55,9 +71,25 @@ public class ModelExplorerPart {
 
 		treeView.setShowRoot(false);
 
-		ECPItemProviderAdapterFactory adapterFactory = new ECPItemProviderAdapterFactory(DummyWorkspace.INSTANCE.getProvider());
+//		ECPItemProviderAdapterFactory adapterFactory = new ECPItemProviderAdapterFactory(DummyWorkspace.INSTANCE.getProvider());
+		
+		// create some dummy element
+		
+		ECPProvider provider = providerRegistry.getProviders().iterator().next();
+		
+		ECPProperties properties = ECPUtil.createProperties();
+		
+//		properties.addProperty("rootURI", "bundle://resource/resources/project.xmi");
+		
+		properties.addProperty("rootURI", "file:///Users/tors10/Development/org.eclipse.fx/repositories/org.eclipse.efxclipse/demos/org.eclipse.fx.ecp.app/resources/project.xmi");
+		
+		ECPProject project = projectManager.createProject(provider, "My Project", properties);
+		
+//		createDummyContent(project);
 
-		final ECPProjectManager projectManager = new DummyProjectManager();
+		ECPItemProviderAdapterFactory adapterFactory = new ECPItemProviderAdapterFactory((InternalProvider) provider);
+		
+//		final ECPProjectManager projectManager = new DummyProjectManager();
 
 		final AdapterFactoryTreeItem rootItem = new AdapterFactoryTreeItem(projectManager, treeView, adapterFactory);
 
@@ -122,5 +154,49 @@ public class ModelExplorerPart {
 		parent.setCenter(treeView);
 
 	}
+	
+	private void createDummyContent(ECPProject project) {
+		Tournament tournament = BowlingFactory.eINSTANCE.createTournament();
+//		project1.getResource().getContents().add(tournament);
+		project.getContents().add(tournament);
+		
+		tournament.getPriceMoney().add(1.55);
+		tournament.getPriceMoney().add(1000.0);
+
+		tournament.getReceivesTrophy().add(false);
+		tournament.getReceivesTrophy().add(true);
+
+		tournament.getMatchDays().add(new Date(0));
+		tournament.getMatchDays().add(new Date());
+
+		Matchup matchup = BowlingFactory.eINSTANCE.createMatchup();
+		matchup.setNrSpectators(new BigInteger("21"));
+		tournament.getMatchups().add(matchup);
+
+		League league = BowlingFactory.eINSTANCE.createLeague();
+		project.getContents().add(league);
+		league.setName("Premier League");
+
+		Player hans = BowlingFactory.eINSTANCE.createPlayer();
+		hans.setName("Hans Wurst");
+		hans.setDateOfBirth(new Date(0));
+		hans.setHeight(1.76);
+		hans.setIsProfessional(true);
+		hans.getEMails().add("h.wurst@work.com");
+		hans.getEMails().add("wursti@gmail.com");
+		hans.setNumberOfVictories(4);
+		hans.getPlayedTournamentTypes().add(TournamentType.AMATEUR);
+		hans.getPlayedTournamentTypes().add(TournamentType.PRO);
+		hans.setWinLossRatio(new BigDecimal(0.6));
+		hans.setGender(Gender.MALE);
+		
+		league.getPlayers().add(hans);
+
+		Referee referee = BowlingFactory.eINSTANCE.createReferee();
+		project.getContents().add(referee);
+		referee.setLeague(league);
+	}
+	
+	
 
 }
