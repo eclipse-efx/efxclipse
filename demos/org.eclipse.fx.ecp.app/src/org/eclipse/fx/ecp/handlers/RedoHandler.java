@@ -2,21 +2,25 @@ package org.eclipse.fx.ecp.handlers;
 
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.emf.ecp.core.ECPProject;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
 public class RedoHandler {
 	
+	private EditingDomain editingDomain;
+
 	@CanExecute
-	public boolean canRedo() {
-		// TODO get this from current selection / active part
-		EditingDomain editingDomain = null; //DummyWorkspace.INSTANCE.getEditingDomain();
-		return editingDomain.getCommandStack().canRedo();
+	public boolean canRedo(@Optional ECPProject project) {
+		if (project != null) {
+			editingDomain = project.getEditingDomain();
+			return editingDomain.getCommandStack().canRedo();
+		}
+		return false;
 	}
 	
 	@Execute
 	public void redo() {
-		// TODO get this from current selection / active part
-		EditingDomain editingDomain = null; //DummyWorkspace.INSTANCE.getEditingDomain();
 		editingDomain.getCommandStack().redo();
 	}
 	

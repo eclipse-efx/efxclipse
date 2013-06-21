@@ -139,6 +139,7 @@ public class ModelExplorerPart {
 			public void onChanged(ListChangeListener.Change<? extends TreeItem<Object>> arg0) {
 				Set<Object> selectedItems = new HashSet<>();
 				for (TreeItem<Object> treeItem : arg0.getList())
+					// TODO check for null
 					selectedItems.add(treeItem.getValue());
 				application.getContext().set("modelExplorer.selectedItems", selectedItems);
 			}

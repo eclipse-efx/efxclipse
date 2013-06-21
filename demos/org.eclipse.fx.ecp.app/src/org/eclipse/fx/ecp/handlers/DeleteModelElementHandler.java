@@ -12,21 +12,22 @@ import org.eclipse.emf.ecp.core.ECPProject;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
-
 public class DeleteModelElementHandler {
-	
+
 	private Command command;
 	private EditingDomain editingDomain;
 
 	@CanExecute
-	public boolean canAddNewElement(@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems) {
-		// TODO: get this from ECPWorkspaceManager.getProject()
-		ECPProject project = null; //DummyWorkspace.INSTANCE.getProject();
-		editingDomain = project.getEditingDomain();
+	public boolean canAddNewElement(@Optional ECPProject project,
+			@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems) {
 		
-		command = DeleteCommand.create(editingDomain, selectedItems);
-		
-		return command.canExecute();
+		if (project != null) {
+			editingDomain = project.getEditingDomain();
+			command = DeleteCommand.create(editingDomain, selectedItems);
+			return command.canExecute();
+		}
+
+		return false;
 	}
 
 	@Execute

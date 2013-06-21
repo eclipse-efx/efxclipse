@@ -12,21 +12,23 @@ import org.eclipse.emf.ecp.core.ECPProject;
 import org.eclipse.emf.edit.command.CutToClipboardCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
-
 public class CutModelElementsHandler {
-	
+
 	private Command command;
 	private EditingDomain editingDomain;
 
 	@CanExecute
-	public boolean canAddNewElement(@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems) {
-		// TODO: get this from ECPWorkspaceManager.getProject()
-		ECPProject project = null; //DummyWorkspace.INSTANCE.getProject();
-		editingDomain = project.getEditingDomain();
-		
-		command = CutToClipboardCommand.create(editingDomain, selectedItems);
-		
-		return command.canExecute();
+	public boolean canAddNewElement(@Optional ECPProject project,
+			@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems) {
+
+		if (project != null) {
+			editingDomain = project.getEditingDomain();
+			editingDomain = project.getEditingDomain();
+			command = CutToClipboardCommand.create(editingDomain, selectedItems);
+			return command.canExecute();
+		}
+
+		return false;
 	}
 
 	@Execute

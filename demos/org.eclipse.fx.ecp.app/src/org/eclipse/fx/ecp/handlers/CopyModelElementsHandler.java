@@ -13,23 +13,22 @@ import org.eclipse.emf.ecp.core.ECPProjectManager;
 import org.eclipse.emf.edit.command.CopyToClipboardCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
-
 public class CopyModelElementsHandler {
-	
+
 	private Command command;
 	private EditingDomain editingDomain;
 
 	@CanExecute
-	public boolean canAddNewElement(@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems, ECPProjectManager projectManager) {
-		// TODO: get this from ECPWorkspaceManager.getProject()
-		ECPProject project = projectManager.getProject(null);
-		
-		//ECPProject project = DummyWorkspace.INSTANCE.getProject();
-		editingDomain = project.getEditingDomain();
-		
-		command = CopyToClipboardCommand.create(editingDomain, selectedItems);
-		
-		return command.canExecute();
+	public boolean canAddNewElement(@Optional ECPProject project,
+			@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems, ECPProjectManager projectManager) {
+
+		if (project != null) {
+			editingDomain = project.getEditingDomain();
+			command = CopyToClipboardCommand.create(editingDomain, selectedItems);
+			return command.canExecute();
+		}
+
+		return false;
 	}
 
 	@Execute

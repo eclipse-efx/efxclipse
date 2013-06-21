@@ -18,15 +18,18 @@ public class PasteModelElementsHandler {
 	private EditingDomain editingDomain;
 
 	@CanExecute
-	public boolean canAddNewElement(@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems) {
-		// TODO: get this from ECPWorkspaceManager.getProject()
-		ECPProject project = null; //DummyWorkspace.INSTANCE.getProject();
-		editingDomain = project.getEditingDomain();
+	public boolean canAddNewElement(@Optional ECPProject project,
+			@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems) {
 
-		if (selectedItems.size() == 1) {
-			Object selectedItem = selectedItems.iterator().next();
-			command = PasteFromClipboardCommand.create(editingDomain, selectedItem, null);
-			return command.canExecute();
+		if (project != null) {
+			editingDomain = project.getEditingDomain();
+
+			if (selectedItems.size() == 1) {
+				Object selectedItem = selectedItems.iterator().next();
+				command = PasteFromClipboardCommand.create(editingDomain, selectedItem, null);
+				return command.canExecute();
+			}
+
 		}
 
 		return false;
