@@ -2,6 +2,8 @@ package org.eclipse.fx.ecp.ui;
 
 import java.util.Set;
 
+import javafx.scene.Node;
+
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
@@ -19,7 +21,7 @@ public interface ECPControl {
 
 	interface Factory {
 		
-		ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context);
+		Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context);
 		
 		interface Descriptor {
 			

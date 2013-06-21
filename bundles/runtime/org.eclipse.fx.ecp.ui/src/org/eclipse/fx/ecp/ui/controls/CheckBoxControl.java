@@ -1,6 +1,7 @@
 package org.eclipse.fx.ecp.ui.controls;
 
 import javafx.beans.property.Property;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.VBox;
 
@@ -49,7 +50,7 @@ public class CheckBoxControl extends VBox implements ECPControl {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new CheckBoxControl(itemPropertyDescriptor, context);
 		}
 

@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<org.eclipse.example.bowling:League xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.example.bowling="http://org/eclipse/example/bowling" name="Premiere League"/>
+<org.eclipse.example.bowling:League xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.example.bowling="http://org/eclipse/example/bowling" name="Premiere League">
+  <players name="Hans Wurst" height="1.77" isProfessional="true" numberOfVictories="2" gender="Male">
+    <eMails>h.wurst@gmail.com</eMails>
+  </players>
+</org.eclipse.example.bowling:League>

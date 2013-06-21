@@ -10,8 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -79,11 +77,10 @@ public class ModelElementForm extends Control {
 						ControlDecoration controlDecoration = new ControlDecoration(feature);
 						controls.put(feature, controlDecoration);
 						
-						ECPControl control = factory.createControl(propertyDescriptor, modelElementContext);
-						Node node = (Node) control;
-						controlDecoration.getChildren().add(node);
-						AnchorPane.setLeftAnchor(node, 0.0);
-						AnchorPane.setRightAnchor(node, 0.0);
+						Node control = factory.createControl(propertyDescriptor, modelElementContext);
+						controlDecoration.getChildren().add(control);
+						AnchorPane.setLeftAnchor(control, 0.0);
+						AnchorPane.setRightAnchor(control, 0.0);
 						
 						gridPane.add(controlDecoration, 1, i);
 						GridPane.setHgrow(controlDecoration, Priority.ALWAYS);

@@ -1,5 +1,6 @@
 package org.eclipse.fx.ecp.ui.controls;
 
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
@@ -67,7 +68,7 @@ public class DummyControl extends Control implements ECPControl {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new DummyControl(itemPropertyDescriptor, context);
 		}
 

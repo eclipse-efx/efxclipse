@@ -183,7 +183,7 @@ public class ReferenceControl extends HBox implements ECPControl {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new ReferenceControl(itemPropertyDescriptor, context);
 		}
 

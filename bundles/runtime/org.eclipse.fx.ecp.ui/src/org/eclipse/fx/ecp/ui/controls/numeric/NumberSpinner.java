@@ -1,12 +1,12 @@
-package org.eclipse.fx.ecp.ui.controls;
+package org.eclipse.fx.ecp.ui.controls.numeric;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -18,32 +18,34 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 
-public class IntegerControl extends Control implements ECPControl {
+public abstract class NumberSpinner extends Control implements ECPControl {
 
 	protected final EObject modelElement;
 	protected final EStructuralFeature feature;
-	private EditingDomain editingDomain;
-	private TextField textField;
+	protected final EditingDomain editingDomain;
 
-	private final class Skin extends SkinBase<IntegerControl> {
+	abstract class NumberSpinnerSkin<C extends Control, T extends Number> extends SkinBase<C> {
 
-		private Adapter modelElementAdapter;
+		private final Button decreaseButton;
+		private final TextField textField;
+		private final Button increaseButton;
+		private final Adapter modelElementAdapter;
 
-		private Skin(IntegerControl control) {
+		@SuppressWarnings("unchecked")
+		NumberSpinnerSkin(C control) {
 			super(control);
 
 			HBox hBox = new HBox();
 			getChildren().add(hBox);
 			hBox.setFillHeight(true);
 
-			Button decreaseButton = new Button();
+			decreaseButton = new Button();
 			hBox.getChildren().add(decreaseButton);
 			decreaseButton.getStyleClass().add("decrease-button");
 			decreaseButton.getStyleClass().add("left-pill");
@@ -52,8 +54,8 @@ public class IntegerControl extends Control implements ECPControl {
 
 				@Override
 				public void handle(ActionEvent arg0) {
-					Integer value = (Integer) modelElement.eGet(feature);
-					Command command = SetCommand.create(editingDomain, modelElement, feature, --value);
+					T value = (T) modelElement.eGet(feature);
+					Command command = SetCommand.create(editingDomain, modelElement, feature, decrease(value));
 					if (command.canExecute())
 						editingDomain.getCommandStack().execute(command);
 				}
@@ -64,42 +66,38 @@ public class IntegerControl extends Control implements ECPControl {
 
 				@Override
 				public void replaceText(int start, int end, String text) {
-					if("".equals(text))
-						super.replaceText(start, end, text);
-					else if(start == 0 && text.matches("\\-?[0-9]*"))
-						super.replaceText(start, end, text);
-					else if (text.matches("[0-9]+"))
+					String currentText = getText();
+					StringBuffer sb = new StringBuffer(currentText);
+					sb.replace(start, end, text);
+					String tmp = sb.toString();
+
+					if (validate(tmp))
 						super.replaceText(start, end, text);
 				}
 
 				@Override
 				public void replaceSelection(String text) {
-					getSelectedText();
-					getCaretPosition();
-					if (text.matches("[0-9]*"))
+					IndexRange selection = getSelection();
+					int start = selection.getStart();
+					int end = selection.getEnd();
+					StringBuffer sb = new StringBuffer(getText());
+					sb.replace(start, end, text);
+					String tmp = sb.toString();
+
+					if (validate(tmp))
 						super.replaceSelection(text);
 				}
 
 			};
 			hBox.getChildren().add(textField);
-//			textField.setMinWidth(10);
-//			textField.setPrefWidth(100);
-//			textField.setMaxWidth(110);
-//			textField.setAlignment(Pos.BASELINE_RIGHT);
 			textField.getStyleClass().add("center-pill");
-
 			textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 
 				@Override
 				public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldFocused, Boolean newFocused) {
 					if (!newFocused) {
-						int oldValue = (Integer) modelElement.eGet(feature);
-						int newValue = 0;
-						try {
-							newValue = Integer.parseInt(textField.getText());
-						} catch (NumberFormatException e) {
-							// TODO maybe log this?
-						}
+						T oldValue = (T) modelElement.eGet(feature);
+						T newValue = parseValue(textField.getText());
 
 						// only commit if the value has changed
 						if (oldValue != newValue) {
@@ -112,7 +110,7 @@ public class IntegerControl extends Control implements ECPControl {
 
 			});
 
-			Button increaseButton = new Button();
+			increaseButton = new Button();
 			hBox.getChildren().add(increaseButton);
 			increaseButton.getStyleClass().add("increase-button");
 			increaseButton.getStyleClass().add("right-pill");
@@ -121,8 +119,8 @@ public class IntegerControl extends Control implements ECPControl {
 
 				@Override
 				public void handle(ActionEvent arg0) {
-					Integer value = (Integer) modelElement.eGet(feature);
-					Command command = SetCommand.create(editingDomain, modelElement, feature, ++value);
+					T value = (T) modelElement.eGet(feature);
+					Command command = SetCommand.create(editingDomain, modelElement, feature, increase(value));
 					if (command.canExecute())
 						editingDomain.getCommandStack().execute(command);
 				}
@@ -144,24 +142,33 @@ public class IntegerControl extends Control implements ECPControl {
 			update();
 		}
 
+		abstract T decrease(T value);
+
+		abstract T increase(T value);
+
+		abstract T parseValue(String literal);
+		
+		abstract boolean validate(String literal);
+
+		protected void update() {
+			Object value = modelElement.eGet(feature);
+			textField.setText(value != null ? value.toString() : "0");
+		}
+
 	}
 
-	private void update() {
-		Integer value = (Integer) modelElement.eGet(feature);
-		textField.setText(value.toString());
-	}
+	public NumberSpinner(IItemPropertyDescriptor propertyDescriptor, EObject modelElement, EStructuralFeature feature,
+			EditingDomain editingDomain) {
+		this.modelElement = modelElement;
+		this.feature = feature;
+		this.editingDomain = editingDomain;
 
-	public IntegerControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		modelElement = context.getModelElement();
-		editingDomain = context.getEditingDomain();
-		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
-		setSkin(new Skin(this));
 		getStyleClass().add("integer-control");
 	}
 
 	@Override
 	protected String getUserAgentStylesheet() {
-		return getClass().getResource("ECPControls.css").toExternalForm();
+		return getClass().getResource("../ECPControls.css").toExternalForm();
 	}
 
 	@Override
@@ -177,15 +184,6 @@ public class IntegerControl extends Control implements ECPControl {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-	}
-
-	public static class Factory implements ECPControl.Factory {
-
-		@Override
-		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
-			return new IntegerControl(itemPropertyDescriptor, context);
-		}
-
 	}
 
 }

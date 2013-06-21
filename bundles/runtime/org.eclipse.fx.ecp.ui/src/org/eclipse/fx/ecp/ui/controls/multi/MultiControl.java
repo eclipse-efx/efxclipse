@@ -169,7 +169,7 @@ public class MultiControl extends Control implements ECPControl {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new MultiControl(itemPropertyDescriptor, context);
 		}
 

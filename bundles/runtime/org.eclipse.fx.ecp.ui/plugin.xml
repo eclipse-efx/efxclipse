@@ -39,42 +39,12 @@
          <staticTest
                priority="1"
                singleValue="true"
-               supportedClassType="java.math.BigDecimal">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.math.BigInteger">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
                supportedClassType="java.lang.Character">
          </staticTest>   
          <staticTest
                priority="1"
                singleValue="true"
                supportedClassType="java.util.Date">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Double">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Float">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Long">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Short">
          </staticTest>
          <staticTest
                priority="1"
@@ -179,13 +149,73 @@
          </staticTest>
       </factory>
       <factory
-            class="org.eclipse.fx.ecp.ui.controls.IntegerControl$Factory"
-            id="org.eclipse.fx.ecp.ui.controls.integerField"
+            class="org.eclipse.fx.ecp.ui.controls.numeric.IntegerSpinner$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.integerSpinner"
             showLabel="true">
          <staticTest
                priority="1"
                singleValue="true"
                supportedClassType="java.lang.Integer">
+         </staticTest>
+      </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.numeric.LongSpinner$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.longSpinner"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="java.lang.Long">
+         </staticTest>
+      </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.numeric.ShortSpinner$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.shortSpinner"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="java.lang.Short">
+         </staticTest>
+      </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.numeric.DoubleSpinner$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.doubleSpinner"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="java.lang.Double">
+         </staticTest>
+      </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.numeric.FloatSpinner$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.floatSpinner"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="java.lang.Float">
+         </staticTest>
+      </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.numeric.BigDecimalSpinner$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.bigDecimalSpinner"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="java.math.BigDecimal">
+         </staticTest>
+      </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.numeric.BigIntegerSpinner$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.bigIntegerSpinner"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="java.math.BigInteger">
          </staticTest>
       </factory>
       

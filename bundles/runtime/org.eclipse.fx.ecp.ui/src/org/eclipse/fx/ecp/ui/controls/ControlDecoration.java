@@ -38,7 +38,7 @@ public class ControlDecoration extends AnchorPane implements ECPControl {
 			for (Diagnostic childDiagnostic : diagnostic.getChildren()) {
 				Object feature = childDiagnostic.getData().get(1);
 				if(feature == this.feature) {
-					tooltip.setText(diagnostic.getMessage());
+					tooltip.setText(childDiagnostic.getMessage());
 					showLabel = true;
 				}
 			}

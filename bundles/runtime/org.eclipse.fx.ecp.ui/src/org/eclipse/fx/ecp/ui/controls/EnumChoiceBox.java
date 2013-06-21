@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 
 import org.eclipse.emf.common.command.Command;
@@ -109,7 +110,7 @@ public class EnumChoiceBox extends ChoiceBox<Enumerator> implements ECPControl {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new EnumChoiceBox(itemPropertyDescriptor, context);
 		}
 

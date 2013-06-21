@@ -1,5 +1,7 @@
 package org.eclipse.fx.ecp.ui;
 
+import javafx.scene.Node;
+
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
@@ -7,7 +9,7 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 public class DummyControlFactory implements ECPControl.Factory {
 
 	@Override
-	public ECPControl createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+	public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 		return null;
 	}
 

@@ -42,6 +42,7 @@ import org.eclipse.emf.ecp.core.util.ECPProperties;
 import org.eclipse.emf.ecp.core.util.ECPUtil;
 import org.eclipse.emf.ecp.core.util.observer.ECPProjectContentChangedObserver;
 import org.eclipse.emf.ecp.internal.core.util.observer.ECPObserverBusImpl;
+import org.eclipse.emf.ecp.spi.core.InternalProject;
 import org.eclipse.emf.ecp.spi.core.InternalProvider;
 import org.eclipse.emf.emfstore.bowling.BowlingFactory;
 import org.eclipse.emf.emfstore.bowling.Gender;
@@ -63,7 +64,8 @@ public class ModelExplorerPart {
 
 	@Inject
 	public ModelExplorerPart(BorderPane parent, ECPProjectManager projectManager, final MApplication application,
-			final ECPModelElementOpener modelElementOpener, PopupMenuService<Control> popupMenuService, ECPProviderRegistry providerRegistry) throws ECPProjectWithNameExistsException {
+			final ECPModelElementOpener modelElementOpener, PopupMenuService<Control> popupMenuService, ECPProviderRegistry providerRegistry)
+			throws ECPProjectWithNameExistsException {
 
 		final TreeView<Object> treeView = new TreeView<>();
 
@@ -71,25 +73,37 @@ public class ModelExplorerPart {
 
 		treeView.setShowRoot(false);
 
-//		ECPItemProviderAdapterFactory adapterFactory = new ECPItemProviderAdapterFactory(DummyWorkspace.INSTANCE.getProvider());
-		
+		// ECPItemProviderAdapterFactory adapterFactory = new
+		// ECPItemProviderAdapterFactory(DummyWorkspace.INSTANCE.getProvider());
+
 		// create some dummy element
-		
+
 		ECPProvider provider = providerRegistry.getProviders().iterator().next();
-		
+
 		ECPProperties properties = ECPUtil.createProperties();
-		
-//		properties.addProperty("rootURI", "bundle://resource/resources/project.xmi");
-		
-		properties.addProperty("rootURI", "file:///Users/tors10/Development/org.eclipse.fx/repositories/org.eclipse.efxclipse/demos/org.eclipse.fx.ecp.app/resources/project.xmi");
-		
+
+		// properties.addProperty("rootURI", "bundle://resource/resources/project.xmi");
+
+		Collection<ECPProject> projects = projectManager.getProjects();
+
+		// platform:/resource
+		// properties.addProperty("rootURI",
+		// "platform:/resources/org.eclipse.fx.ecp.app/resources/project.xmi");
+		properties
+				.addProperty("rootURI",
+						"file:///Users/tors10/Development/org.eclipse.fx/repositories/org.eclipse.efxclipse/demos/org.eclipse.fx.ecp.app/resources/project.xmi");
+
 		ECPProject project = projectManager.createProject(provider, "My Project", properties);
-		
-//		createDummyContent(project);
+
+		// ((InternalProject)project).saveProperties();
+
+		application.getContext().set(ECPProject.class, project);
+
+		// createDummyContent(project);
 
 		ECPItemProviderAdapterFactory adapterFactory = new ECPItemProviderAdapterFactory((InternalProvider) provider);
-		
-//		final ECPProjectManager projectManager = new DummyProjectManager();
+
+		// final ECPProjectManager projectManager = new DummyProjectManager();
 
 		final AdapterFactoryTreeItem rootItem = new AdapterFactoryTreeItem(projectManager, treeView, adapterFactory);
 
@@ -107,17 +121,17 @@ public class ModelExplorerPart {
 
 		treeView.setRoot(rootItem);
 
-		treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Object>>() {
-
-			@Override
-			public void changed(ObservableValue<? extends TreeItem<Object>> arg0, TreeItem<Object> arg1, TreeItem<Object> arg2) {
-				System.out.println(arg2);
-				application.getContext().set(ECPProject.class,
-						(arg2 != null && arg2.getValue() instanceof ECPProject) ? (ECPProject) arg2.getValue() : null);
-
-			}
-
-		});
+//		treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Object>>() {
+//
+//			@Override
+//			public void changed(ObservableValue<? extends TreeItem<Object>> arg0, TreeItem<Object> arg1, TreeItem<Object> arg2) {
+//				System.out.println(arg2);
+//				application.getContext().set(ECPProject.class,
+//						(arg2 != null && arg2.getValue() instanceof ECPProject) ? (ECPProject) arg2.getValue() : null);
+//
+//			}
+//
+//		});
 
 		treeView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<TreeItem<Object>>() {
 
@@ -152,51 +166,6 @@ public class ModelExplorerPart {
 		});
 
 		parent.setCenter(treeView);
-
 	}
-	
-	private void createDummyContent(ECPProject project) {
-		Tournament tournament = BowlingFactory.eINSTANCE.createTournament();
-//		project1.getResource().getContents().add(tournament);
-		project.getContents().add(tournament);
-		
-		tournament.getPriceMoney().add(1.55);
-		tournament.getPriceMoney().add(1000.0);
-
-		tournament.getReceivesTrophy().add(false);
-		tournament.getReceivesTrophy().add(true);
-
-		tournament.getMatchDays().add(new Date(0));
-		tournament.getMatchDays().add(new Date());
-
-		Matchup matchup = BowlingFactory.eINSTANCE.createMatchup();
-		matchup.setNrSpectators(new BigInteger("21"));
-		tournament.getMatchups().add(matchup);
-
-		League league = BowlingFactory.eINSTANCE.createLeague();
-		project.getContents().add(league);
-		league.setName("Premier League");
-
-		Player hans = BowlingFactory.eINSTANCE.createPlayer();
-		hans.setName("Hans Wurst");
-		hans.setDateOfBirth(new Date(0));
-		hans.setHeight(1.76);
-		hans.setIsProfessional(true);
-		hans.getEMails().add("h.wurst@work.com");
-		hans.getEMails().add("wursti@gmail.com");
-		hans.setNumberOfVictories(4);
-		hans.getPlayedTournamentTypes().add(TournamentType.AMATEUR);
-		hans.getPlayedTournamentTypes().add(TournamentType.PRO);
-		hans.setWinLossRatio(new BigDecimal(0.6));
-		hans.setGender(Gender.MALE);
-		
-		league.getPlayers().add(hans);
-
-		Referee referee = BowlingFactory.eINSTANCE.createReferee();
-		project.getContents().add(referee);
-		referee.setLeague(league);
-	}
-	
-	
 
 }
