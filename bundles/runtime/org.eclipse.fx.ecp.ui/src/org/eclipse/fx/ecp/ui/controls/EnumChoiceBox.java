@@ -49,7 +49,7 @@ public class EnumChoiceBox extends ChoiceBox<Enumerator> implements ECPControl {
 			values.add(literal.getInstance());
 
 		getItems().addAll(values);
-		
+
 		getChildren();
 
 		// select the current value before adding the listeners
@@ -60,7 +60,7 @@ public class EnumChoiceBox extends ChoiceBox<Enumerator> implements ECPControl {
 			@Override
 			public void changed(ObservableValue<? extends Enumerator> observableValue, Enumerator oldValue, Enumerator newValue) {
 				final Object currentValue = modelElement.eGet(feature);
-				
+
 				// only execute the command if the value has changed
 				if (newValue != currentValue) {
 					final Command command = SetCommand.create(editingDomain, modelElement, feature, newValue);
@@ -87,21 +87,12 @@ public class EnumChoiceBox extends ChoiceBox<Enumerator> implements ECPControl {
 	public void update() {
 		final Enumerator selectedItem = getSelectionModel().getSelectedItem();
 		final Enumerator value = (Enumerator) modelElement.eGet(feature);
-		
+
 		// only update the selection if the value has changed
 		if (selectedItem != value)
 			getSelectionModel().select(value);
 	}
 
-	@Override
-	public void handleValidation(Diagnostic diagnostic) {
-	}
-
-	@Override
-	public void resetValidation() {
-
-	}
-	
 	@Override
 	protected String getUserAgentStylesheet() {
 		return getClass().getResource("ECPControls.css").toExternalForm();

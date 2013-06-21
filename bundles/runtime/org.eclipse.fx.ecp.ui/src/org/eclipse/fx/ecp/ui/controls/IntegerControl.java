@@ -64,9 +64,9 @@ public class IntegerControl extends Control implements ECPControl {
 
 				@Override
 				public void replaceText(int start, int end, String text) {
-					if("".equals(text))
+					if ("".equals(text))
 						super.replaceText(start, end, text);
-					else if(start == 0 && text.matches("\\-?[0-9]*"))
+					else if (start == 0 && text.matches("\\-?[0-9]*"))
 						super.replaceText(start, end, text);
 					else if (text.matches("[0-9]+"))
 						super.replaceText(start, end, text);
@@ -82,10 +82,10 @@ public class IntegerControl extends Control implements ECPControl {
 
 			};
 			hBox.getChildren().add(textField);
-//			textField.setMinWidth(10);
-//			textField.setPrefWidth(100);
-//			textField.setMaxWidth(110);
-//			textField.setAlignment(Pos.BASELINE_RIGHT);
+			// textField.setMinWidth(10);
+			// textField.setPrefWidth(100);
+			// textField.setMaxWidth(110);
+			// textField.setAlignment(Pos.BASELINE_RIGHT);
 			textField.getStyleClass().add("center-pill");
 
 			textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -162,16 +162,6 @@ public class IntegerControl extends Control implements ECPControl {
 	@Override
 	protected String getUserAgentStylesheet() {
 		return getClass().getResource("ECPControls.css").toExternalForm();
-	}
-
-	@Override
-	public void handleValidation(Diagnostic diagnostic) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void resetValidation() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override

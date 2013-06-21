@@ -65,23 +65,22 @@ public class ReferenceControl extends HBox implements ECPControl {
 
 		hyperlink.setOnDragOver(new EventHandler<DragEvent>() {
 
-
 			@Override
 			public void handle(DragEvent event) {
 				Object object = LocalTransfer.INSTANCE.getObject();
-				
-				if(object instanceof Collection<?>) {
+
+				if (object instanceof Collection<?>) {
 					Collection<?> collection = (Collection<?>) object;
 					object = collection.size() == 1 ? collection.iterator().next() : null;
 				}
-				
+
 				Command command = SetCommand.create(editingDomain, modelElement, reference, object);
-				if(command.canExecute()) {
+				if (command.canExecute()) {
 					setCommand = command;
 					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
 
-//					event.acceptTransferModes(TransferMode.LINK);
-//					event.acceptTransferModes(TransferMode.ANY);
+					// event.acceptTransferModes(TransferMode.LINK);
+					// event.acceptTransferModes(TransferMode.ANY);
 					System.out.println("accepted2");
 				} else {
 					setCommand = null;
@@ -89,15 +88,15 @@ public class ReferenceControl extends HBox implements ECPControl {
 			}
 
 		});
-		
+
 		hyperlink.setOnDragDropped(new EventHandler<DragEvent>() {
 
 			@Override
 			public void handle(DragEvent arg0) {
-				if(setCommand != null)
+				if (setCommand != null)
 					editingDomain.getCommandStack().execute(setCommand);
 			}
-			
+
 		});
 
 		if (reference.isUnsettable()) {
@@ -187,16 +186,6 @@ public class ReferenceControl extends HBox implements ECPControl {
 			return new ReferenceControl(itemPropertyDescriptor, context);
 		}
 
-	}
-
-	@Override
-	public void handleValidation(Diagnostic diagnostic) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void resetValidation() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override

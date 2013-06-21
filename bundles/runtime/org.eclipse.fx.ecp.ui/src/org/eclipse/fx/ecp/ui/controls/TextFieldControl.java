@@ -107,20 +107,6 @@ public class TextFieldControl extends VBox implements ECPControl {
 	}
 
 	@Override
-	public void handleValidation(Diagnostic diagnostic) {
-		// if (diagnostic.getSeverity() != Diagnostic.OK) {
-		// validationMessage.setMessage(diagnostic.getMessage());
-		// } else {
-		// resetValidation();
-		// }
-	}
-
-	@Override
-	public void resetValidation() {
-		// validationMessage.setMessage(null);
-	}
-	
-	@Override
 	public void dispose() {
 		modelElement.eAdapters().remove(modelElementAdapter);
 	}

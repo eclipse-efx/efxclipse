@@ -147,7 +147,7 @@ public abstract class NumberSpinner extends Control implements ECPControl {
 		abstract T increase(T value);
 
 		abstract T parseValue(String literal);
-		
+
 		abstract boolean validate(String literal);
 
 		protected void update() {
@@ -169,16 +169,6 @@ public abstract class NumberSpinner extends Control implements ECPControl {
 	@Override
 	protected String getUserAgentStylesheet() {
 		return getClass().getResource("../ECPControls.css").toExternalForm();
-	}
-
-	@Override
-	public void handleValidation(Diagnostic diagnostic) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void resetValidation() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override

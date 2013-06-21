@@ -20,17 +20,17 @@ public class DummyControl extends Control implements ECPControl {
 
 	public DummyControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		getStyleClass().add("dummy-control");
-		
-//		HBox hBox = new HBox();
-//		getChildren().add(hBox);
-//		
-//		TextField textField = new TextField();
-//		hBox.getChildren().add(textField);
-//		
-//		Button button = new Button("Add");
-//		hBox.getChildren().add(button);
-		
-//		getSkin();
+
+		// HBox hBox = new HBox();
+		// getChildren().add(hBox);
+		//
+		// TextField textField = new TextField();
+		// hBox.getChildren().add(textField);
+		//
+		// Button button = new Button("Add");
+		// hBox.getChildren().add(button);
+
+		// getSkin();
 		setSkin(new DummyControlSkin(this));
 		// EObject modelElement = context.getModelElement();
 		//
@@ -48,16 +48,6 @@ public class DummyControl extends Control implements ECPControl {
 		// HBox.setHgrow(textField, Priority.ALWAYS);
 		//
 		// getChildren().add(textField);
-	}
-
-	@Override
-	public void handleValidation(Diagnostic diagnostic) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void resetValidation() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -79,19 +69,19 @@ public class DummyControl extends Control implements ECPControl {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public class DummyControlSkin extends SkinBase<DummyControl> {
 
 		protected DummyControlSkin(DummyControl control) {
 			super(control);
-			
+
 			HBox hBox = new HBox();
 			getChildren().add(hBox);
-			
+
 			TextField textField = new TextField();
 			hBox.getChildren().add(textField);
 			HBox.setHgrow(textField, Priority.ALWAYS);
-			
+
 			Button button = new Button("Add");
 			hBox.getChildren().add(button);
 		}

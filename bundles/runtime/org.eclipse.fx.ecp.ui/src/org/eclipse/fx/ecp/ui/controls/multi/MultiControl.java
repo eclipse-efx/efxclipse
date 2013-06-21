@@ -46,23 +46,23 @@ public class MultiControl extends Control implements ECPControl {
 	private EList<Object> values;
 	private VBox controlsBox;
 	protected final AdapterImpl modelElementAdapter;
-	
+
 	class Skin extends SkinBase<MultiControl> {
 
 		protected Skin(MultiControl multiControl) {
 			super(multiControl);
 		}
-		
+
 	}
 
 	public MultiControl(final IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
 		setSkin(new Skin(this));
-		
+
 		modelElement = context.getModelElement();
 		editingDomain = context.getEditingDomain();
 		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 		values = (EList<Object>) modelElement.eGet(feature);
-		
+
 		VBox vBox = new VBox();
 		getChildren().add(vBox);
 		vBox.setSpacing(4);
@@ -154,16 +154,6 @@ public class MultiControl extends Control implements ECPControl {
 		Path path = new Path(resourcePath);
 		URL url = FileLocator.find(bundle, path, null);
 		return new ImageView(url.toExternalForm());
-	}
-
-	@Override
-	public void handleValidation(Diagnostic diagnostic) {
-		
-	}
-
-	@Override
-	public void resetValidation() {
-
 	}
 
 	public static class Factory implements ECPControl.Factory {

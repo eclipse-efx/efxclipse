@@ -13,10 +13,6 @@ import org.eclipse.fx.ecp.ui.impl.ControlFactoryRegistryImpl;
 
 public interface ECPControl {
 	
-	void handleValidation(Diagnostic diagnostic);
-	
-	void resetValidation();
-	
 	void dispose();
 
 	interface Factory {

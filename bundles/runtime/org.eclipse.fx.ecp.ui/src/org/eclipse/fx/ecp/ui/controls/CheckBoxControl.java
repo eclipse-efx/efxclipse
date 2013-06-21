@@ -33,18 +33,8 @@ public class CheckBoxControl extends VBox implements ECPControl {
 	}
 
 	@Override
-	public void handleValidation(Diagnostic diagnostic) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void resetValidation() {
-		// TODO Auto-generated method stub
-	}
-	
-	@Override
 	public void dispose() {
-		checkBox.selectedProperty().unbindBidirectional(property);		
+		checkBox.selectedProperty().unbindBidirectional(property);
 	}
 
 	public static class Factory implements ECPControl.Factory {

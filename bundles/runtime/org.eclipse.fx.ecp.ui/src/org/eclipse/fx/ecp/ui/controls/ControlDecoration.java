@@ -30,7 +30,6 @@ public class ControlDecoration extends AnchorPane implements ECPControl {
 		label.setTooltip(tooltip);
 	}
 
-	@Override
 	public void handleValidation(Diagnostic diagnostic) {
 		boolean showLabel = false;
 
@@ -47,7 +46,6 @@ public class ControlDecoration extends AnchorPane implements ECPControl {
 		label.setVisible(showLabel);
 	}
 
-	@Override
 	public void resetValidation() {
 		label.setVisible(false);
 	}
