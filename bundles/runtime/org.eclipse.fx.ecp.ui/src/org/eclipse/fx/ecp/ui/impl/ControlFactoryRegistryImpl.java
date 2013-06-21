@@ -39,9 +39,8 @@ public class ControlFactoryRegistryImpl implements ECPControl.Factory.Registry {
 		readExtensionPoint();
 	}
 
-	public Factory getFactory(Class<?> controlClass, IItemPropertyDescriptor propertyDescriptor, EObject modelElement) {
-		ControlFactoryDescriptor factoryDescriptor = getControlFactoryCandidate(controlClass, propertyDescriptor,
-			modelElement);
+	public Factory getFactory(IItemPropertyDescriptor propertyDescriptor, EObject modelElement) {
+		ControlFactoryDescriptor factoryDescriptor = getControlFactoryCandidate(propertyDescriptor, modelElement);
 		return factoryDescriptor != null ? factoryDescriptor.createFactory() : null;
 	}
 
@@ -109,8 +108,8 @@ public class ControlFactoryRegistryImpl implements ECPControl.Factory.Registry {
 		return (Class<T>) bundle.loadClass(clazz);
 	}
 
-	private ControlFactoryDescriptor getControlFactoryCandidate(Class<?> clazz,
-		IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement) {
+	private ControlFactoryDescriptor getControlFactoryCandidate(IItemPropertyDescriptor itemPropertyDescriptor,
+		EObject modelElement) {
 		int highestPriority = -1;
 
 		ControlFactoryDescriptor bestCandidate = null;

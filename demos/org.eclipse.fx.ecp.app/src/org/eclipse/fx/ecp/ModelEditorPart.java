@@ -40,7 +40,7 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.controls.BreadcrumbBar;
-import org.eclipse.fx.ecp.ui.controls.ModelElementForm;
+import org.eclipse.fx.ecp.ui.form.DefaultModelElementForm;
 
 public class ModelEditorPart implements ModelElementEditor {
 
@@ -78,7 +78,7 @@ public class ModelEditorPart implements ModelElementEditor {
 		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		adapterFactoryItemDelegator = new AdapterFactoryItemDelegator(adapterFactory);
 
-		scrollPane.setContent(new ModelElementForm(modelElementContext));
+		scrollPane.setContent(new DefaultModelElementForm(modelElementContext));
 
 		modelElement.eAdapters().add(new AdapterImpl() {
 

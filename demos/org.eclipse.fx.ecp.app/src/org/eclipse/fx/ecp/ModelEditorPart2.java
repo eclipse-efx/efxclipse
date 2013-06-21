@@ -43,7 +43,7 @@ import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.controls.BreadcrumbBar;
-import org.eclipse.fx.ecp.ui.controls.ModelElementForm;
+import org.eclipse.fx.ecp.ui.form.ModelElementForm;
 
 public class ModelEditorPart2 implements ModelElementEditor {
 
@@ -64,12 +64,12 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		parent.setCenter(scrollPane);
 		scrollPane.setFitToWidth(true);
 		scrollPane.getStyleClass().add("my-scroll-pane");
-		
+
 		// workaround for 1px border bug in e4 container control
 		Parent grandParent = parent.getParent();
 		Parent grandGrandParent = grandParent.getParent();
 		grandGrandParent.setStyle("-fx-padding: 0 -1 -1 0; ");
-		
+
 		HBox hBox = new HBox();
 		parent.setTop(hBox);
 
@@ -153,37 +153,37 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		breadcrumbBar = new BreadcrumbBar();
 		HBox.setHgrow(breadcrumbBar, Priority.ALWAYS);
 		hBox.getChildren().add(breadcrumbBar);
-		
+
 		final Button moreButton = new Button();
 		hBox.getChildren().add(moreButton);
 		moreButton.getStyleClass().addAll("more-button");
 		ECPUtil.addMark(moreButton, "lines");
-		
+
 		moreButton.setOnAction(new EventHandler<ActionEvent>() {
-			
+
 			@Override
 			public void handle(ActionEvent arg0) {
 				ContextMenu contextMenu2 = new ContextMenu();
 				MenuItem menuItem = new MenuItem("Validate");
 				contextMenu2.getItems().add(menuItem);
 				menuItem.setOnAction(new EventHandler<ActionEvent>() {
-					
+
 					@Override
 					public void handle(ActionEvent arg0) {
 						validate();
 					}
-					
+
 				});
 				ECPUtil.showContextMenu(contextMenu2, moreButton);
 			}
-			
+
 		});
-		
-//		StackPane stackPane = new StackPane();
-//		stackPane.getChildren().add(new TextField());
-//		stackPane.getChildren().add(new Button("x"));
-//		stackPane.setAlignment(Pos.CENTER_RIGHT);
-//		parent.setBottom(stackPane);
+
+		// StackPane stackPane = new StackPane();
+		// stackPane.getChildren().add(new TextField());
+		// stackPane.getChildren().add(new Button("x"));
+		// stackPane.setAlignment(Pos.CENTER_RIGHT);
+		// parent.setBottom(stackPane);
 	}
 
 	public void setInput(final ECPControlContext modelElementContext) {
@@ -201,8 +201,11 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		backButton.setDisable(prevModelElements.isEmpty());
 		forwardButton.setDisable(nextModelElements.isEmpty());
 		breadcrumbBar.setModelElement(controlContext.getModelElement());
-		modelElementForm = new ModelElementForm(controlContext);
-		scrollPane.setContent(modelElementForm);
+		Node form = ModelElementForm.Factory.Registry.INSTANCE.getFactory(controlContext.getModelElement()).createModelElementForm(
+				controlContext);
+		scrollPane.setContent(form);
+		if (form instanceof ModelElementForm)
+			modelElementForm = (ModelElementForm) form;
 	}
 
 	public void showContextMenu(Node node, boolean back) {
@@ -235,10 +238,10 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		double y = position.getY() + scene.getY() + window.getY() + node.getLayoutBounds().getHeight() + 5;
 		contextMenu.show(node, x, y);
 	}
-	
+
 	private void validate() {
 		Diagnostic diagnostic = Diagnostician.INSTANCE.validate(controlContext.getModelElement());
-		modelElementForm.validate(diagnostic);
+		modelElementForm.handleValidation(diagnostic);
 	}
 
 	/**

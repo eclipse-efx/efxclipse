@@ -43,7 +43,7 @@ public interface ECPControl {
 			
 			Registry INSTANCE = new ControlFactoryRegistryImpl();
 			
-			Factory getFactory(Class<?> controlClass, IItemPropertyDescriptor propertyDescriptor, EObject modelElement);
+			Factory getFactory(IItemPropertyDescriptor propertyDescriptor, EObject modelElement);
 			
 		}
 		
