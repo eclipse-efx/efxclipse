@@ -17,6 +17,7 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.ECPUtil;
+import org.eclipse.fx.ecp.ui.controls.AutoSelector;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public abstract class NumberSpinner extends ECPControlBase implements ECPControl {
@@ -81,6 +82,7 @@ public abstract class NumberSpinner extends ECPControlBase implements ECPControl
 			};
 			hBox.getChildren().add(textField);
 			textField.getStyleClass().add("center-pill");
+			textField.focusedProperty().addListener(new AutoSelector(textField));
 			textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 
 				@Override

@@ -23,6 +23,8 @@ public class CharacterField extends ECPControlBase {
 		super(propertyDescriptor, context);
 
 		setSkin(new Skin(this));
+		
+		textField.focusedProperty().addListener(new AutoSelector(textField));
 
 		textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 
