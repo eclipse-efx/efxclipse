@@ -6,20 +6,6 @@
    <extension
          point="org.eclipse.fx.ecp.ui.controls">
          
-      <!--
-      <factory
-            class="org.eclipse.fx.ecp.ui.controls.DummyControl$Factory"
-            controlClass="javafx.scene.Node"
-            id="org.eclipse.fx.ecp.ui.controls.dummy"
-            showLabel="true">
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Object">
-         </staticTest>
-      </factory>
-      -->
-      
       <factory
             class="org.eclipse.fx.ecp.ui.controls.CheckBoxControl$Factory"
             id="org.eclipse.fx.ecp.ui.controls.checkBox"
@@ -30,21 +16,24 @@
                supportedClassType="java.lang.Boolean">
          </staticTest>
       </factory>
-      
       <factory
             class="org.eclipse.fx.ecp.ui.controls.TextFieldControl$Factory"
             id="org.eclipse.fx.ecp.ui.controls.textField"
             showLabel="true">
-            
-         <staticTest
-               priority="1"
-               singleValue="true"
-               supportedClassType="java.lang.Character">
-         </staticTest>   
          <staticTest
                priority="1"
                singleValue="true"
                supportedClassType="java.lang.String">
+         </staticTest>
+      </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.CharacterField$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.characterField"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="java.lang.Character">
          </staticTest>
       </factory>
       <factory
