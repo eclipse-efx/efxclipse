@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
@@ -65,12 +64,8 @@ public class DefaultModelElementForm extends Control implements ModelElementForm
 					label.getStyleClass().add("control-label");
 					GridPane.setValignment(label, VPos.TOP);
 					gridPane.add(label, 0, i);
-//					gridPane.setPadding(new Insets(20));
-//					gridPane.setVgap(10);
-//					gridPane.setHgap(12);
 
 					EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
-
 					ECPControl.Factory factory = registry.getFactory(propertyDescriptor, modelElement);
 
 					if (factory != null) {
@@ -103,7 +98,9 @@ public class DefaultModelElementForm extends Control implements ModelElementForm
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		for (ControlDecoration controlDecoration : controls.values()) {
+			controlDecoration.dispose();
+		}
 	}
 
 	@Override

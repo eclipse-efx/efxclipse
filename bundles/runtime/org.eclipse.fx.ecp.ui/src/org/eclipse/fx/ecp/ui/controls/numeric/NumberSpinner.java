@@ -12,30 +12,20 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.common.util.Diagnostic;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.ECPUtil;
+import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
-public abstract class NumberSpinner extends Control implements ECPControl {
+public abstract class NumberSpinner extends ECPControlBase implements ECPControl {
 
-	protected final EObject modelElement;
-	protected final EStructuralFeature feature;
-	protected final EditingDomain editingDomain;
+	private Button decreaseButton;
+	private TextField textField;
+	private Button increaseButton;
 
 	abstract class NumberSpinnerSkin<C extends Control, T extends Number> extends SkinBase<C> {
-
-		private final Button decreaseButton;
-		private final TextField textField;
-		private final Button increaseButton;
-		private final Adapter modelElementAdapter;
 
 		@SuppressWarnings("unchecked")
 		NumberSpinnerSkin(C control) {
@@ -127,18 +117,6 @@ public abstract class NumberSpinner extends Control implements ECPControl {
 
 			});
 
-			modelElementAdapter = new AdapterImpl() {
-
-				@Override
-				public void notifyChanged(Notification msg) {
-					if (msg.getFeature() == feature)
-						update();
-				}
-
-			};
-
-			modelElement.eAdapters().add(modelElementAdapter);
-
 			update();
 		}
 
@@ -150,19 +128,10 @@ public abstract class NumberSpinner extends Control implements ECPControl {
 
 		abstract boolean validate(String literal);
 
-		protected void update() {
-			Object value = modelElement.eGet(feature);
-			textField.setText(value != null ? value.toString() : "0");
-		}
-
 	}
 
-	public NumberSpinner(IItemPropertyDescriptor propertyDescriptor, EObject modelElement, EStructuralFeature feature,
-			EditingDomain editingDomain) {
-		this.modelElement = modelElement;
-		this.feature = feature;
-		this.editingDomain = editingDomain;
-
+	public NumberSpinner(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
+		super(propertyDescriptor, context);
 		getStyleClass().add("spinner");
 	}
 
@@ -172,8 +141,14 @@ public abstract class NumberSpinner extends Control implements ECPControl {
 	}
 
 	@Override
+	protected void update() {
+		Object value = modelElement.eGet(feature);
+		textField.setText(value != null ? value.toString() : "0");
+	}
+
+	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		modelElement.eAdapters().remove(modelElementAdapter);
 	}
 
 }

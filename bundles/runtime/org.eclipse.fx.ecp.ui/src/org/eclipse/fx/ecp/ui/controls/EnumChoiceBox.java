@@ -4,37 +4,30 @@ import java.util.ArrayList;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.SkinBase;
+import javafx.scene.layout.HBox;
 
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
 
-public class EnumChoiceBox extends ChoiceBox<Enumerator> implements ECPControl {
+public class EnumChoiceBox extends ECPControlBase {
 
-	protected final EObject modelElement;
-	protected final EStructuralFeature feature;
-	protected final AdapterImpl modelElementAdapter;
+	protected ChoiceBox<Enumerator> choiceBox;
 
 	public EnumChoiceBox(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		modelElement = context.getModelElement();
-		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
+		super(propertyDescriptor, context);
 
-		final EditingDomain editingDomain = context.getEditingDomain();
+		setSkin(new Skin(this));
+
 		final EClassifier type = feature.getEType();
 		final EEnum eEnum = (EEnum) type;
 		final EList<EEnumLiteral> enumLiterals = eEnum.getELiterals();
@@ -48,14 +41,12 @@ public class EnumChoiceBox extends ChoiceBox<Enumerator> implements ECPControl {
 		for (EEnumLiteral literal : enumLiterals)
 			values.add(literal.getInstance());
 
-		getItems().addAll(values);
-
-		getChildren();
+		choiceBox.getItems().addAll(values);
 
 		// select the current value before adding the listeners
 		update();
 
-		getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Enumerator>() {
+		choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Enumerator>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Enumerator> observableValue, Enumerator oldValue, Enumerator newValue) {
@@ -71,26 +62,16 @@ public class EnumChoiceBox extends ChoiceBox<Enumerator> implements ECPControl {
 
 		});
 
-		modelElementAdapter = new AdapterImpl() {
-
-			@Override
-			public void notifyChanged(Notification msg) {
-				if (msg.getFeature() == feature)
-					update();
-			}
-
-		};
-
-		modelElement.eAdapters().add(modelElementAdapter);
 	}
 
+	@Override
 	public void update() {
-		final Enumerator selectedItem = getSelectionModel().getSelectedItem();
+		final Enumerator selectedItem = choiceBox.getSelectionModel().getSelectedItem();
 		final Enumerator value = (Enumerator) modelElement.eGet(feature);
 
 		// only update the selection if the value has changed
 		if (selectedItem != value)
-			getSelectionModel().select(value);
+			choiceBox.getSelectionModel().select(value);
 	}
 
 	@Override
@@ -98,18 +79,26 @@ public class EnumChoiceBox extends ChoiceBox<Enumerator> implements ECPControl {
 		return getClass().getResource("ECPControls.css").toExternalForm();
 	}
 
-	public static class Factory implements ECPControl.Factory {
+	class Skin extends SkinBase<EnumChoiceBox> {
 
-		@Override
-		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
-			return new EnumChoiceBox(itemPropertyDescriptor, context);
+		Skin(EnumChoiceBox control) {
+			super(control);
+			HBox hBox = new HBox();
+			getChildren().add(hBox);
+			
+			choiceBox = new ChoiceBox<>();
+			hBox.getChildren().add(choiceBox);
 		}
 
 	}
 
-	@Override
-	public void dispose() {
-		modelElement.eAdapters().remove(modelElementAdapter);
+	public static class Factory implements ECPControl.Factory {
+
+		@Override
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+			return new EnumChoiceBox(itemPropertyDescriptor, context);
+		}
+
 	}
 
 }

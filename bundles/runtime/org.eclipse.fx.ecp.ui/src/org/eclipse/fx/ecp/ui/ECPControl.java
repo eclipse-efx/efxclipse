@@ -2,13 +2,11 @@ package org.eclipse.fx.ecp.ui;
 
 import java.util.Set;
 
-import javafx.scene.Node;
-
-import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.ecp.edit.util.ECPApplicableTester;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 import org.eclipse.fx.ecp.ui.impl.ControlFactoryRegistryImpl;
 
 public interface ECPControl {
@@ -17,7 +15,7 @@ public interface ECPControl {
 
 	interface Factory {
 		
-		Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context);
+		ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context);
 		
 		interface Descriptor {
 			

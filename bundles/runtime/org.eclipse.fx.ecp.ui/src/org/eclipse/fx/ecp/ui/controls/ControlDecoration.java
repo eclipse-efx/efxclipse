@@ -52,7 +52,7 @@ public class ControlDecoration extends AnchorPane implements ECPControl {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		
 	}
 
 }

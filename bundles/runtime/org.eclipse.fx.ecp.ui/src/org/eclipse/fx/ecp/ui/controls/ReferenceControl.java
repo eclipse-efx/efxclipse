@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.SkinBase;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
@@ -16,42 +17,33 @@ import javafx.scene.layout.Priority;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.controls.multi.MarkButton;
-import org.eclipse.fx.emf.edit.ui.AdapterFactoryCellFactory;
 import org.eclipse.fx.emf.edit.ui.dnd.LocalTransfer;
 
-public class ReferenceControl extends HBox implements ECPControl {
+public class ReferenceControl extends ECPControlBase {
 
-	protected final Hyperlink hyperlink;
-	protected final EObject modelElement;
 	protected final EReference reference;
 	protected final AdapterImpl valueAdapter;
-	protected final Button unsetButton;
-	protected final EditingDomain editingDomain;
+
+	protected Hyperlink hyperlink;
+	protected Button unsetButton;
 	protected Command setCommand;
 	protected Command unsetCommand;
-	protected final AdapterImpl modelElementAdapter;
 
 	public ReferenceControl(IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
+		super(propertyDescriptor, context);
 
-		modelElement = context.getModelElement();
-		reference = (EReference) propertyDescriptor.getFeature(modelElement);
-		editingDomain = context.getEditingDomain();
+		setSkin(new Skin(this));
 
-		hyperlink = new Hyperlink();
-		getChildren().add(hyperlink);
-		hyperlink.setMaxWidth(Double.MAX_VALUE);
-		HBox.setHgrow(hyperlink, Priority.ALWAYS);
+		reference = (EReference) feature;
+
 		hyperlink.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -99,40 +91,6 @@ public class ReferenceControl extends HBox implements ECPControl {
 
 		});
 
-		if (reference.isUnsettable()) {
-			unsetButton = new MarkButton("cross");
-			getChildren().add(unsetButton);
-			unsetButton.getStyleClass().add("unset-reference-button");
-			Tooltip tooltip = new Tooltip("Remove reference");
-			unsetButton.setTooltip(tooltip);
-			unsetButton.setOnAction(new EventHandler<ActionEvent>() {
-
-				@Override
-				public void handle(ActionEvent arg0) {
-					if (unsetCommand.canExecute())
-						editingDomain.getCommandStack().execute(unsetCommand);
-				}
-
-			});
-
-		} else {
-			unsetButton = null;
-		}
-
-		final EReference feature = (EReference) propertyDescriptor.getFeature(modelElement);
-
-		modelElementAdapter = new AdapterImpl() {
-
-			@Override
-			public void notifyChanged(Notification msg) {
-				if (msg.getFeature() == feature)
-					update();
-			}
-
-		};
-
-		modelElement.eAdapters().add(modelElementAdapter);
-
 		valueAdapter = new AdapterImpl() {
 
 			@Override
@@ -145,9 +103,8 @@ public class ReferenceControl extends HBox implements ECPControl {
 		update();
 	}
 
-	private void update() {
-		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-
+	@Override
+	protected void update() {
 		Object value = modelElement.eGet(reference);
 
 		if (unsetButton != null) {
@@ -156,41 +113,62 @@ public class ReferenceControl extends HBox implements ECPControl {
 		}
 
 		if (value instanceof EObject) {
-
 			EObject eObject = (EObject) value;
 
 			eObject.eAdapters().add(valueAdapter);
 
-			IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(value, IItemLabelProvider.class);
+			String text = ECPUtil.getText(value);
+			hyperlink.setText(text);
 
-			if (labelProvider != null) {
-				String text = labelProvider.getText(value);
-				hyperlink.setText(text);
-
-				Object image = labelProvider.getImage(value);
-				Node graphic = AdapterFactoryCellFactory.graphicFromObject(image);
-				hyperlink.setGraphic(graphic);
-				return;
-			}
-
+			Node graphic = ECPUtil.getGraphic(value);
+			hyperlink.setGraphic(graphic);
 		}
 
-		hyperlink.setText(null);
-		hyperlink.setGraphic(null);
+	}
+
+	class Skin extends SkinBase<ReferenceControl> {
+		
+		Skin(ReferenceControl control) {
+			super(control);
+			
+			HBox hBox = new HBox();
+			getChildren().add(hBox);
+
+			hyperlink = new Hyperlink();
+			hBox.getChildren().add(hyperlink);
+			hyperlink.setMaxWidth(Double.MAX_VALUE);
+			HBox.setHgrow(hyperlink, Priority.ALWAYS);
+
+			if (reference.isUnsettable()) {
+				unsetButton = new MarkButton("cross");
+				getChildren().add(unsetButton);
+				
+				unsetButton.getStyleClass().add("unset-reference-button");
+				
+				Tooltip tooltip = new Tooltip("Remove reference");
+				unsetButton.setTooltip(tooltip);
+				
+				unsetButton.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						if (unsetCommand.canExecute())
+							editingDomain.getCommandStack().execute(unsetCommand);
+					}
+
+				});
+			}
+		}
+		
 	}
 
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new ReferenceControl(itemPropertyDescriptor, context);
 		}
 
-	}
-
-	@Override
-	public void dispose() {
-		modelElement.eAdapters().remove(modelElementAdapter);
 	}
 
 }

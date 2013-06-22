@@ -4,36 +4,24 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
-import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
-import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.ECPControl;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Node;
-import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.HBox;
 
-public class DateControl extends Control {
+import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.ecp.edit.ECPControlContext;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ECPControl;
 
-	private EObject modelElement;
-	private EStructuralFeature feature;
+public class DateControl extends ECPControlBase {
+
 	private DatePicker datePicker;
 
 	public DateControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-
-		modelElement = context.getModelElement();
-		final EditingDomain editingDomain = context.getEditingDomain();
-		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
+		super(propertyDescriptor, context);
 		
 		setSkin(new Skin(this));
 
@@ -53,19 +41,10 @@ public class DateControl extends Control {
 
 		});
 
-		modelElement.eAdapters().add(new AdapterImpl() {
-
-			@Override
-			public void notifyChanged(Notification msg) {
-				if (msg.getFeature() == feature)
-					update();
-			}
-
-		});
-
 		update();
 	}
 
+	@Override
 	public void update() {
 		Date date = (Date) modelElement.eGet(feature);
 		if(date == null)
@@ -89,7 +68,7 @@ public class DateControl extends Control {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new DateControl(itemPropertyDescriptor, context);
 		}
 

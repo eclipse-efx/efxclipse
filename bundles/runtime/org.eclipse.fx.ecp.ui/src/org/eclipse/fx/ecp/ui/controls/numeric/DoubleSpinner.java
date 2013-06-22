@@ -1,19 +1,14 @@
 package org.eclipse.fx.ecp.ui.controls.numeric;
 
-import javafx.scene.Node;
-
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class DoubleSpinner extends NumberSpinner {
 
-	public DoubleSpinner(IItemPropertyDescriptor propertyDescriptor, EObject modelElement, EStructuralFeature feature,
-			EditingDomain editingDomain) {
-		super(propertyDescriptor, modelElement, feature, editingDomain);
+	public DoubleSpinner(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
+		super(propertyDescriptor, context);
 
 		setSkin(new NumberSpinnerSkin<NumberSpinner, Double>(this) {
 
@@ -55,11 +50,8 @@ public class DoubleSpinner extends NumberSpinner {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
-			EObject modelElement = context.getModelElement();
-			EStructuralFeature feature = (EStructuralFeature) itemPropertyDescriptor.getFeature(modelElement);
-			EditingDomain editingDomain = context.getEditingDomain();
-			return new DoubleSpinner(itemPropertyDescriptor, modelElement, feature, editingDomain);
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+			return new DoubleSpinner(itemPropertyDescriptor, context);
 		}
 
 	}

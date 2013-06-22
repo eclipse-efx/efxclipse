@@ -5,44 +5,31 @@ import java.util.Objects;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
+import javafx.scene.control.SkinBase;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
 
-public class TextFieldControl extends VBox implements ECPControl {
+public class TextFieldControl extends ECPControlBase {
 
-	protected final TextField textField;
-	protected final EObject modelElement;
-	protected final EStructuralFeature feature;
-	protected final EDataTypeValueHandler valueHandler;
-	protected final AdapterImpl modelElementAdapter;
+	protected TextField textField;
+	protected EDataTypeValueHandler valueHandler;
 
 	public TextFieldControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-
-		modelElement = context.getModelElement();
-		final EditingDomain editingDomain = context.getEditingDomain();
-
-		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
-
+		super(propertyDescriptor, context);
+		
+		setSkin(new Skin(this));
+		
 		valueHandler = new EDataTypeValueHandler((EDataType) feature.getEType());
-
-		textField = new TextField();
-		getChildren().add(textField);
 
 		textField.textProperty().addListener(new ChangeListener<String>() {
 
@@ -51,10 +38,10 @@ public class TextFieldControl extends VBox implements ECPControl {
 				final String message = valueHandler.isValid(newText);
 				ObservableList<String> styleClass = textField.getStyleClass();
 				if (message == null) {
-					styleClass.remove(IControlConstants.INVALID_CLASS);
+					styleClass.remove("invalid");
 				} else {
-					if (!styleClass.contains(IControlConstants.INVALID_CLASS))
-						styleClass.add(IControlConstants.INVALID_CLASS);
+					if (!styleClass.contains("invalid"))
+						styleClass.add("invalid");
 				}
 			}
 
@@ -86,35 +73,33 @@ public class TextFieldControl extends VBox implements ECPControl {
 
 		});
 
-		modelElementAdapter = new AdapterImpl() {
-
-			@Override
-			public void notifyChanged(Notification msg) {
-				if (msg.getFeature() == feature)
-					update();
-			}
-
-		};
-
-		modelElement.eAdapters().add(modelElementAdapter);
-
 		update();
 	}
 
-	public void update() {
+	@Override
+	protected void update() {
 		Object value = modelElement.eGet(feature);
 		textField.setText(valueHandler.toString(value));
 	}
 
-	@Override
-	public void dispose() {
-		modelElement.eAdapters().remove(modelElementAdapter);
+	class Skin extends SkinBase<TextFieldControl> {
+		
+		Skin(TextFieldControl control) {
+			super(control);
+			
+			VBox vBox = new VBox();
+			getChildren().add(vBox);
+			
+			textField = new TextField();
+			vBox.getChildren().add(textField);
+		}
+		
 	}
 
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new TextFieldControl(itemPropertyDescriptor, context);
 		}
 

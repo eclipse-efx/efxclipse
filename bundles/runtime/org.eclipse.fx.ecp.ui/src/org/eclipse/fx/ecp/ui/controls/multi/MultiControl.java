@@ -34,18 +34,15 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.ECPUIPlugin;
+import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 import org.eclipse.fx.ecp.ui.controls.ValidationMessage;
 import org.osgi.framework.Bundle;
 
 @SuppressWarnings("all")
-public class MultiControl extends Control implements ECPControl {
+public class MultiControl extends ECPControlBase {
 
-	private EStructuralFeature feature;
-	private EObject modelElement;
-	private EditingDomain editingDomain;
 	private EList<Object> values;
 	private VBox controlsBox;
-	protected final AdapterImpl modelElementAdapter;
 
 	class Skin extends SkinBase<MultiControl> {
 
@@ -56,11 +53,10 @@ public class MultiControl extends Control implements ECPControl {
 	}
 
 	public MultiControl(final IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
+		super(propertyDescriptor, context);
+		
 		setSkin(new Skin(this));
 
-		modelElement = context.getModelElement();
-		editingDomain = context.getEditingDomain();
-		feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 		values = (EList<Object>) modelElement.eGet(feature);
 
 		VBox vBox = new VBox();
@@ -89,7 +85,13 @@ public class MultiControl extends Control implements ECPControl {
 				vBox.getChildren().add(new ReferenceDropControl(editingDomain, reference, modelElement));
 		}
 
-		modelElementAdapter = new AdapterImpl() {
+		createModelElementAdapter();
+	}
+
+	@Override
+	protected AdapterImpl createModelElementAdapter() {
+		
+		return new AdapterImpl() {
 
 			@Override
 			public void notifyChanged(Notification msg) {
@@ -125,8 +127,7 @@ public class MultiControl extends Control implements ECPControl {
 			}
 
 		};
-
-		modelElement.eAdapters().add(modelElementAdapter);
+		
 	}
 
 	private AbstractEmbeddedControl createEmbeddedControl(final IItemPropertyDescriptor propertyDescriptor,
@@ -159,7 +160,7 @@ public class MultiControl extends Control implements ECPControl {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public Node createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new MultiControl(itemPropertyDescriptor, context);
 		}
 
@@ -259,8 +260,8 @@ public class MultiControl extends Control implements ECPControl {
 	}
 
 	@Override
-	public void dispose() {
-		modelElement.eAdapters().add(modelElementAdapter);
+	protected void update() {
+		// TODO Auto-generated method stub
 	}
 
 }
