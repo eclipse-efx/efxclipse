@@ -2,14 +2,23 @@
 	-fx-max-width: 200;
 }
 
-.integer-control {
-	-fx-max-width: 200;
+.model-element-form .spinner .text-input {
+	-fx-pref-width: 144;
+}
+
+.model-element-form .date-picker {
+	-fx-pref-width: 200;
+	-fx-pref-height: 26;
+}
+
+.model-element-form .check-box {
+	-fx-pref-height: 26;
 }
 
 .model-element-form .grid {
-	-fx-padding: 10.0;
-	-fx-hgap: 6.0;
-	-fx-vgap: 10.0;
+	-fx-padding: 20 25 25 20;
+	-fx-hgap: 15;
+	-fx-vgap: 15;
 }
 
 .up-button, .down-button, .remove-button {
@@ -44,6 +53,10 @@
     /* -fx-shape: "M -1 0 L -3 -2, -2 -3, 0 -1, 2 -3, 3 -2, 1 0, 3 2, 2 3, 0 1, -2 3, -3 2 z"; */
     -fx-pref-height: 2;
     -fx-pref-width: 8;
+}
+
+.decrease-button, .increase-button {
+    -fx-pref-width: 28;
 }
 
 .increase-button .plus {

@@ -65,9 +65,9 @@ public class DefaultModelElementForm extends Control implements ModelElementForm
 					label.getStyleClass().add("control-label");
 					GridPane.setValignment(label, VPos.TOP);
 					gridPane.add(label, 0, i);
-					gridPane.setPadding(new Insets(20));
-					gridPane.setVgap(10);
-					gridPane.setHgap(12);
+//					gridPane.setPadding(new Insets(20));
+//					gridPane.setVgap(10);
+//					gridPane.setHgap(12);
 
 					EStructuralFeature feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
 

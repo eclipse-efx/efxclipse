@@ -163,7 +163,7 @@ public abstract class NumberSpinner extends Control implements ECPControl {
 		this.feature = feature;
 		this.editingDomain = editingDomain;
 
-		getStyleClass().add("integer-control");
+		getStyleClass().add("spinner");
 	}
 
 	@Override

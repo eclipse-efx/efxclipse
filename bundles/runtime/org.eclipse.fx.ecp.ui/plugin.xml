@@ -44,14 +44,8 @@
          <staticTest
                priority="1"
                singleValue="true"
-               supportedClassType="java.util.Date">
-         </staticTest>
-         <staticTest
-               priority="1"
-               singleValue="true"
                supportedClassType="java.lang.String">
          </staticTest>
-            
       </factory>
       <factory
             class="org.eclipse.fx.ecp.ui.controls.EnumChoiceBox$Factory"
@@ -216,6 +210,16 @@
                priority="1"
                singleValue="true"
                supportedClassType="java.math.BigInteger">
+         </staticTest>
+      </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.DateControl$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.datePicker"
+            showLabel="true">
+         <staticTest
+               priority="1"
+               singleValue="true"
+               supportedClassType="java.util.Date">
          </staticTest>
       </factory>
       

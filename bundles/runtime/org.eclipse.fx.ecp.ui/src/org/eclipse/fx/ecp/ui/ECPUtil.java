@@ -29,15 +29,15 @@ import org.osgi.framework.Bundle;
 public class ECPUtil {
 
 	public static final ComposedAdapterFactory DEFAULT_ADAPTER_FACTORY;
-	private static final String PACKAGE_IMAGE_URL = null;
+	private static final String PACKAGE_IMAGE_URL;
 
 	static {
 		DEFAULT_ADAPTER_FACTORY = new ComposedAdapterFactory();
 		DEFAULT_ADAPTER_FACTORY.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		DEFAULT_ADAPTER_FACTORY.addAdapterFactory(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
-//		Bundle bundle = Platform.getBundle("org.eclipse.fx.ecp.app");
-//		URL entry = bundle.getEntry("icons/EPackage.gif");
-//		PACKAGE_IMAGE_URL = entry.toExternalForm();
+		Bundle bundle = Platform.getBundle("org.eclipse.fx.ecp.app");
+		URL entry = bundle.getEntry("icons/EPackage.gif");
+		PACKAGE_IMAGE_URL = entry.toExternalForm();
 	}
 
 	public static TreeItem<ENamedElement> getConcreteClasses() {
