@@ -23,6 +23,7 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.ECPControl.Factory.Registry;
 import org.eclipse.fx.ecp.ui.controls.ControlDecoration;
+import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class DefaultModelElementForm extends Control implements ModelElementForm {
 
@@ -69,13 +70,12 @@ public class DefaultModelElementForm extends Control implements ModelElementForm
 					ECPControl.Factory factory = registry.getFactory(propertyDescriptor, modelElement);
 
 					if (factory != null) {
-						ControlDecoration controlDecoration = new ControlDecoration(feature);
-						controls.put(feature, controlDecoration);
-
-						Node control = factory.createControl(propertyDescriptor, modelElementContext);
-						controlDecoration.getChildren().add(control);
+						ECPControlBase control = factory.createControl(propertyDescriptor, modelElementContext);
 						AnchorPane.setLeftAnchor(control, 0.0);
 						AnchorPane.setRightAnchor(control, 0.0);
+
+						ControlDecoration controlDecoration = new ControlDecoration(feature, control);
+						controls.put(feature, controlDecoration);
 
 						gridPane.add(controlDecoration, 1, i);
 						GridPane.setHgrow(controlDecoration, Priority.ALWAYS);

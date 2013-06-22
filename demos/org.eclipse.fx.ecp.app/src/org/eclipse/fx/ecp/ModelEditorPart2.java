@@ -43,6 +43,7 @@ import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.controls.BreadcrumbBar;
+import org.eclipse.fx.ecp.ui.form.DefaultModelElementForm;
 import org.eclipse.fx.ecp.ui.form.ModelElementForm;
 
 public class ModelEditorPart2 implements ModelElementEditor {
@@ -56,7 +57,7 @@ public class ModelEditorPart2 implements ModelElementEditor {
 	private final BreadcrumbBar breadcrumbBar;
 	private final ContextMenu contextMenu = new ContextMenu();
 	private Timeline contextMenuTimeline;
-	private ModelElementForm modelElementForm;
+	private DefaultModelElementForm modelElementForm;
 
 	@Inject
 	public ModelEditorPart2(BorderPane parent, final MApplication application, MPart part) {
@@ -179,11 +180,6 @@ public class ModelEditorPart2 implements ModelElementEditor {
 
 		});
 
-		// StackPane stackPane = new StackPane();
-		// stackPane.getChildren().add(new TextField());
-		// stackPane.getChildren().add(new Button("x"));
-		// stackPane.setAlignment(Pos.CENTER_RIGHT);
-		// parent.setBottom(stackPane);
 	}
 
 	public void setInput(final ECPControlContext modelElementContext) {
@@ -201,11 +197,13 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		backButton.setDisable(prevModelElements.isEmpty());
 		forwardButton.setDisable(nextModelElements.isEmpty());
 		breadcrumbBar.setModelElement(controlContext.getModelElement());
-		Node form = ModelElementForm.Factory.Registry.INSTANCE.getFactory(controlContext.getModelElement()).createModelElementForm(
+		
+		if(modelElementForm != null)
+			modelElementForm.dispose();
+		
+		modelElementForm = (DefaultModelElementForm) ModelElementForm.Factory.Registry.INSTANCE.getFactory(controlContext.getModelElement()).createModelElementForm(
 				controlContext);
-		scrollPane.setContent(form);
-		if (form instanceof ModelElementForm)
-			modelElementForm = (ModelElementForm) form;
+		scrollPane.setContent(modelElementForm);
 	}
 
 	public void showContextMenu(Node node, boolean back) {

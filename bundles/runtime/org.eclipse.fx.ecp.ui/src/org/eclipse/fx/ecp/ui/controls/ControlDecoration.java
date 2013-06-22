@@ -7,16 +7,20 @@ import javafx.scene.layout.AnchorPane;
 
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.fx.ecp.ui.ECPControl;
 
-public class ControlDecoration extends AnchorPane implements ECPControl {
+public class ControlDecoration extends AnchorPane {
 
 	private Label label;
 	private Tooltip tooltip;
 	private final EStructuralFeature feature;
+	private final ECPControlBase control;
 	
-	public ControlDecoration(EStructuralFeature feature) {
+	public ControlDecoration(EStructuralFeature feature, ECPControlBase control) {
 		this.feature = feature;
+		this.control = control;
+		
+		getChildren().add(control);
+		
 		ImageView imageView = new ImageView(getClass().getResource("asterisk.png").toExternalForm());
 		label = new Label();
 		label.setGraphic(imageView);
@@ -50,9 +54,8 @@ public class ControlDecoration extends AnchorPane implements ECPControl {
 		label.setVisible(false);
 	}
 
-	@Override
 	public void dispose() {
-		
+		control.dispose();
 	}
 
 }
