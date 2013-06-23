@@ -45,7 +45,6 @@
     -fx-pref-width: 30;
 }
 
-.remove-button .minus,
 .decrease-button .minus {
     -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
     -fx-background-insets: 0 0 -1 0, 0;
@@ -67,6 +66,7 @@
     -fx-pref-width: 10;
 }
 
+.remove-button .cross,
 .unset-reference-button .cross {
     -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
     -fx-background-insets: 0 0 -1 0, 0;
