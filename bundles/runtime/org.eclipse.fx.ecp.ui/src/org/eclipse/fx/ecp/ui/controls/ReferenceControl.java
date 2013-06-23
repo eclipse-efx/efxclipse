@@ -24,7 +24,6 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.ECPUtil;
-import org.eclipse.fx.ecp.ui.controls.multi.MarkButton;
 import org.eclipse.fx.emf.edit.ui.dnd.LocalTransfer;
 
 public class ReferenceControl extends ECPControlBase {
@@ -140,10 +139,10 @@ public class ReferenceControl extends ECPControlBase {
 			HBox.setHgrow(hyperlink, Priority.ALWAYS);
 
 			if (reference.isUnsettable()) {
-				unsetButton = new MarkButton("cross");
+				unsetButton = new Button();
 				getChildren().add(unsetButton);
-				
 				unsetButton.getStyleClass().add("unset-reference-button");
+				ECPUtil.addMark(unsetButton, "cross");
 				
 				Tooltip tooltip = new Tooltip("Remove reference");
 				unsetButton.setTooltip(tooltip);
