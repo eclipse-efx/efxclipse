@@ -7,9 +7,11 @@ import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class LongSpinner extends NumberSpinner {
 
+	public static final long DEFAULT_VALUE = 0L;
+
 	public LongSpinner(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		super(propertyDescriptor, context);
-		
+
 		setSkin(new NumberSpinnerSkin<NumberSpinner, Long>(this) {
 
 			@Override
@@ -27,11 +29,15 @@ public class LongSpinner extends NumberSpinner {
 
 			@Override
 			Long decrease(Long value) {
+				if (value == null)
+					value = DEFAULT_VALUE;
 				return value - 1;
 			}
 
 			@Override
 			Long increase(Long value) {
+				if (value == null)
+					value = DEFAULT_VALUE;
 				return value + 1;
 			}
 
@@ -40,13 +46,13 @@ public class LongSpinner extends NumberSpinner {
 				try {
 					return Long.parseLong(literal);
 				} catch (NumberFormatException e) {
-					return 0l;
+					return DEFAULT_VALUE;
 				}
 			}
 
 		});
 	}
-	
+
 	public static class Factory implements ECPControl.Factory {
 
 		@Override

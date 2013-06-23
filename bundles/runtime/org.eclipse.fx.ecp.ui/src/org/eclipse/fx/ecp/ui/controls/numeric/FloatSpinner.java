@@ -7,6 +7,8 @@ import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class FloatSpinner extends NumberSpinner {
 
+	public static final float DEFAULT_VALUE = 0f;
+
 	public FloatSpinner(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		super(propertyDescriptor, context);
 		setSkin(new NumberSpinnerSkin<NumberSpinner, Float>(this) {
@@ -26,11 +28,15 @@ public class FloatSpinner extends NumberSpinner {
 
 			@Override
 			Float decrease(Float value) {
+				if (value == null)
+					value = DEFAULT_VALUE;
 				return value - 1;
 			}
 
 			@Override
 			Float increase(Float value) {
+				if (value == null)
+					value = DEFAULT_VALUE;
 				return value + 1;
 			}
 
@@ -39,7 +45,7 @@ public class FloatSpinner extends NumberSpinner {
 				try {
 					return Float.parseFloat(literal);
 				} catch (NumberFormatException e) {
-					return 0.0f;
+					return DEFAULT_VALUE;
 				}
 			}
 

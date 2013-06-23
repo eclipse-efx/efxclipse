@@ -10,6 +10,8 @@ import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class BigDecimalSpinner extends NumberSpinner {
 
+	public static final BigDecimal DEFAULT_VALUE = BigDecimal.ZERO;
+
 	public BigDecimalSpinner(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		super(propertyDescriptor, context);
 
@@ -31,7 +33,7 @@ public class BigDecimalSpinner extends NumberSpinner {
 			@Override
 			BigDecimal decrease(BigDecimal value) {
 				if(value == null)
-					value = BigDecimal.ZERO;
+					value = DEFAULT_VALUE;
 				
 				return value.subtract(BigDecimal.ONE);
 			}
@@ -39,7 +41,7 @@ public class BigDecimalSpinner extends NumberSpinner {
 			@Override
 			BigDecimal increase(BigDecimal value) {
 				if(value == null)
-					value = BigDecimal.ZERO;
+					value = DEFAULT_VALUE;
 				
 				return value.add(BigDecimal.ONE);
 			}
@@ -49,7 +51,7 @@ public class BigDecimalSpinner extends NumberSpinner {
 				try {
 					return new BigDecimal(literal);
 				} catch (NumberFormatException e) {
-					return BigDecimal.ZERO;
+					return DEFAULT_VALUE;
 				}
 			}
 

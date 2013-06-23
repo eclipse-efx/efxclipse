@@ -7,6 +7,8 @@ import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class DoubleSpinner extends NumberSpinner {
 
+	public static final double DEFAULT_VALUE = 0.0;
+
 	public DoubleSpinner(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		super(propertyDescriptor, context);
 
@@ -27,11 +29,15 @@ public class DoubleSpinner extends NumberSpinner {
 
 			@Override
 			Double decrease(Double value) {
+				if (value == null)
+					value = DEFAULT_VALUE;
 				return value - 1;
 			}
 
 			@Override
 			Double increase(Double value) {
+				if (value == null)
+					value = DEFAULT_VALUE;
 				return value + 1;
 			}
 
@@ -40,7 +46,7 @@ public class DoubleSpinner extends NumberSpinner {
 				try {
 					return Double.parseDouble(literal);
 				} catch (NumberFormatException e) {
-					return 0.0;
+					return DEFAULT_VALUE;
 				}
 			}
 

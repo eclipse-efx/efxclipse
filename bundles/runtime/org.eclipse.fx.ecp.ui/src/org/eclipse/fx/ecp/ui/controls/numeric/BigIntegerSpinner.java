@@ -9,6 +9,8 @@ import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class BigIntegerSpinner extends NumberSpinner {
 
+	private static final BigInteger DEFAULT_VALUE = BigInteger.ZERO;
+
 	public BigIntegerSpinner(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		super(propertyDescriptor, context);
 
@@ -30,16 +32,14 @@ public class BigIntegerSpinner extends NumberSpinner {
 			@Override
 			BigInteger decrease(BigInteger value) {
 				if (value == null)
-					value = BigInteger.ZERO;
-
+					value = DEFAULT_VALUE;
 				return value.subtract(BigInteger.ONE);
 			}
 
 			@Override
 			BigInteger increase(BigInteger value) {
 				if (value == null)
-					value = BigInteger.ZERO;
-
+					value = DEFAULT_VALUE;
 				return value.add(BigInteger.ONE);
 			}
 
@@ -48,7 +48,7 @@ public class BigIntegerSpinner extends NumberSpinner {
 				try {
 					return new BigInteger(literal);
 				} catch (NumberFormatException e) {
-					return BigInteger.ZERO;
+					return DEFAULT_VALUE;
 				}
 			}
 

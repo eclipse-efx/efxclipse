@@ -6,6 +6,8 @@ import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class IntegerSpinner extends NumberSpinner {
+	
+	public static final Integer DEFAULT_VALUE = 0;
 
 	public IntegerSpinner(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		super(propertyDescriptor, context);
@@ -27,11 +29,15 @@ public class IntegerSpinner extends NumberSpinner {
 
 			@Override
 			Integer decrease(Integer value) {
+				if(value == null)
+					value = DEFAULT_VALUE;
 				return value - 1;
 			}
 
 			@Override
 			Integer increase(Integer value) {
+				if(value == null)
+					value = DEFAULT_VALUE;
 				return value + 1;
 			}
 
@@ -40,7 +46,7 @@ public class IntegerSpinner extends NumberSpinner {
 				try {
 					return Integer.parseInt(literal);
 				} catch (NumberFormatException e) {
-					return 0;
+					return DEFAULT_VALUE;
 				}
 			}
 
