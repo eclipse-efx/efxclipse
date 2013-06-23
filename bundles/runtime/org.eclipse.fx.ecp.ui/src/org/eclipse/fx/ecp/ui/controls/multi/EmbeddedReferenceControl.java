@@ -1,11 +1,9 @@
 package org.eclipse.fx.ecp.ui.controls.multi;
 
-import java.net.URL;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
@@ -13,9 +11,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ECPUtil;
 
 public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 
@@ -62,7 +59,7 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 		super.update();
 
 		if (eList.size() > index) {
-			final EObject newValue = (EObject) eList.get(index);
+			EObject newValue = (EObject) eList.get(index);
 
 			if (newValue != value) {
 				if (value != null)
@@ -71,21 +68,11 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 				value = newValue;
 			}
 
-			ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-
-			// TODO check why this is not working:
-			// IItemLabelProvider labelProvider =
-			// ComposedAdapterFactory.Descriptor.Registry.INSTANCE//(IItemLabelProvider)
-			// EcoreUtil.getRegisteredAdapter(value, IItemLabelProvider.class);
-			IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(value, IItemLabelProvider.class);
-
-			String text = labelProvider.getText(value);
-
-			URL image = (URL) labelProvider.getImage(value);
-			ImageView imageView = new ImageView(image.toExternalForm());
+			String text = ECPUtil.getText(value);
+			Node icon = ECPUtil.getGraphic(value);
 
 			hyperlink.setText(text);
-			hyperlink.setGraphic(imageView);
+			hyperlink.setGraphic(icon);
 		} else {
 			hyperlink.setText(null);
 			hyperlink.setGraphic(null);

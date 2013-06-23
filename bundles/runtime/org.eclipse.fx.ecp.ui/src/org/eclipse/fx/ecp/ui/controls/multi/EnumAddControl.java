@@ -10,7 +10,6 @@ import javafx.scene.control.Control;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
@@ -24,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.fx.ecp.ui.ECPUtil;
 
 public class EnumAddControl extends Control {
 
@@ -70,9 +70,10 @@ public class EnumAddControl extends Control {
 
 		});
 
-		addButton = new MarkButton("plus");
+		addButton = new Button();
 		hBox.getChildren().add(addButton);
 		addButton.getStyleClass().addAll("right-pill", "add-enum-button");
+		ECPUtil.addMark(addButton, "plus");
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override

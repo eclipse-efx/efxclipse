@@ -6,9 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
@@ -117,10 +115,6 @@ public class EmbeddedTextFieldControl extends AbstractEmbeddedControl {
 							if (command.canExecute())
 								editingDomain.getCommandStack().execute(command);
 						}
-						// textField.getStyleClass().remove("error");
-					} else {
-						// if (!textField.getStyleClass().contains("error"))
-						// textField.getStyleClass().add("error");
 					}
 				}
 			}

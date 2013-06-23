@@ -14,6 +14,7 @@ import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ECPUtil;
 
 public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedControl {
 
@@ -39,10 +40,11 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 
 		if (feature.isOrdered()) {
 
-			upButton = new MarkButton("up-arrow");
+			upButton = new Button();
 			getChildren().add(upButton);
 			upButton.getStyleClass().addAll("up-button");
 			upButton.setMaxHeight(Double.MAX_VALUE);
+			ECPUtil.addMark(upButton, "up-arrow");
 			
 			upButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -57,9 +59,10 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 
 			});
 
-			downButton = new MarkButton("down-arrow");
+			downButton = new Button();
 			getChildren().add(downButton);
 			downButton.getStyleClass().addAll("down-button", "center-pill");
+			ECPUtil.addMark(downButton, "down-arrow");
 			
 			downButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -77,9 +80,10 @@ public abstract class AbstractEmbeddedControl extends HBox implements EmbeddedCo
 
 		}
 
-		final Button deleteButton = new MarkButton("minus");
+		final Button deleteButton = new Button();
 		getChildren().add(deleteButton);
 		deleteButton.getStyleClass().addAll("remove-button", "right-pill");
+		ECPUtil.addMark(deleteButton, "cross");
 		
 		deleteButton.setOnAction(new EventHandler<ActionEvent>() {
 

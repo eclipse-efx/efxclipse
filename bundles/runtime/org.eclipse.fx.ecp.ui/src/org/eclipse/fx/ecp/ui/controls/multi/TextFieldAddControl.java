@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.fx.ecp.ui.ECPUtil;
 
 public class TextFieldAddControl extends HBox {
 
@@ -66,11 +67,12 @@ public class TextFieldAddControl extends HBox {
 
 		});
 
-		addButton = new MarkButton("plus");
+		addButton = new Button();
 		getChildren().add(addButton);
 		addButton.setMaxHeight(Double.MAX_VALUE);
 		addButton.getStyleClass().addAll("right-pill", "text-field-add-button");
-
+		ECPUtil.addMark(addButton, "plus");
+		
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
