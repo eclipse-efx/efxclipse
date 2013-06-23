@@ -1,5 +1,7 @@
 package org.eclipse.fx.ecp.ui.controls;
 
+import com.google.common.base.Strings;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,16 +17,18 @@ public class AutoSelector implements ChangeListener<Boolean> {
 	}
 
 	@Override
-	public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+	public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldFocused, Boolean newFocused) {
+		
 		Platform.runLater(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				if (textField.isFocused() && !textField.getText().isEmpty())
+				if (textField.isFocused() && !Strings.isNullOrEmpty(textField.getText()))
 					textField.selectAll();
 			}
-			
+
 		});
+		
 	}
 
 }
