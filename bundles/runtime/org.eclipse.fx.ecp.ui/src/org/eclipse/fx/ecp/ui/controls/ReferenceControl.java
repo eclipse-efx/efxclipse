@@ -38,10 +38,9 @@ public class ReferenceControl extends ECPControlBase {
 
 	public ReferenceControl(IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
 		super(propertyDescriptor, context);
+		reference = (EReference) feature;
 
 		setSkin(new Skin(this));
-
-		reference = (EReference) feature;
 
 		hyperlink.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -126,10 +125,10 @@ public class ReferenceControl extends ECPControlBase {
 	}
 
 	class Skin extends SkinBase<ReferenceControl> {
-		
+
 		Skin(ReferenceControl control) {
 			super(control);
-			
+
 			HBox hBox = new HBox();
 			getChildren().add(hBox);
 
@@ -143,10 +142,10 @@ public class ReferenceControl extends ECPControlBase {
 				getChildren().add(unsetButton);
 				unsetButton.getStyleClass().add("unset-reference-button");
 				ECPUtil.addMark(unsetButton, "cross");
-				
+
 				Tooltip tooltip = new Tooltip("Remove reference");
 				unsetButton.setTooltip(tooltip);
-				
+
 				unsetButton.setOnAction(new EventHandler<ActionEvent>() {
 
 					@Override
@@ -158,7 +157,7 @@ public class ReferenceControl extends ECPControlBase {
 				});
 			}
 		}
-		
+
 	}
 
 	public static class Factory implements ECPControl.Factory {
