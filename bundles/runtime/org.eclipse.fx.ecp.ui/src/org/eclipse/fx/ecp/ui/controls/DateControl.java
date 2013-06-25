@@ -1,11 +1,8 @@
 package org.eclipse.fx.ecp.ui.controls;
 
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Objects;
-import java.util.TimeZone;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
