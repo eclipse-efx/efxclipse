@@ -1,8 +1,11 @@
 package org.eclipse.fx.ecp.ui.controls;
 
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -22,7 +25,7 @@ public class DateControl extends ECPControlBase {
 
 	public DateControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		super(propertyDescriptor, context);
-		
+
 		setSkin(new Skin(this));
 
 		datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
@@ -31,8 +34,9 @@ public class DateControl extends ECPControlBase {
 			public void changed(ObservableValue<? extends LocalDate> observableValue, LocalDate oldDate, LocalDate newDate) {
 				// only commit if the value has changed
 				if (!Objects.equals(oldDate, newDate)) {
+
 					@SuppressWarnings("deprecation")
-					Date date = new Date(newDate.getYear(), newDate.getMonthValue(), newDate.getDayOfMonth());
+					Date date = new Date(newDate.getYear() - 1900, newDate.getMonthValue(), newDate.getDayOfMonth());
 					Command command = SetCommand.create(editingDomain, modelElement, feature, date);
 					if (command.canExecute())
 						editingDomain.getCommandStack().execute(command);
@@ -46,23 +50,31 @@ public class DateControl extends ECPControlBase {
 
 	@Override
 	public void update() {
-		Date date = (Date) modelElement.eGet(feature);
-		if(date == null)
-			date = new Date();
+		Date newDate = (Date) modelElement.eGet(feature);
+
+		if (newDate == null)
+			newDate = new Date();
+
 		@SuppressWarnings("deprecation")
-		LocalDate localDate = LocalDate.of(date.getYear(), date.getMonth(), date.getDate());
-		datePicker.valueProperty().set(localDate);
+		LocalDate newLocalDate = LocalDate.of(newDate.getYear() + 1900, newDate.getMonth(), newDate.getDate());
+
+		// set the date only if the value has changed
+		if (!Objects.equals(newLocalDate, datePicker.getValue()))
+			datePicker.valueProperty().set(newLocalDate);
 	}
 
 	private final class Skin extends SkinBase<DateControl> {
+
 		private Skin(DateControl control) {
 			super(control);
+
 			HBox hBox = new HBox();
 			getChildren().add(hBox);
-			
+
 			datePicker = new DatePicker();
 			hBox.getChildren().add(datePicker);
 		}
+
 	}
 
 	public static class Factory implements ECPControl.Factory {
