@@ -139,7 +139,7 @@ public class ReferenceControl extends ECPControlBase {
 
 			if (reference.isUnsettable()) {
 				unsetButton = new Button();
-				getChildren().add(unsetButton);
+				hBox.getChildren().add(unsetButton);
 				unsetButton.getStyleClass().add("unset-reference-button");
 				ECPUtil.addMark(unsetButton, "cross");
 

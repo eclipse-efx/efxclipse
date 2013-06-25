@@ -1,5 +1,5 @@
-.enum-choice-box {
-	-fx-max-width: 200;
+.model-element-form .enum-choice-box .choice-box {
+	-fx-pref-width: 200;
 }
 
 .model-element-form .spinner .text-input {
@@ -58,6 +58,7 @@
     -fx-pref-width: 28;
 }
 
+.text-field-add-button .plus,
 .increase-button .plus {
     -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
     -fx-background-insets: 0 0 -1 0, 0;

@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
@@ -63,6 +64,7 @@ public class TextFieldControl extends ECPControlBase {
 
 			textField = new TextField();
 			hBox.getChildren().add(textField);
+			HBox.setHgrow(textField, Priority.ALWAYS);
 		}
 
 	}

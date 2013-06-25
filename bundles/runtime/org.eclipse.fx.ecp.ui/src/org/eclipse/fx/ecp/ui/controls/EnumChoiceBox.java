@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
@@ -83,11 +84,13 @@ public class EnumChoiceBox extends ECPControlBase {
 
 		Skin(EnumChoiceBox control) {
 			super(control);
+			
 			HBox hBox = new HBox();
 			getChildren().add(hBox);
 			
 			choiceBox = new ChoiceBox<>();
 			hBox.getChildren().add(choiceBox);
+			HBox.setHgrow(control, Priority.ALWAYS);
 		}
 
 	}
