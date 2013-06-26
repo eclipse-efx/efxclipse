@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecp.core.ECPProject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.fx.ecp.ui.ECPUtil;
@@ -31,12 +31,13 @@ public class NewModelElementDialogController {
 	Button createButton;
 
 	Stage stage;
-	ECPProject project;
+	Resource resource;
+	EditingDomain editingDomain;
 
-	public NewModelElementDialogController(Stage stage, ECPProject project) {
-		super();
+	public NewModelElementDialogController(Stage stage, Resource resource, EditingDomain editingDomain) {
 		this.stage = stage;
-		this.project = project;
+		this.resource = resource;
+		this.editingDomain = editingDomain;
 	}
 
 	@FXML
@@ -102,9 +103,9 @@ public class NewModelElementDialogController {
 			EClass eClass = (EClass) selectedItem.getValue();
 			EPackage ePackage = eClass.getEPackage();
 			EObject instance = ePackage.getEFactoryInstance().create(eClass);
-			EditingDomain editingDomain = project.getEditingDomain();
 			
-			AddCommand command = new AddCommand(editingDomain, project.getContents(), instance);
+			AddCommand command = new AddCommand(editingDomain, resource.getContents(), instance);
+			
 			if (command.canExecute())
 				editingDomain.getCommandStack().execute(command);
 			

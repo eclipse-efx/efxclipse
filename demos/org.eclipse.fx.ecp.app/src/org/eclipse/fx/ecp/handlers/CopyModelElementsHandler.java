@@ -8,8 +8,6 @@ import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.ecp.core.ECPProject;
-import org.eclipse.emf.ecp.core.ECPProjectManager;
 import org.eclipse.emf.edit.command.CopyToClipboardCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
@@ -19,11 +17,12 @@ public class CopyModelElementsHandler {
 	private EditingDomain editingDomain;
 
 	@CanExecute
-	public boolean canAddNewElement(@Optional ECPProject project,
-			@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems, ECPProjectManager projectManager) {
+	public boolean canAddNewElement(@Optional EditingDomain editingDomain,
+			@Optional @Named("modelExplorer.selectedItems") Collection<?> selectedItems) {
 
-		if (project != null) {
-			editingDomain = project.getEditingDomain();
+		this.editingDomain = editingDomain;
+		
+		if (editingDomain != null) {
 			command = CopyToClipboardCommand.create(editingDomain, selectedItems);
 			return command.canExecute();
 		}

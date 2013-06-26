@@ -9,17 +9,18 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import org.eclipse.emf.ecp.core.ECPProject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edit.domain.EditingDomain;
 
 public class EClassSelectionDialog extends Stage {
 
-	public EClassSelectionDialog(ECPProject project) {
+	public EClassSelectionDialog(Resource resource, EditingDomain editingDomain) {
 
 		URL location = getClass().getResource("EClassSelectionDialog.fxml");
 		
 		FXMLLoader fxmlLoader = new FXMLLoader(location);
 
-		fxmlLoader.setController(new NewModelElementDialogController(this, project));
+		fxmlLoader.setController(new NewModelElementDialogController(this, resource, editingDomain));
 
 		Pane root = null;
 		

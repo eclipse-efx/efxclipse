@@ -24,7 +24,6 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
@@ -51,8 +50,21 @@ public class AdapterFactoryTreeItem extends TreeItem<Object> {
 			((Notifier) object).eAdapters().add(new AdapterImpl() {
 				@Override
 				public void notifyChanged(Notification msg) {
-					if (msg.getFeature() instanceof EReference)
+					switch (msg.getEventType()) {
+					case Notification.RESOLVE: 
+					case Notification.UNSET:
+					case Notification.SET:
+						// ignore resolve and attribute changes
+						break;
+					case Notification.ADD:
+					case Notification.ADD_MANY:
+					case Notification.REMOVE:
+					case Notification.REMOVE_MANY:
+					case Notification.MOVE:
+					default:
 						updateChildren();
+						break;
+					}
 				}
 
 			});

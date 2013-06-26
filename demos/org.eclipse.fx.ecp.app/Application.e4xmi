@@ -2,7 +2,7 @@
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_wIZNwZO_EeK1DMHyA2N3yA" elementId="org.eclipse.e4.application" bindingContexts="_wIZNwJO_EeK1DMHyA2N3yA">
   <children xsi:type="basic:TrimmedWindow" xmi:id="_BinB4JPAEeK1DMHyA2N3yA" elementId="org.eclipse.fx.ecp.app.trimmedwindow.0" label="EMF Client Platform Demo" x="20" y="20" width="1500" height="1000">
     <children xsi:type="basic:PartSashContainer" xmi:id="_K08kYJPKEeK1DMHyA2N3yA" elementId="org.eclipse.fx.ecp.app.partsashcontainer.0" horizontal="true">
-      <children xsi:type="basic:Part" xmi:id="_zTgCYJPAEeK1DMHyA2N3yA" elementId="org.eclipse.fx.ecp.app.part.0" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.ModelExplorerPart" label="Model Explorer">
+      <children xsi:type="basic:Part" xmi:id="_zTgCYJPAEeK1DMHyA2N3yA" elementId="org.eclipse.fx.ecp.app.part.0" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.ResourceExplorerPart" label="Resource Explorer">
         <menus xsi:type="menu:PopupMenu" xmi:id="_B-mKwM6OEeKID4BbLaKRLg" elementId="org.eclipse.fx.ecp.app.modelexplorer.popupmenu">
           <children xsi:type="menu:HandledMenuItem" xmi:id="_IwhxkM6OEeKID4BbLaKRLg" elementId="org.eclipse.fx.ecp.app.handledmenuitem.1" label="New Model Element" command="_WD7E0M6PEeKID4BbLaKRLg"/>
           <children xsi:type="menu:HandledMenuItem" xmi:id="_5GGvENLKEeK0tPbq2df1cA" elementId="" label="Cut" command="_G3JSgNLKEeK0tPbq2df1cA"/>
@@ -15,8 +15,9 @@
     </children>
     <mainMenu xmi:id="_ExCa0JPCEeK1DMHyA2N3yA" elementId="org.eclipse.fx.ecp.app.menu.0">
       <children xsi:type="menu:Menu" xmi:id="_x8DqEJSLEeK6bNllnvSnhw" elementId="" label="_File">
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_3daKANm8EeKlbaEchLX5kA" elementId="" label="Save Project" command="_Jf03gNnGEeKlbaEchLX5kA"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_g3-KEKNJEeKrxsf5nYgbOA" elementId="" label="Open Model Element" command="_R-d_MKNJEeKrxsf5nYgbOA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_jWMDkN0eEeKWfowEy5Ftpg" elementId="" label="New" command="_c_eZIN0eEeKWfowEy5Ftpg"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_QgKPANztEeKWfowEy5Ftpg" elementId="" label="Open" command="_LMt_cNztEeKWfowEy5Ftpg"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_3daKANm8EeKlbaEchLX5kA" elementId="" label="Save" command="_Jf03gNnGEeKlbaEchLX5kA"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_0g9PwJSLEeK6bNllnvSnhw" elementId="" label="Exit" command="_zREoUKNJEeKrxsf5nYgbOA"/>
       </children>
       <children xsi:type="menu:Menu" xmi:id="_fKWWQKddEeKa-q0jml1KAw" elementId="org.eclipse.fx.ecp.app.menu.0" label="Edit">
@@ -30,7 +31,6 @@
       </children>
     </mainMenu>
   </children>
-  <handlers xmi:id="_RAYmUKNJEeKrxsf5nYgbOA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.OpenModelElementHandler" command="_R-d_MKNJEeKrxsf5nYgbOA"/>
   <handlers xmi:id="_38AGYKNJEeKrxsf5nYgbOA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.ExitHandler" command="_zREoUKNJEeKrxsf5nYgbOA"/>
   <handlers xmi:id="_oRThoMwmEeKbUKCytQcqrw" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.UndoHandler" command="_TIft8KddEeKa-q0jml1KAw"/>
   <handlers xmi:id="_sHLYQMwsEeKbUKCytQcqrw" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.RedoHandler" command="_UvMmAKddEeKa-q0jml1KAw"/>
@@ -39,7 +39,9 @@
   <handlers xmi:id="_UlstMNLKEeK0tPbq2df1cA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.CutModelElementsHandler" command="_G3JSgNLKEeK0tPbq2df1cA"/>
   <handlers xmi:id="_X9o5YNLKEeK0tPbq2df1cA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.CopyModelElementsHandler" command="_L5pjENLKEeK0tPbq2df1cA"/>
   <handlers xmi:id="_bk57ANLKEeK0tPbq2df1cA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.PasteModelElementsHandler" command="_O4nOkNLKEeK0tPbq2df1cA"/>
-  <handlers xmi:id="_OE0FoNnGEeKlbaEchLX5kA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.SaveProjectHandler" command="_Jf03gNnGEeKlbaEchLX5kA"/>
+  <handlers xmi:id="_OE0FoNnGEeKlbaEchLX5kA" elementId="" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.SaveHandler" command="_Jf03gNnGEeKlbaEchLX5kA"/>
+  <handlers xmi:id="_JMtPgNztEeKWfowEy5Ftpg" elementId="org.eclipse.fx.ecp.app.handlers.openFile" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.OpenFileHandler" command="_LMt_cNztEeKWfowEy5Ftpg"/>
+  <handlers xmi:id="_fcq0UN0eEeKWfowEy5Ftpg" elementId="org.eclipse.fx.ecp.app.handlers.newFile" contributionURI="bundleclass://org.eclipse.fx.ecp.app/org.eclipse.fx.ecp.handlers.NewFileHandler" command="_c_eZIN0eEeKWfowEy5Ftpg"/>
   <bindingTables xmi:id="_x_4z4MwzEeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.bindingtable.0" bindingContext="_wIZNwJO_EeK1DMHyA2N3yA">
     <bindings xmi:id="_w4Q9IMw2EeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.handlers.undo" keySequence="CTRL+Z" command="_TIft8KddEeKa-q0jml1KAw"/>
     <bindings xmi:id="_q9qwgMxCEeKbUKCytQcqrw" elementId="org.eclipse.fx.ecp.app.handlers.redo" keySequence="CTRL+Y" command="_UvMmAKddEeKa-q0jml1KAw"/>
@@ -48,9 +50,6 @@
     <children xmi:id="_wIZ00JO_EeK1DMHyA2N3yA" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
     <children xmi:id="_wIZ00ZO_EeK1DMHyA2N3yA" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
   </rootContext>
-  <commands xmi:id="_R-d_MKNJEeKrxsf5nYgbOA" elementId="org.eclipse.fx.ecp.app.commands.openModelElement" commandName="Open Model Element">
-    <parameters xmi:id="_XSvEcKNlEeKwjd1bf4rv-A" elementId="org.eclipse.fx.ecp.app.commandparameter.modelElement" name="Model Element" typeId="theTypeID" optional="false"/>
-  </commands>
   <commands xmi:id="_zREoUKNJEeKrxsf5nYgbOA" elementId="org.eclipse.fx.ecp.app.commands.exit" commandName="Exit"/>
   <commands xmi:id="_TIft8KddEeKa-q0jml1KAw" elementId="org.eclipse.fx.ecp.app.commands.undo" commandName="Undo"/>
   <commands xmi:id="_UvMmAKddEeKa-q0jml1KAw" elementId="org.eclipse.fx.ecp.app.commands.redo" commandName="Redo"/>
@@ -59,7 +58,9 @@
   <commands xmi:id="_L5pjENLKEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.commands.copyModelElements" commandName="Copy Model Elements"/>
   <commands xmi:id="_O4nOkNLKEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.commands.pasteModelElements" commandName="Paste Model Elements"/>
   <commands xmi:id="_n5cFANKZEeK0tPbq2df1cA" elementId="org.eclipse.fx.ecp.app.commands.deleteModelElements" commandName="Delete Model Elements"/>
-  <commands xmi:id="_Jf03gNnGEeKlbaEchLX5kA" elementId="org.eclipse.fx.ecp.app.commands.saveProject" commandName="Save Project"/>
+  <commands xmi:id="_Jf03gNnGEeKlbaEchLX5kA" elementId="org.eclipse.fx.ecp.app.commands.save" commandName="Save"/>
+  <commands xmi:id="_LMt_cNztEeKWfowEy5Ftpg" elementId="org.eclipse.fx.ecp.app.commands.openFile" commandName="Open File"/>
+  <commands xmi:id="_c_eZIN0eEeKWfowEy5Ftpg" elementId="org.eclipse.fx.ecp.app.commands.newFile" commandName="New File"/>
   <addons xmi:id="_XGB3wPZlEd-XstlTZ6nTXg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_XGB3wPZlEd-XstlTZ6nTXh" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_ViIQQBnuEeKroetix5qA3A" elementId="org.eclipse.fx.demo.contacts.addon.0" contributionURI="bundleclass://org.eclipse.fx.ui.keybindings.e4/org.eclipse.fx.ui.keybindings.e4.BindingServiceAddon"/>
