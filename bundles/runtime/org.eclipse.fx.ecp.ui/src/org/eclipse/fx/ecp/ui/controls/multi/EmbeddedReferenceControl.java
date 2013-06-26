@@ -16,41 +16,15 @@ import org.eclipse.fx.ecp.ui.ECPUtil;
 
 public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 
-	final protected Hyperlink hyperlink;
-	final protected AdapterImpl valueAdapter;
+	protected Hyperlink hyperlink;
+	protected AdapterImpl valueAdapter;
 	protected EObject value;
 
 	public EmbeddedReferenceControl(IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context, int initialIndex) {
 		super(propertyDescriptor, context, initialIndex);
-		hyperlink = new Hyperlink();
-		getChildren().add(0, hyperlink);
-		HBox.setHgrow(hyperlink, Priority.ALWAYS);
-		hyperlink.setMaxWidth(Double.MAX_VALUE);
-
-		hyperlink.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				if (eList.size() > index) {
-					Object item = eList.get(index);
-					if (item instanceof EObject)
-						context.openInNewContext((EObject) item);
-				}
-			}
-
-		});
-
-		upButton.getStyleClass().add("left-pill");
-
-		valueAdapter = new AdapterImpl() {
-
-			@Override
-			public void notifyChanged(Notification msg) {
-				update();
-			}
-
-		};
-
+		
+		setSkin(new Skin(this));
+		
 		update();
 	}
 
@@ -58,6 +32,7 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 	protected void update() {
 		super.update();
 
+		// only update if index inside bounds
 		if (eList.size() > index) {
 			EObject newValue = (EObject) eList.get(index);
 
@@ -77,6 +52,43 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 			hyperlink.setText(null);
 			hyperlink.setGraphic(null);
 		}
+	}
+	
+	protected class Skin extends EmbeddedControlSkin {
+
+		protected Skin(EmbeddedReferenceControl control) {
+			super(control);
+			
+			hyperlink = new Hyperlink();
+			hBox.getChildren().add(0, hyperlink);
+			HBox.setHgrow(hyperlink, Priority.ALWAYS);
+			hyperlink.setMaxWidth(Double.MAX_VALUE);
+
+			hyperlink.setOnAction(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					if (eList.size() > index) {
+						Object item = eList.get(index);
+						if (item instanceof EObject)
+							context.openInNewContext((EObject) item);
+					}
+				}
+
+			});
+
+			upButton.getStyleClass().add("left-pill");
+
+			valueAdapter = new AdapterImpl() {
+
+				@Override
+				public void notifyChanged(Notification msg) {
+					update();
+				}
+
+			};
+		}
+		
 	}
 
 }

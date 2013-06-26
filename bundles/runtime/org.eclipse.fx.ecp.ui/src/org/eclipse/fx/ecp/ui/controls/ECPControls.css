@@ -1,7 +1,9 @@
+/*
 .model-element-form .enum-choice-box .choice-box {
 	-fx-pref-width: 200;
 }
-
+ */
+ 
 .model-element-form .spinner .text-input {
 	-fx-pref-width: 144;
 }
@@ -58,6 +60,7 @@
     -fx-pref-width: 28;
 }
 
+.add-enum-button .plus,
 .text-field-add-button .plus,
 .increase-button .plus {
     -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
@@ -82,7 +85,6 @@
 
 .text-field.left-pill, .choice-box.left-pill {
 	-fx-background-radius: 3 0 0 3, 2 0 0 2;
-	-fx-max-width: 1000;
 }
 
 .text-field.center-pill {

@@ -68,10 +68,6 @@ public class ReferenceControl extends ECPControlBase {
 				if (command.canExecute()) {
 					setCommand = command;
 					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-
-					// event.acceptTransferModes(TransferMode.LINK);
-					// event.acceptTransferModes(TransferMode.ANY);
-					System.out.println("accepted2");
 				} else {
 					setCommand = null;
 				}
@@ -112,7 +108,7 @@ public class ReferenceControl extends ECPControlBase {
 
 		if (value instanceof EObject) {
 			EObject eObject = (EObject) value;
-
+			// TODO remove adapter from previous value
 			eObject.eAdapters().add(valueAdapter);
 
 			String text = ECPUtil.getText(value);
@@ -120,6 +116,10 @@ public class ReferenceControl extends ECPControlBase {
 
 			Node graphic = ECPUtil.getGraphic(value);
 			hyperlink.setGraphic(graphic);
+		} else {
+			// TODO show "drop here" zone
+			hyperlink.setText(null);
+			hyperlink.setGraphic(null);
 		}
 
 	}

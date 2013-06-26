@@ -54,7 +54,7 @@ public class MultiControl extends ECPControlBase {
 
 	public MultiControl(final IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
 		super(propertyDescriptor, context);
-		
+
 		setSkin(new Skin(this));
 
 		values = (EList<Object>) modelElement.eGet(feature);
@@ -74,9 +74,9 @@ public class MultiControl extends ECPControlBase {
 		}
 
 		if (feature.getEType() instanceof EEnum) {
-			vBox.getChildren().add(new EnumAddControl(editingDomain, feature, modelElement));
+			vBox.getChildren().add(new EnumAddControl(propertyDescriptor, context));
 		} else if (feature.getEType() instanceof EDataType) {
-			vBox.getChildren().add(new TextFieldAddControl(editingDomain, feature, modelElement));
+			vBox.getChildren().add(new TextFieldAddControl(propertyDescriptor, context));
 		} else if (feature.getEType() instanceof EObject) {
 			EReference reference = (EReference) feature;
 			if (reference.isContainment())
@@ -90,7 +90,7 @@ public class MultiControl extends ECPControlBase {
 
 	@Override
 	protected AdapterImpl createModelElementAdapter() {
-		
+
 		return new AdapterImpl() {
 
 			@Override
@@ -112,6 +112,14 @@ public class MultiControl extends ECPControlBase {
 					case Notification.SET:
 					case Notification.UNSET:
 						break;
+					case Notification.ADD_MANY:
+						while (children.size() < values.size())
+							children.add(createEmbeddedControl(propertyDescriptor, context, 0));
+						break;
+					case Notification.REMOVE_MANY:
+						while (children.size() > values.size())
+							children.remove(0);
+						break;
 					default:
 						throw new UnsupportedOperationException();
 					}
@@ -127,7 +135,7 @@ public class MultiControl extends ECPControlBase {
 			}
 
 		};
-		
+
 	}
 
 	private AbstractEmbeddedControl createEmbeddedControl(final IItemPropertyDescriptor propertyDescriptor,
@@ -138,16 +146,17 @@ public class MultiControl extends ECPControlBase {
 		} else if (feature.getEType() instanceof EEnum) {
 			return new EmbeddedEnumControl(propertyDescriptor, context, i);
 		} else {
-			return new EmbeddedTextFieldControl(propertyDescriptor, context, i);
+			Class<?> instanceClass = feature.getEType().getInstanceClass();
+			if (Boolean.class.isAssignableFrom(instanceClass)) {
+				return new EmbeddedCheckboxControl(propertyDescriptor, context, i);
+			} else if (Number.class.isAssignableFrom(instanceClass)
+					|| (instanceClass.isPrimitive() && instanceClass != boolean.class && instanceClass != char.class)) {
+				return new EmbeddedNumberFieldControl(propertyDescriptor, context, i);
+			} else {
+				return new EmbeddedTextFieldControl(propertyDescriptor, context, i);
+			}
 		}
 
-	}
-
-	private void updateIndices(int first, int last, int offset) {
-		for (int i = first; i <= last; i++) {
-			ControlWrapper control = (ControlWrapper) controlsBox.getChildren().get(i);
-			control.setIndex(control.getIndex() + offset);
-		}
 	}
 
 	public static ImageView getImage(String resourcePath) {
@@ -162,99 +171,6 @@ public class MultiControl extends ECPControlBase {
 		@Override
 		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
 			return new MultiControl(itemPropertyDescriptor, context);
-		}
-
-	}
-
-	class ControlWrapper extends HBox {
-
-		private final EmbeddedControl embeddedControl;
-		private Button upButton;
-		private Button downButton;
-		private int index;
-
-		public ControlWrapper(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context, int initialIndex) {
-			index = initialIndex;
-
-			setFillHeight(true);
-
-			if (feature instanceof EReference) {
-				embeddedControl = new EmbeddedReferenceControl(propertyDescriptor, context, initialIndex);
-			} else if (feature.getEType() instanceof EEnum) {
-				embeddedControl = new EmbeddedEnumControl(propertyDescriptor, context, initialIndex);
-			} else {
-				embeddedControl = new EmbeddedTextFieldControl(propertyDescriptor, context, initialIndex);
-			}
-
-			((Node) embeddedControl).getStyleClass().add("left-pill");
-
-			HBox.setHgrow((Node) embeddedControl, Priority.ALWAYS);
-			getChildren().add((Node) embeddedControl);
-
-			if (feature.isOrdered()) {
-
-				upButton = new Button();
-				getChildren().add(upButton);
-				upButton.getStyleClass().addAll("moveUpButton", "center-pill");
-				upButton.setOnAction(new EventHandler<ActionEvent>() {
-
-					@Override
-					public void handle(ActionEvent arg0) {
-						Command command = MoveCommand.create(editingDomain, modelElement, feature, values.get(index), index - 1);
-						if (command.canExecute())
-							editingDomain.getCommandStack().execute(command);
-					}
-
-				});
-
-				downButton = new Button();
-				downButton.getStyleClass().addAll("moveDownButton", "center-pill");
-				getChildren().add(downButton);
-				downButton.setOnAction(new EventHandler<ActionEvent>() {
-
-					@Override
-					public void handle(ActionEvent arg0) {
-						Command command = MoveCommand.create(editingDomain, modelElement, feature, values.get(index), index + 1);
-						if (command.canExecute())
-							editingDomain.getCommandStack().execute(command);
-					}
-
-				});
-
-			}
-
-			final Button deleteButton = new Button();
-			getChildren().add(deleteButton);
-			deleteButton.getStyleClass().addAll("deleteButton", "right-pill");
-			deleteButton.setOnAction(new EventHandler<ActionEvent>() {
-
-				@Override
-				public void handle(ActionEvent arg0) {
-					Command command = RemoveCommand.create(editingDomain, modelElement, feature, values.get(index));
-					if (command.canExecute())
-						editingDomain.getCommandStack().execute(command);
-				}
-
-			});
-
-			updateButtons();
-		}
-
-		public int getIndex() {
-			return index;
-		}
-
-		public void setIndex(int index) {
-			this.index = index;
-			embeddedControl.setIndex(index);
-		}
-
-		public void updateButtons() {
-			if (upButton != null)
-				upButton.setDisable(index < 1);
-
-			if (downButton != null)
-				downButton.setDisable(index > values.size() - 2);
 		}
 
 	}
