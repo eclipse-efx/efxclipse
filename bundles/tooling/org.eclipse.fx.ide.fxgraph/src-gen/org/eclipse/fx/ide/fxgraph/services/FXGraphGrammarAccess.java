@@ -1118,17 +1118,14 @@ public class FXGraphGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
 		private final Assignment cNegativeAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
 		private final Keyword cNegativeHyphenMinusKeyword_2_0_0 = (Keyword)cNegativeAssignment_2_0.eContents().get(0);
-		private final Alternatives cAlternatives_2_1 = (Alternatives)cGroup_2.eContents().get(1);
-		private final Assignment cIntValueAssignment_2_1_0 = (Assignment)cAlternatives_2_1.eContents().get(0);
-		private final RuleCall cIntValueINTTerminalRuleCall_2_1_0_0 = (RuleCall)cIntValueAssignment_2_1_0.eContents().get(0);
-		private final Assignment cRealValueAssignment_2_1_1 = (Assignment)cAlternatives_2_1.eContents().get(1);
-		private final RuleCall cRealValueREALTerminalRuleCall_2_1_1_0 = (RuleCall)cRealValueAssignment_2_1_1.eContents().get(0);
+		private final Assignment cNumberAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
+		private final RuleCall cNumberNumberParserRuleCall_2_1_0 = (RuleCall)cNumberAssignment_2_1.eContents().get(0);
 		
 		//SimpleValueProperty:
-		//	stringValue=STRING | booleanValue=("true" | "false") | negative?="-"? (intValue=INT | realValue=REAL);
+		//	stringValue=STRING | booleanValue=("true" | "false") | negative?="-"? number=Number;
 		public ParserRule getRule() { return rule; }
 
-		//stringValue=STRING | booleanValue=("true" | "false") | negative?="-"? (intValue=INT | realValue=REAL)
+		//stringValue=STRING | booleanValue=("true" | "false") | negative?="-"? number=Number
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//stringValue=STRING
@@ -1149,7 +1146,7 @@ public class FXGraphGrammarAccess extends AbstractGrammarElementFinder {
 		//"false"
 		public Keyword getBooleanValueFalseKeyword_1_0_1() { return cBooleanValueFalseKeyword_1_0_1; }
 
-		//negative?="-"? (intValue=INT | realValue=REAL)
+		//negative?="-"? number=Number
 		public Group getGroup_2() { return cGroup_2; }
 
 		//negative?="-"?
@@ -1158,20 +1155,11 @@ public class FXGraphGrammarAccess extends AbstractGrammarElementFinder {
 		//"-"
 		public Keyword getNegativeHyphenMinusKeyword_2_0_0() { return cNegativeHyphenMinusKeyword_2_0_0; }
 
-		//intValue=INT | realValue=REAL
-		public Alternatives getAlternatives_2_1() { return cAlternatives_2_1; }
+		//number=Number
+		public Assignment getNumberAssignment_2_1() { return cNumberAssignment_2_1; }
 
-		//intValue=INT
-		public Assignment getIntValueAssignment_2_1_0() { return cIntValueAssignment_2_1_0; }
-
-		//INT
-		public RuleCall getIntValueINTTerminalRuleCall_2_1_0_0() { return cIntValueINTTerminalRuleCall_2_1_0_0; }
-
-		//realValue=REAL
-		public Assignment getRealValueAssignment_2_1_1() { return cRealValueAssignment_2_1_1; }
-
-		//REAL
-		public RuleCall getRealValueREALTerminalRuleCall_2_1_1_0() { return cRealValueREALTerminalRuleCall_2_1_1_0; }
+		//Number
+		public RuleCall getNumberNumberParserRuleCall_2_1_0() { return cNumberNumberParserRuleCall_2_1_0; }
 	}
 
 	public class ConstValuePropertyElements extends AbstractParserRuleElementFinder {
@@ -1692,7 +1680,6 @@ public class FXGraphGrammarAccess extends AbstractGrammarElementFinder {
 	private ResourceValuePropertyElements pResourceValueProperty;
 	private BindValuePropertyElements pBindValueProperty;
 	private StringValueElements pStringValue;
-	private TerminalRule tREAL;
 	private TerminalRule tSCRIPTLITERAL;
 	
 	private final Grammar grammar;
@@ -1914,7 +1901,7 @@ public class FXGraphGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//SimpleValueProperty:
-	//	stringValue=STRING | booleanValue=("true" | "false") | negative?="-"? (intValue=INT | realValue=REAL);
+	//	stringValue=STRING | booleanValue=("true" | "false") | negative?="-"? number=Number;
 	public SimpleValuePropertyElements getSimpleValuePropertyAccess() {
 		return (pSimpleValueProperty != null) ? pSimpleValueProperty : (pSimpleValueProperty = new SimpleValuePropertyElements());
 	}
@@ -2057,12 +2044,7 @@ public class FXGraphGrammarAccess extends AbstractGrammarElementFinder {
 		return getStringValueAccess().getRule();
 	}
 
-	//terminal REAL returns ecore::EDouble:
-	//	"0".."9"* "." "0".."9"+;
-	public TerminalRule getREALRule() {
-		return (tREAL != null) ? tREAL : (tREAL = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "REAL"));
-	} 
-
+	////terminal REAL returns ecore::EDouble: (('0'..'9')*"."('0'..'9')+);
 	//terminal SCRIPTLITERAL:
 	//	"#{"->"}#";
 	public TerminalRule getSCRIPTLITERALRule() {
@@ -2080,9 +2062,8 @@ public class FXGraphGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//XAssignment returns XExpression:
-	//	{XAssignment} / * (declaringType=[types::JvmDeclaredType] '::')? * /
-	//	feature=[types::JvmIdentifiableElement|FeatureCallID] OpSingleAssign value=XAssignment | XOrExpression (=>
-	//	({XBinaryOperation.leftOperand=current} feature=[types::JvmIdentifiableElement|OpMultiAssign])
+	//	{XAssignment} feature=[types::JvmIdentifiableElement|FeatureCallID] OpSingleAssign value=XAssignment | XOrExpression
+	//	(=> ({XBinaryOperation.leftOperand=current} feature=[types::JvmIdentifiableElement|OpMultiAssign])
 	//	rightOperand=XAssignment)?;
 	public XbaseGrammarAccess.XAssignmentElements getXAssignmentAccess() {
 		return gaXbase.getXAssignmentAccess();
@@ -2291,9 +2272,10 @@ public class FXGraphGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//XMemberFeatureCall returns XExpression:
-	//	XPrimaryExpression (=> ({XAssignment.assignable=current} "." feature=[types::JvmIdentifiableElement|FeatureCallID]
-	//	OpSingleAssign) value=XAssignment | => ({XMemberFeatureCall.memberCallTarget=current} ("." | nullSafe?="?." |
-	//	spreading?="*.")) ("<" typeArguments+=JvmArgumentTypeReference ("," typeArguments+=JvmArgumentTypeReference)* ">")?
+	//	XPrimaryExpression (=> ({XAssignment.assignable=current} ("." | explicitStatic?="::")
+	//	feature=[types::JvmIdentifiableElement|FeatureCallID] OpSingleAssign) value=XAssignment | =>
+	//	({XMemberFeatureCall.memberCallTarget=current} ("." | nullSafe?="?." | explicitStatic?="::")) ("<"
+	//	typeArguments+=JvmArgumentTypeReference ("," typeArguments+=JvmArgumentTypeReference)* ">")?
 	//	feature=[types::JvmIdentifiableElement|FeatureCallID] (=> explicitOperationCall?="("
 	//	(memberCallArguments+=XShortClosure | memberCallArguments+=XExpression ("," memberCallArguments+=XExpression)*)? ")")?
 	//	memberCallArguments+=XClosure?)*;
@@ -2513,10 +2495,9 @@ public class FXGraphGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//XFeatureCall returns XExpression:
-	//	{XFeatureCall} declaringType=[types::JvmDeclaredType|StaticQualifier]? ("<" typeArguments+=JvmArgumentTypeReference
-	//	("," typeArguments+=JvmArgumentTypeReference)* ">")? feature=[types::JvmIdentifiableElement|IdOrSuper] (=>
-	//	explicitOperationCall?="(" (featureCallArguments+=XShortClosure | featureCallArguments+=XExpression (","
-	//	featureCallArguments+=XExpression)*)? ")")? featureCallArguments+=XClosure?;
+	//	{XFeatureCall} ("<" typeArguments+=JvmArgumentTypeReference ("," typeArguments+=JvmArgumentTypeReference)* ">")?
+	//	feature=[types::JvmIdentifiableElement|IdOrSuper] (=> explicitOperationCall?="(" (featureCallArguments+=XShortClosure
+	//	| featureCallArguments+=XExpression ("," featureCallArguments+=XExpression)*)? ")")? featureCallArguments+=XClosure?;
 	public XbaseGrammarAccess.XFeatureCallElements getXFeatureCallAccess() {
 		return gaXbase.getXFeatureCallAccess();
 	}
@@ -2543,19 +2524,6 @@ public class FXGraphGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getIdOrSuperRule() {
 		return getIdOrSuperAccess().getRule();
-	}
-
-	//// This is a workaround since ANTLR will not be able to resolve
-	//// StaticQualifier: ValidID ('::' ValidID)*; and XFeatureCall: (StaticQualifier '::')? ValidID
-	//// Make sure to change the value converter if you change the syntax of the StaticQualifier
-	//StaticQualifier:
-	//	(ValidID "::")+;
-	public XbaseGrammarAccess.StaticQualifierElements getStaticQualifierAccess() {
-		return gaXbase.getStaticQualifierAccess();
-	}
-	
-	public ParserRule getStaticQualifierRule() {
-		return getStaticQualifierAccess().getRule();
 	}
 
 	//XConstructorCall returns XExpression:
@@ -2679,6 +2647,19 @@ public class FXGraphGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getNumberRule() {
 		return getNumberAccess().getRule();
+	}
+
+	/// **
+	// * Dummy rule, for "better" downwards compatibility, since GrammarAccess generates non-static inner classes, 
+	// * which makes downstream grammars break on classloading, when a rule is removed.
+	// * / StaticQualifier:
+	//	(ValidID "::")+;
+	public XbaseGrammarAccess.StaticQualifierElements getStaticQualifierAccess() {
+		return gaXbase.getStaticQualifierAccess();
+	}
+	
+	public ParserRule getStaticQualifierRule() {
+		return getStaticQualifierAccess().getRule();
 	}
 
 	//terminal HEX:

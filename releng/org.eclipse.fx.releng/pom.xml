@@ -57,7 +57,7 @@
 		<module>../../bundles/runtime/org.eclipse.fx.ui.workbench.renderers.fx</module>
 		
 		<!-- 3.x / 4.x SDK -->
-		<!--  module>../../bundles/runtime/org.eclipse.fx.ui.workbench3</module -->
+		<module>../../bundles/runtime/org.eclipse.fx.ui.workbench3</module>
 		
 		<!-- Format Conversion -->
 		<module>../../bundles/runtime/org.eclipse.fx.formats.svg</module>
@@ -65,6 +65,7 @@
 		<!-- Features -->
 		<module>../runtime/org.eclipse.fx.core.feature</module>
 		<module>../runtime/org.eclipse.fx.target.feature</module>
+		<module>../runtime/org.eclipse.fx.target.rcp.feature</module>
 		
 		<module>../org.eclipse.fx.updatesite</module>
 	</modules>
@@ -74,6 +75,11 @@
 			<id>kepler</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/kepler</url>
+		</repository>
+		<repository>
+			<id>kepler-ecf</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/rt/ecf/3.6.1/site.p2</url>
 		</repository>
 		<repository>
 			<id>xtext</id>

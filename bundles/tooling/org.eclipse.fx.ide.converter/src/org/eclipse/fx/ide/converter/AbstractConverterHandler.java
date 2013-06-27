@@ -11,7 +11,6 @@
 package org.eclipse.fx.ide.converter;
 
 import java.io.ByteArrayInputStream;
-import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -19,15 +18,10 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.ToolFactory;
-import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISources;
@@ -50,11 +44,6 @@ public abstract class AbstractConverterHandler extends AbstractHandler {
 								- 1)
 						+ getTargetFileExtension()));
 				String content = convert(outFile, f);
-				IProject project = outFile.getProject();
-				Object codeFormatter = createCodeFormatter(project);
-				if (codeFormatter != null) {
-					content = format(content, (CodeFormatter) codeFormatter);
-				}
 
 				if (!outFile.exists()) {
 					try {
@@ -86,13 +75,4 @@ public abstract class AbstractConverterHandler extends AbstractHandler {
 
 	protected abstract String getTargetFileExtension();
 
-	protected String format(String content, CodeFormatter codeFormatter) {
-		return content;
-	}
-
-	public static Object createCodeFormatter(IProject project) {
-		IJavaProject javaProject = JavaCore.create(project);
-		Map options = javaProject.getOptions(true);
-		return ToolFactory.createCodeFormatter(options);
-	}
 }
