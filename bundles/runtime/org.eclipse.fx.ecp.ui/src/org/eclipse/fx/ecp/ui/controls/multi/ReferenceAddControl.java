@@ -2,69 +2,79 @@ package org.eclipse.fx.ecp.ui.controls.multi;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.SkinBase;
+import javafx.scene.layout.HBox;
 
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.AddCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ECPUtil;
+import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
-public class ReferenceAddControl extends Button {
+public class ReferenceAddControl extends ECPControlBase {
 
-	final protected EditingDomain editingDomain;
-	final protected EReference reference;
-	final protected EObject modelElement;
-	final protected EClass eClass;
-	protected Command addCommand;
+	protected EClass eClass;
+	protected Button addButton;
+	protected Command addNewCommand;
+	protected Command addExistingCommand;
 
-	public ReferenceAddControl(final EditingDomain editingDomain, final EReference reference, final EObject modelElement) {
-		this.editingDomain = editingDomain;
-		this.reference = reference;
-		eClass = (EClass) reference.getEType();
-		this.modelElement = modelElement;
+	protected class Skin extends SkinBase<ReferenceAddControl> {
 
-		StackPane cssNode = new StackPane();
-		cssNode.getStyleClass().add("plus");
-		setGraphic(new Group(cssNode));
+		protected Skin(ReferenceAddControl control) {
+			super(control);
 
-		setOnAction(new EventHandler<ActionEvent>() {
+			HBox hBox = new HBox();
+			getChildren().add(hBox);
 
-			@Override
-			public void handle(ActionEvent arg0) {
-				editingDomain.getCommandStack().execute(addCommand);
+			// display the add button only for containment references
+			if (((EReference) feature).isContainment()) {
+				addButton = new Button();
+				hBox.getChildren().add(addButton);
+				addButton.getStyleClass().add("add-reference-button");
+				ECPUtil.addMark(addButton, "plus");
+
+				addButton.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						editingDomain.getCommandStack().execute(addNewCommand);
+					}
+
+				});
 			}
+		}
+		
+	}
 
-		});
+	public ReferenceAddControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
+		super(propertyDescriptor, context);
+		eClass = (EClass) ((EReference) feature).getEType();
 
-		modelElement.eAdapters().add(new AdapterImpl() {
+		setSkin(new Skin(this));
+		
+		getStyleClass().add("reference-add-control");
 
-			@Override
-			public void notifyChanged(Notification msg) {
-				if (msg.getFeature() == reference)
-					updateAddButton();
-			}
-
-		});
-
-		updateAddButton();
+		update();
 	}
 
 	@Override
 	protected String getUserAgentStylesheet() {
-		return ReferenceAddControl.class.getResource("controls.css").toExternalForm();
+		return ReferenceAddControl.class.getResource("../ECPControls.css").toExternalForm();
 	}
 
-	protected void updateAddButton() {
-		EObject obj = EcoreUtil.create(eClass);
-		addCommand = AddCommand.create(editingDomain, modelElement, reference, obj);
-		setDisable(!addCommand.canExecute());
+	@Override
+	protected void update() {
+		if (addButton != null) {
+			EObject obj = EcoreUtil.create(eClass);
+			addNewCommand = AddCommand.create(editingDomain, modelElement, feature, obj);
+			setDisable(!addNewCommand.canExecute());
+		}
 	}
 
 }

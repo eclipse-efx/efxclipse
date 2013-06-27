@@ -7,12 +7,12 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.BorderPane;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
@@ -31,10 +31,12 @@ public class ReferenceControl extends ECPControlBase {
 	protected final EReference reference;
 	protected final AdapterImpl valueAdapter;
 
+	protected BorderPane borderPane;
 	protected Hyperlink hyperlink;
 	protected Button unsetButton;
 	protected Command setCommand;
 	protected Command unsetCommand;
+	protected Label label;
 
 	public ReferenceControl(IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
 		super(propertyDescriptor, context);
@@ -53,7 +55,7 @@ public class ReferenceControl extends ECPControlBase {
 
 		});
 
-		hyperlink.setOnDragOver(new EventHandler<DragEvent>() {
+		EventHandler<DragEvent> dragEventHandler = new EventHandler<DragEvent>() {
 
 			@Override
 			public void handle(DragEvent event) {
@@ -73,9 +75,12 @@ public class ReferenceControl extends ECPControlBase {
 				}
 			}
 
-		});
+		};
 
-		hyperlink.setOnDragDropped(new EventHandler<DragEvent>() {
+		label.setOnDragOver(dragEventHandler);
+		hyperlink.setOnDragOver(dragEventHandler);
+
+		EventHandler<DragEvent> dropEventHandler = new EventHandler<DragEvent>() {
 
 			@Override
 			public void handle(DragEvent arg0) {
@@ -83,7 +88,10 @@ public class ReferenceControl extends ECPControlBase {
 					editingDomain.getCommandStack().execute(setCommand);
 			}
 
-		});
+		};
+
+		label.setOnDragDropped(dropEventHandler);
+		hyperlink.setOnDragDropped(dropEventHandler);
 
 		valueAdapter = new AdapterImpl() {
 
@@ -116,10 +124,10 @@ public class ReferenceControl extends ECPControlBase {
 
 			Node graphic = ECPUtil.getGraphic(value);
 			hyperlink.setGraphic(graphic);
+
+			borderPane.setLeft(hyperlink);
 		} else {
-			// TODO show "drop here" zone
-			hyperlink.setText(null);
-			hyperlink.setGraphic(null);
+			borderPane.setLeft(label);
 		}
 
 	}
@@ -129,17 +137,17 @@ public class ReferenceControl extends ECPControlBase {
 		Skin(ReferenceControl control) {
 			super(control);
 
-			HBox hBox = new HBox();
-			getChildren().add(hBox);
+			borderPane = new BorderPane();
+			getChildren().add(borderPane);
+
+			label = new Label("Drop " + feature.getEType().getName() + " here");
+			label.getStyleClass().add("reference-drop-label");
 
 			hyperlink = new Hyperlink();
-			hBox.getChildren().add(hyperlink);
-			hyperlink.setMaxWidth(Double.MAX_VALUE);
-			HBox.setHgrow(hyperlink, Priority.ALWAYS);
 
 			if (reference.isUnsettable()) {
 				unsetButton = new Button();
-				hBox.getChildren().add(unsetButton);
+				borderPane.setRight(unsetButton);
 				unsetButton.getStyleClass().add("unset-reference-button");
 				ECPUtil.addMark(unsetButton, "cross");
 

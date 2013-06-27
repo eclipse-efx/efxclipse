@@ -23,6 +23,15 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 	public EmbeddedReferenceControl(IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context, int initialIndex) {
 		super(propertyDescriptor, context, initialIndex);
 		
+		valueAdapter = new AdapterImpl() {
+
+			@Override
+			public void notifyChanged(Notification msg) {
+				update();
+			}
+
+		};
+		
 		setSkin(new Skin(this));
 		
 		update();
@@ -54,6 +63,12 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 		}
 	}
 	
+	@Override
+	public void dispose() {
+		value.eAdapters().remove(valueAdapter);
+		super.dispose();
+	}
+	
 	protected class Skin extends EmbeddedControlSkin {
 
 		protected Skin(EmbeddedReferenceControl control) {
@@ -78,15 +93,6 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 			});
 
 			upButton.getStyleClass().add("left-pill");
-
-			valueAdapter = new AdapterImpl() {
-
-				@Override
-				public void notifyChanged(Notification msg) {
-					update();
-				}
-
-			};
 		}
 		
 	}

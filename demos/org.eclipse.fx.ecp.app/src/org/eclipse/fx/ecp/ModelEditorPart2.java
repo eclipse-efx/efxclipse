@@ -66,11 +66,6 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		scrollPane.setFitToWidth(true);
 		scrollPane.getStyleClass().add("my-scroll-pane");
 
-		// workaround for 1px border bug in e4 container control
-		Parent grandParent = parent.getParent();
-		Parent grandGrandParent = grandParent.getParent();
-		grandGrandParent.setStyle("-fx-padding: 0 -1 -1 0; ");
-
 		HBox hBox = new HBox();
 		parent.setTop(hBox);
 

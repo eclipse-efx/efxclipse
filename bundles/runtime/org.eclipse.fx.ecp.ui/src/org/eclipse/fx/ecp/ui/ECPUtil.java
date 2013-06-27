@@ -11,6 +11,7 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.stage.PopupWindow;
 import javafx.stage.Window;
 
 import org.eclipse.core.runtime.Platform;
@@ -112,13 +113,13 @@ public class ECPUtil {
 		backButton.setGraphic(new Group(mark));
 	}
 	
-	public static void showContextMenu(ContextMenu contextMenu, Node node) {
+	public static void showContextMenu(PopupWindow popupWindow, Node node) {
 		Point2D position = node.localToScene(0.0, 0.0);
 		Scene scene = node.getScene();
 		Window window = scene.getWindow();
 		double x = position.getX() + scene.getX() + window.getX();
 		double y = position.getY() + scene.getY() + window.getY() + node.getLayoutBounds().getHeight() + 5;
-		contextMenu.show(node, x, y);
+		popupWindow.show(node, x, y);
 	}
 
 }

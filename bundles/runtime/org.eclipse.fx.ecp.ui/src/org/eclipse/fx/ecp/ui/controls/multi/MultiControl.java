@@ -1,6 +1,7 @@
 package org.eclipse.fx.ecp.ui.controls.multi;
 
 import java.net.URL;
+import java.util.Collection;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,6 +11,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -28,6 +31,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
+import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -36,13 +40,16 @@ import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.ECPUIPlugin;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 import org.eclipse.fx.ecp.ui.controls.ValidationMessage;
+import org.eclipse.fx.emf.edit.ui.dnd.LocalTransfer;
 import org.osgi.framework.Bundle;
 
 @SuppressWarnings("all")
 public class MultiControl extends ECPControlBase {
 
-	private EList<Object> values;
-	private VBox controlsBox;
+	protected EList<Object> values;
+	protected VBox controlsBox;
+	protected ECPControlBase addControl;
+	private Command addReferenceCommand;
 
 	class Skin extends SkinBase<MultiControl> {
 
@@ -74,18 +81,52 @@ public class MultiControl extends ECPControlBase {
 		}
 
 		if (feature.getEType() instanceof EEnum) {
-			vBox.getChildren().add(new EnumAddControl(propertyDescriptor, context));
+			vBox.getChildren().add(addControl = new EnumAddControl(propertyDescriptor, context));
 		} else if (feature.getEType() instanceof EDataType) {
-			vBox.getChildren().add(new TextFieldAddControl(propertyDescriptor, context));
+			vBox.getChildren().add(addControl = new TextFieldAddControl(propertyDescriptor, context));
 		} else if (feature.getEType() instanceof EObject) {
-			EReference reference = (EReference) feature;
-			if (reference.isContainment())
-				vBox.getChildren().add(new ReferenceAddControl(editingDomain, reference, modelElement));
-			else
-				vBox.getChildren().add(new ReferenceDropControl(editingDomain, reference, modelElement));
-		}
+			vBox.getChildren().add(addControl = new ReferenceAddControl(propertyDescriptor, context));
 
-		createModelElementAdapter();
+			setOnDragOver(new EventHandler<DragEvent>() {
+
+				@Override
+				public void handle(DragEvent event) {
+					Object object = LocalTransfer.INSTANCE.getObject();
+					Command command = object instanceof Collection<?> ? AddCommand.create(editingDomain, modelElement, feature,
+							(Collection<?>) object) : AddCommand.create(editingDomain, modelElement, feature, object);
+					if (command.canExecute()) {
+						addReferenceCommand = command;
+						event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+					} else {
+						addReferenceCommand = null;
+					}
+				}
+
+			});
+
+			setOnDragDropped(new EventHandler<DragEvent>() {
+
+				@Override
+				public void handle(DragEvent arg0) {
+					if (addReferenceCommand != null)
+						editingDomain.getCommandStack().execute(addReferenceCommand);
+				}
+
+			});
+		}
+		
+	}
+
+	@Override
+	public void dispose() {
+		// dispose the embedded controls
+		for (Node control : controlsBox.getChildren())
+			((AbstractEmbeddedControl) control).dispose();
+
+		// and the add-control
+		addControl.dispose();
+
+		super.dispose();
 	}
 
 	@Override
@@ -105,8 +146,11 @@ public class MultiControl extends ECPControlBase {
 					case Notification.ADD:
 						controlsBox.getChildren().add(createEmbeddedControl(propertyDescriptor, context, position));
 						break;
-					case Notification.REMOVE:
-						children.remove(position);
+					case Notification.REMOVE: {
+						AbstractEmbeddedControl control = (AbstractEmbeddedControl) children.get(position);
+						control.dispose();
+						children.remove(control);
+					}
 						break;
 					case Notification.MOVE:
 					case Notification.SET:
@@ -117,8 +161,11 @@ public class MultiControl extends ECPControlBase {
 							children.add(createEmbeddedControl(propertyDescriptor, context, 0));
 						break;
 					case Notification.REMOVE_MANY:
-						while (children.size() > values.size())
-							children.remove(0);
+						while (children.size() > values.size()) {
+							AbstractEmbeddedControl control = (AbstractEmbeddedControl) children.get(0);
+							control.dispose();
+							children.remove(control);
+						}
 						break;
 					default:
 						throw new UnsupportedOperationException();

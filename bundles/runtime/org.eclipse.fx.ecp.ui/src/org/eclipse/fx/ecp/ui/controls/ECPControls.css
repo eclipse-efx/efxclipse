@@ -61,6 +61,7 @@
 }
 
 .add-enum-button .plus,
+.add-reference-button .plus,
 .text-field-add-button .plus,
 .increase-button .plus {
     -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
@@ -106,13 +107,17 @@
     -fx-text-fill: derive(-fx-text-base-color, +50%);
     
     -fx-border-color: -fx-outer-border;
-    -fx-border-radius: 5;
+    -fx-border-radius: 3;
     -fx-border-insets: 0;
     -fx-border-style: segments(5, 4);
     
+    /* 
     -fx-background-color: -fx-background;
     -fx-background-insets: 1;
     -fx-background-radius: 4;
+    */
     
-    -fx-padding: 0.333333em 0.666667em 0.416667em 0.666667em;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+    
+    -fx-padding: 4 8 4 6;
 }
