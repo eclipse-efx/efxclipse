@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<org.eclipse.example.bowling:League xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.example.bowling="http://org/eclipse/example/bowling" name="Premiere League">
-  <players name="Hans Wurst" height="1.77" isProfessional="true" numberOfVictories="2" gender="Male">
-    <eMails>h.wurst@gmail.com</eMails>
-  </players>
-</org.eclipse.example.bowling:League>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.example.bowling="http://org/eclipse/example/bowling">
+  <org.eclipse.example.bowling:Tournament type="Amateur" players="/1">
+    <matchups nrSpectators="1"/>
+    <playerPoints/>
+    <referees/>
+  </org.eclipse.example.bowling:Tournament>
+  <org.eclipse.example.bowling:Player name="Hans Wurstson" dateOfBirth="2013-06-24T00:00:00.000+0200" isProfessional="true"/>
+  <org.eclipse.example.bowling:League/>
+  <org.eclipse.example.bowling:Merchandise price="20" serialNumber="1"/>
+  <org.eclipse.example.bowling:Area/>
+  <org.eclipse.example.bowling:Fan dateOfBirth="1989-06-24T00:00:00.000+0200" hasSeasonTicket="true" gender="Male" favouritePlayer="/1" numberOfTournamentsVisited="3" moneySpentOnTickets="6.0">
+    <eMails>fan@gmail.com</eMails>
+  </org.eclipse.example.bowling:Fan>
+</xmi:XMI>
