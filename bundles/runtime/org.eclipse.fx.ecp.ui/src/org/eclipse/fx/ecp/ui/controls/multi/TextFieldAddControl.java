@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.SkinBase;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
@@ -19,12 +18,13 @@ import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPUtil;
+import org.eclipse.fx.ecp.ui.controls.AutoSelector;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class TextFieldAddControl extends ECPControlBase {
 
-	protected TextField addTextField;
-	protected Button addButton;
+	protected EDataTypeTextField textField;
+	protected Button button;
 	protected Command addCommand;
 	protected EDataTypeValueHandler valueHandler = new EDataTypeValueHandler((EDataType) feature.getEType());
 
@@ -39,17 +39,17 @@ public class TextFieldAddControl extends ECPControlBase {
 	protected void doAdd() {
 		if (addCommand != null && addCommand.canExecute()) {
 			editingDomain.getCommandStack().execute(addCommand);
-			addTextField.selectAll();
-			addTextField.requestFocus();
+			textField.selectAll();
+			textField.requestFocus();
 		}
 	}
 
 	@Override
 	protected void update() {
-		String text = addTextField.textProperty().getValue();
+		String text = textField.textProperty().getValue();
 		String message = valueHandler.isValid(text);
 
-		ObservableList<String> styleClass = addTextField.getStyleClass();
+		ObservableList<String> styleClass = textField.getStyleClass();
 
 		if (message == null) {
 			Object value = valueHandler.toValue(text);
@@ -61,7 +61,7 @@ public class TextFieldAddControl extends ECPControlBase {
 				styleClass.add("error");
 		}
 
-		addButton.setDisable(addCommand == null || !addCommand.canExecute());
+		button.setDisable(addCommand == null || !addCommand.canExecute());
 	}
 
 	protected class Skin extends SkinBase<TextFieldAddControl> {
@@ -72,13 +72,17 @@ public class TextFieldAddControl extends ECPControlBase {
 			HBox hBox = new HBox();
 			getChildren().add(hBox);
 
-			addTextField = new TextField();
-			hBox.getChildren().add(addTextField);
-			addTextField.setText(feature.getDefaultValueLiteral());
-			addTextField.getStyleClass().add("left-pill");
-			HBox.setHgrow(addTextField, Priority.ALWAYS);
+			textField = new EDataTypeTextField((EDataType) feature.getEType());
+			hBox.getChildren().add(textField);
+			textField.getStyleClass().add("left-pill");
+			
+			textField.focusedProperty().addListener(new AutoSelector(textField));
+			
+			textField.setText(feature.getDefaultValueLiteral());
 
-			addTextField.textProperty().addListener(new ChangeListener<String>() {
+			HBox.setHgrow(textField, Priority.ALWAYS);
+
+			textField.textProperty().addListener(new ChangeListener<String>() {
 
 				@Override
 				public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
@@ -87,25 +91,25 @@ public class TextFieldAddControl extends ECPControlBase {
 
 			});
 
-			addTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+			textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 
 				@Override
 				public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
 					if (arg2) {
-						addTextField.requestFocus();
-						addTextField.selectAll();
+						textField.requestFocus();
+						textField.selectAll();
 					}
 				}
 
 			});
 
-			addButton = new Button();
-			hBox.getChildren().add(addButton);
-			addButton.setMaxHeight(Double.MAX_VALUE);
-			addButton.getStyleClass().addAll("right-pill", "text-field-add-button");
-			ECPUtil.addMark(addButton, "plus");
+			button = new Button();
+			hBox.getChildren().add(button);
+			button.setMaxHeight(Double.MAX_VALUE);
+			button.getStyleClass().addAll("right-pill", "text-field-add-button");
+			ECPUtil.addMark(button, "plus");
 
-			addButton.setOnAction(new EventHandler<ActionEvent>() {
+			button.setOnAction(new EventHandler<ActionEvent>() {
 
 				@Override
 				public void handle(ActionEvent arg0) {
@@ -114,7 +118,7 @@ public class TextFieldAddControl extends ECPControlBase {
 
 			});
 
-			addTextField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
 				public void handle(final KeyEvent keyEvent) {
 					if (keyEvent.getCode() == KeyCode.ENTER) {
 						doAdd();

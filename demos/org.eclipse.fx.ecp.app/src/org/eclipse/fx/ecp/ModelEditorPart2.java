@@ -43,6 +43,7 @@ import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.controls.BreadcrumbBar;
+import org.eclipse.fx.ecp.ui.controls.ControlDecoration;
 import org.eclipse.fx.ecp.ui.form.DefaultModelElementForm;
 import org.eclipse.fx.ecp.ui.form.ModelElementForm;
 
@@ -166,7 +167,7 @@ public class ModelEditorPart2 implements ModelElementEditor {
 
 					@Override
 					public void handle(ActionEvent arg0) {
-						validate();
+//						validate();
 					}
 
 				});
@@ -230,11 +231,6 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		double x = position.getX() + scene.getX() + window.getX();
 		double y = position.getY() + scene.getY() + window.getY() + node.getLayoutBounds().getHeight() + 5;
 		contextMenu.show(node, x, y);
-	}
-
-	private void validate() {
-		Diagnostic diagnostic = Diagnostician.INSTANCE.validate(controlContext.getModelElement());
-		modelElementForm.handleValidation(diagnostic);
 	}
 
 	/**

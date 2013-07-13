@@ -1,38 +1,43 @@
-package org.eclipse.fx.ecp.ui.controls;
+package org.eclipse.fx.ecp.ui.form;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import jidefx.animation.AnimationType;
+import jidefx.scene.control.decoration.DecorationUtils;
+import jidefx.scene.control.decoration.Decorator;
 import jidefx.scene.control.popup.BalloonPopupOutline;
 import jidefx.scene.control.popup.ShapedPopup;
 
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import com.fxexperience.javafx.animation.BounceInTransition;
-import com.fxexperience.javafx.animation.BounceOutTransition;
 import com.google.common.base.Objects;
 
-public class ControlDecoration extends AnchorPane {
+public class ValidationDecoration {
 
-	protected Label label;
+	protected final static Image errorImage = new Image(Decorator.class.getResourceAsStream("overlay_error.png"));
+
+	protected Control control;
 	protected final EStructuralFeature feature;
-	protected final ECPControlBase control;
 	protected final ShapedPopup shapedPopup;
 	protected Diagnostic diagnostic;
 	protected Text popupText;
+	
 
-	public ControlDecoration(EStructuralFeature feature, ECPControlBase control) {
-		this.feature = feature;
+	public ValidationDecoration(Control control, EStructuralFeature feature) {
+		super();
 		this.control = control;
-
-		getChildren().add(control);
+		this.feature = feature;
 
 		shapedPopup = new ShapedPopup();
 		shapedPopup.setAutoHide(false);
@@ -43,34 +48,6 @@ public class ControlDecoration extends AnchorPane {
 		popupText = new Text();
 		popupText.setWrappingWidth(300);
 		shapedPopup.setPopupContent(popupText);
-
-		ImageView imageView = new ImageView(getClass().getResource("asterisk.png").toExternalForm());
-		label = new Label();
-		label.setGraphic(imageView);
-
-		getChildren().add(label);
-		AnchorPane.setTopAnchor(label, -1.0);
-		AnchorPane.setLeftAnchor(label, -14.0);
-		label.setOpacity(0);
-		label.setOnMouseEntered(new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent arg0) {
-				if (diagnostic != null)
-					shapedPopup.showPopup(label, Pos.BOTTOM_CENTER, 0, 5);
-			}
-
-		});
-
-		label.setOnMouseExited(new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent arg0) {
-				if (diagnostic != null)
-					shapedPopup.hide();
-			}
-
-		});
 	}
 
 	public void handleValidation(Diagnostic diagnostic) {
@@ -91,25 +68,48 @@ public class ControlDecoration extends AnchorPane {
 			popupText.setText(newDiagnostic.getMessage());
 
 		if (newDiagnostic != null && !equals(this.diagnostic, newDiagnostic)) {
-			BounceInTransition bounceInTransition = new BounceInTransition(label);
-			bounceInTransition.play();
-		} else if (newDiagnostic == null && label.getOpacity() == 1.0) {
-			BounceOutTransition bounceOutTransition = new BounceOutTransition(label);
-			bounceOutTransition.play();
+			final Decorator<Node> validationDecorator = new Decorator<Node>(createErrorGraphic(), Pos.TOP_LEFT, new Point2D(0, 0), new Insets(0), AnimationType.BOUNCE_IN);
+			DecorationUtils.install(control, validationDecorator);
+
+			final Node node = validationDecorator.getNode();
+			node.setOpacity(0);
+
+			node.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent arg0) {
+					if (ValidationDecoration.this.diagnostic != null)
+						shapedPopup.showPopup(node, Pos.BOTTOM_CENTER, 0, 5);
+				}
+
+			});
+
+			node.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent arg0) {
+					if (ValidationDecoration.this.diagnostic != null)
+						shapedPopup.hide();
+				}
+
+			});
+
+		} else if (newDiagnostic == null) {
+			DecorationUtils.uninstall(control);
 		}
 
 		this.diagnostic = newDiagnostic;
 	}
 
-	public void dispose() {
-		control.dispose();
-	}
-	
 	protected static boolean equals(Diagnostic d1, Diagnostic d2) {
-		if(d1 != null && d2 != null)
+		if (d1 != null && d2 != null)
 			return Objects.equal(d1.getMessage(), d2.getMessage());
 		else
 			return false;
 	}
 
+	public Node createErrorGraphic() {
+		return new Label(null, new ImageView(errorImage));
+	}
+	
 }

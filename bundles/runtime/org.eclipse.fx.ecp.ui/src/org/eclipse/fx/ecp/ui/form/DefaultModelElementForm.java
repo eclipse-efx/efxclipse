@@ -3,19 +3,36 @@ package org.eclipse.fx.ecp.ui.form;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
+import javafx.animation.Transition;
+import javafx.beans.property.ObjectProperty;
+import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import jidefx.animation.AnimationType;
+import jidefx.animation.AnimationUtils;
+import jidefx.scene.control.decoration.DecorationPane;
+import jidefx.scene.control.decoration.DecorationUtils;
+import jidefx.scene.control.decoration.Decorator;
+import jidefx.scene.control.decoration.MutableDecorator;
 
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -28,12 +45,29 @@ import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 public class DefaultModelElementForm extends Control implements ModelElementForm {
 
 	ECPControlContext modelElementContext;
-	private Map<EStructuralFeature, ControlDecoration> controls = new HashMap<>();
+	private Map<EStructuralFeature, ValidationDecoration> controls = new HashMap<>();
 
-	public DefaultModelElementForm(ECPControlContext modelElementContext) {
+	public DefaultModelElementForm(final ECPControlContext modelElementContext) {
 		this.modelElementContext = modelElementContext;
 		setSkin(new Skin(this));
 		getStyleClass().add("model-element-form");
+
+		modelElementContext.getModelElement().eAdapters().add(new AdapterImpl() {
+
+			@Override
+			public void notifyChanged(Notification msg) {
+				validate();
+			}
+
+		});
+
+		validate();
+	}
+
+	protected void validate() {
+		Diagnostic diagnostic = Diagnostician.INSTANCE.validate(modelElementContext.getModelElement());
+		for (ValidationDecoration controlDecoration : controls.values())
+			controlDecoration.handleValidation(diagnostic);
 	}
 
 	public class Skin extends SkinBase<DefaultModelElementForm> {
@@ -44,7 +78,7 @@ public class DefaultModelElementForm extends Control implements ModelElementForm
 			super(modelElementForm);
 
 			gridPane = new GridPane();
-			getChildren().add(gridPane);
+			getChildren().add(new DecorationPane(gridPane));
 			gridPane.getStyleClass().add("grid");
 
 			EObject modelElement = modelElementContext.getModelElement();
@@ -71,14 +105,19 @@ public class DefaultModelElementForm extends Control implements ModelElementForm
 
 					if (factory != null) {
 						ECPControlBase control = factory.createControl(propertyDescriptor, modelElementContext);
-						AnchorPane.setLeftAnchor(control, 0.0);
-						AnchorPane.setRightAnchor(control, 0.0);
+						gridPane.add(control, 1, i);
 
-						ControlDecoration controlDecoration = new ControlDecoration(feature, control);
-						controls.put(feature, controlDecoration);
+						GridPane.setHgrow(control, Priority.ALWAYS);
 
-						gridPane.add(controlDecoration, 1, i);
-						GridPane.setHgrow(controlDecoration, Priority.ALWAYS);
+						ValidationDecoration validationDecorator = new ValidationDecoration(control, feature);
+//						DecorationUtils.install(control, validationDecorator);
+
+						// AnchorPane.setLeftAnchor(control, 0.0);
+						// AnchorPane.setRightAnchor(control, 0.0);
+						//
+						// ControlDecoration controlDecoration = new ControlDecoration(feature, control);
+						 controls.put(feature, validationDecorator);
+
 					}
 
 					i++;
@@ -95,18 +134,11 @@ public class DefaultModelElementForm extends Control implements ModelElementForm
 		return getClass().getResource("../controls/ECPControls.css").toExternalForm();
 	}
 
-
 	@Override
 	public void dispose() {
-		for (ControlDecoration controlDecoration : controls.values()) {
-			controlDecoration.dispose();
-		}
-	}
-
-	@Override
-	public void handleValidation(Diagnostic diagnostic) {
-		for (ControlDecoration controlDecoration : controls.values())
-			controlDecoration.handleValidation(diagnostic);		
+//		for (ControlDecoration controlDecoration : controls.values()) {
+//			controlDecoration.dispose();
+//		}
 	}
 
 	public static class Factory implements ModelElementForm.Factory {
@@ -114,6 +146,30 @@ public class DefaultModelElementForm extends Control implements ModelElementForm
 		@Override
 		public Node createModelElementForm(ECPControlContext modelElementContext) {
 			return new DefaultModelElementForm(modelElementContext);
+		}
+
+	}
+
+	public static class ValidationDecorator extends MutableDecorator<Node> {
+
+		Image infoImage = new Image(Decorator.class.getResourceAsStream("overlay_info.png"));
+		Image warningImage = new Image(Decorator.class.getResourceAsStream("overlay_warning.png"));
+		Image errorImage = new Image(Decorator.class.getResourceAsStream("overlay_error.png"));
+
+		public ValidationDecorator() {
+			ImageView imageView = new ImageView(errorImage);
+			Label label = new Label(null, imageView);
+			nodeProperty().set(label);
+			
+			label.setOpacity(0);
+
+			posProperty().set(Pos.TOP_LEFT);
+
+			Transition transition = AnimationUtils.createTransition(label, AnimationType.BOUNCE_IN);
+			
+			transitionProperty().set(transition);
+			
+			paddingProperty().set(new Insets(0));
 		}
 
 	}

@@ -1,14 +1,13 @@
 package org.eclipse.fx.ecp.ui.controls;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.HBox;
+import jidefx.scene.control.field.DateField;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecp.edit.ECPControlContext;
@@ -18,23 +17,21 @@ import org.eclipse.fx.ecp.ui.ECPControl;
 
 public class DateControl extends ECPControlBase {
 
-	private DatePicker datePicker;
+	protected DateField dateField;
+	protected boolean internalUpdate = false;
 
 	public DateControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
 		super(propertyDescriptor, context);
 
 		setSkin(new Skin(this));
 
-		datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
+		dateField.valueProperty().addListener(new ChangeListener<Date>() {
 
 			@Override
-			public void changed(ObservableValue<? extends LocalDate> observableValue, LocalDate oldDate, LocalDate newDate) {
-				// only commit if the value has changed
-				if (!Objects.equals(oldDate, newDate)) {
-
-					@SuppressWarnings("deprecation")
-					Date date = new Date(newDate.getYear() - 1900, newDate.getMonthValue(), newDate.getDayOfMonth());
-					Command command = SetCommand.create(editingDomain, modelElement, feature, date);
+			public void changed(ObservableValue<? extends Date> observableValue, Date oldDate, Date newDate) {
+				// only commit if the value has changed and it's not an internal update
+				if (!Objects.equals(oldDate, newDate) && !internalUpdate) {
+					Command command = SetCommand.create(editingDomain, modelElement, feature, newDate);
 					if (command.canExecute())
 						editingDomain.getCommandStack().execute(command);
 				}
@@ -52,24 +49,23 @@ public class DateControl extends ECPControlBase {
 		if (newDate == null)
 			newDate = new Date();
 
-		@SuppressWarnings("deprecation")
-		LocalDate newLocalDate = LocalDate.of(newDate.getYear() + 1900, newDate.getMonth(), newDate.getDate());
-
 		// set the date only if the value has changed
-		if (!Objects.equals(newLocalDate, datePicker.getValue()))
-			datePicker.valueProperty().set(newLocalDate);
+		if (!Objects.equals(newDate, dateField.getValue())) {
+			internalUpdate = true;
+			dateField.setValue(newDate);
+			internalUpdate = false;
+		}
 	}
 
-	private final class Skin extends SkinBase<DateControl> {
+	protected class Skin extends SkinBase<DateControl> {
 
 		private Skin(DateControl control) {
 			super(control);
-
 			HBox hBox = new HBox();
 			getChildren().add(hBox);
-
-			datePicker = new DatePicker();
-			hBox.getChildren().add(datePicker);
+			dateField = DateField.createDateField();
+			dateField.setPopupButtonVisible(true);
+			hBox.getChildren().add(dateField);
 		}
 
 	}
