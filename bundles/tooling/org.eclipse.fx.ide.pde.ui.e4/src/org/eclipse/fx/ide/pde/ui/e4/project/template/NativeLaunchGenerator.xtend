@@ -20,6 +20,7 @@ class NativeLaunchGenerator implements Generator<DynamicFile> {
 	<property name="eclipse-app-dir" value="«data.tychoOutDir»" />
 	
 	<target name="init-fx-tasks">
+		<taskdef name="fxosgilauncher" classpath="org.eclipse.fx.ide.ant.jar" classname="org.eclipse.fx.ide.ant.FXOsgiLaunchTask" />
 		<path id="fxant">
 			<filelist>
 				<file name="${java.home}\..\lib\ant-javafx.jar"/>
@@ -32,6 +33,11 @@ class NativeLaunchGenerator implements Generator<DynamicFile> {
 	</target>
 		
 	<target name="do-deploy" depends="init-fx-tasks">
+		<fileset id="equinox-launcher" dir="«data.tychoOutDir»">
+			<filename name="plugins/org.eclipse.equinox.launcher_*.jar"/>
+		</fileset>
+		<fxosgilauncher classpathref="fxant" equinoxlauncherjarref="equinox-launcher"/>
+	
 		<fx:resources id="appRes">
 			<fx:fileset dir="." includes="fx-osgi-launch.jar"/>
 			<fx:fileset dir="${eclipse-app-dir}" includes="**/*"/>

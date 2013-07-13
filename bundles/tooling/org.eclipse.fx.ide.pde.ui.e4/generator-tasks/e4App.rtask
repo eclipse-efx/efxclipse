@@ -211,6 +211,7 @@ RobotTask {
 					"org.eclipse.fx.ui.workbench.fx.controls",
 					"org.eclipse.fx.ui.workbench.renderers.base",
 					"org.eclipse.fx.ui.workbench.renderers.fx",
+					"org.eclipse.fx.ui.lifecycle",
 					"com.ibm.icu",
 					// TODO NEED TO SUPPORT CONDITIONALS HERE "com.ibm.icu.base",
 					"javax.annotation",
@@ -497,8 +498,8 @@ RobotTask {
 				DynamicFile "build.xml" 
 					generated-from "bundleclass://org.eclipse.fx.ide.pde.ui.e4/org.eclipse.fx.ide.pde.ui.e4.project.template.NativeLaunchGenerator" by "java"
 					excluded-if "javascript" /# !NativeExport #/,
-				URLFile "fx-osgi-launch.jar" "platform:/plugin/org.eclipse.fx.ide.pde.ui.e4/build_bin/fx-osgi-launch.jar"
-					excluded-if "javascript" /# !NativeExport #/ 
+				URLFile "org.eclipse.fx.ide.ant.jar" "platform:/plugin/org.eclipse.fx.ide.pde.ui.e4/build_bin/org.eclipse.fx.ide.ant-0.9.0.jar"
+					excluded-if "javascript" /# !NativeExport #/
 			}
 		} excluded-if "javascript" /# !TychoIntegration; #/
 	}
