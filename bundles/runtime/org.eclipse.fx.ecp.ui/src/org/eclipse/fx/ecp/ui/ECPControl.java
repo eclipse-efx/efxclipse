@@ -3,8 +3,6 @@ package org.eclipse.fx.ecp.ui;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
-import org.eclipse.emf.ecp.edit.util.ECPApplicableTester;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 import org.eclipse.fx.ecp.ui.impl.ControlFactoryRegistryImpl;

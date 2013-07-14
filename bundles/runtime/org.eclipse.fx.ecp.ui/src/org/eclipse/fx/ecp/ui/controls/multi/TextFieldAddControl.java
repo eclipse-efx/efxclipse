@@ -14,9 +14,9 @@ import javafx.scene.layout.Priority;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.controls.AutoSelector;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;

@@ -7,9 +7,9 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ECPControlContext;
 
 public abstract class ECPControlBase extends Control {
 

@@ -17,9 +17,9 @@ import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 

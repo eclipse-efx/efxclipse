@@ -2,7 +2,7 @@ package org.eclipse.fx.ecp.ui.impl;
 
 import java.util.Set;
 
-import org.eclipse.emf.ecp.edit.util.ECPApplicableTester;
+import org.eclipse.fx.ecp.ui.ECPApplicableTester;
 import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.ECPControl.Factory;
 

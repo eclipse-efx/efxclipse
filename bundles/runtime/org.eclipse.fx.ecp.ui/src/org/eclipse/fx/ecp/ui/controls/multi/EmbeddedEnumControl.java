@@ -13,9 +13,9 @@ import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ECPControlContext;
 
 public class EmbeddedEnumControl extends AbstractEmbeddedControl {
 

@@ -25,11 +25,11 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.form.DefaultModelElementForm;
 

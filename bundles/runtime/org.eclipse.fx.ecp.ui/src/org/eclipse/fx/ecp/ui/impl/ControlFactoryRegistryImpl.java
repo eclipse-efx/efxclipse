@@ -7,10 +7,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecp.edit.util.ECPApplicableTester;
-import org.eclipse.emf.ecp.edit.util.ECPStaticApplicableTester;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ECPApplicableTester;
 import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.ECPStaticApplicableTester;
 import org.eclipse.fx.ecp.ui.ECPControl.Factory;
 import org.osgi.framework.Bundle;
 

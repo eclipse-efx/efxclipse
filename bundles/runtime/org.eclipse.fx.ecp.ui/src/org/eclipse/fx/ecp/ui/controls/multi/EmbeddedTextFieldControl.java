@@ -16,9 +16,9 @@ import javafx.stage.Popup;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.controls.AutoSelector;
 
 public class EmbeddedTextFieldControl extends AbstractEmbeddedControl {

@@ -2,9 +2,9 @@ package org.eclipse.fx.ecp.ui.controls.numeric;
 
 import java.math.BigInteger;
 
-import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class BigIntegerSpinner extends NumberSpinner {

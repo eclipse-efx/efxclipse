@@ -10,10 +10,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.ECPControlContext;
 
 public class CharacterField extends ECPControlBase {
 

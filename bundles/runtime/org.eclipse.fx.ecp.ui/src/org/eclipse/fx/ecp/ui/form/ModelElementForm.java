@@ -3,7 +3,7 @@ package org.eclipse.fx.ecp.ui.form;
 import javafx.scene.Node;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
+import org.eclipse.fx.ecp.ui.ECPControlContext;
 
 public interface ModelElementForm {
 	

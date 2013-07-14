@@ -39,7 +39,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.Diagnostician;
-import org.eclipse.emf.ecp.edit.ECPControlContext;
+import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.controls.BreadcrumbBar;

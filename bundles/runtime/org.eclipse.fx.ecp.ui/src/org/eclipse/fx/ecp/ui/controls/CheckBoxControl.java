@@ -5,9 +5,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.HBox;
 
-import org.eclipse.emf.ecp.edit.ECPControlContext;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.emf.databinding.edit.EMFEditFXProperties;
 
 public class CheckBoxControl extends ECPControlBase {

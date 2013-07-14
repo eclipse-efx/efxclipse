@@ -211,6 +211,11 @@
                supportedClassType="java.util.Date">
          </staticTest>
       </factory>
+      <factory
+            class="org.eclipse.fx.ecp.ui.controls.numeric.DoubleField$Factory"
+            id="org.eclipse.fx.ecp.ui.controls.doubleField"
+            showLabel="true">
+      </factory>
       
    </extension>
 
