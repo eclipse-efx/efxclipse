@@ -14,9 +14,10 @@ import javafx.scene.layout.Priority;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.controls.AutoSelector;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
@@ -28,11 +29,9 @@ public class TextFieldAddControl extends ECPControlBase {
 	protected Command addCommand;
 	protected EDataTypeValueHandler valueHandler = new EDataTypeValueHandler((EDataType) feature.getEType());
 
-	public TextFieldAddControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		super(propertyDescriptor, context);
-
+	public TextFieldAddControl(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain) {
+		super(propertyDescriptor, modelElement, editingDomain);
 		setSkin(new Skin(this));
-
 		update();
 	}
 
@@ -65,19 +64,19 @@ public class TextFieldAddControl extends ECPControlBase {
 	}
 
 	protected class Skin extends SkinBase<TextFieldAddControl> {
-		
+
 		protected Skin(TextFieldAddControl control) {
 			super(control);
-			
+
 			HBox hBox = new HBox();
 			getChildren().add(hBox);
 
 			textField = new EDataTypeTextField((EDataType) feature.getEType());
 			hBox.getChildren().add(textField);
 			textField.getStyleClass().add("left-pill");
-			
+
 			textField.focusedProperty().addListener(new AutoSelector(textField));
-			
+
 			textField.setText(feature.getDefaultValueLiteral());
 
 			HBox.setHgrow(textField, Priority.ALWAYS);
@@ -127,7 +126,7 @@ public class TextFieldAddControl extends ECPControlBase {
 				}
 			});
 		}
-		
+
 	}
 
 }

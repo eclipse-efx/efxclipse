@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.eclipse.fx.ecp;
 
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 
@@ -21,15 +17,7 @@ import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
-import org.eclipse.fx.ecp.ui.ECPControl;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.form.DefaultModelElementForm;
 
@@ -50,13 +38,14 @@ public class ModelEditorPart implements ModelElementEditor {
 		parent.setCenter(scrollPane);
 	}
 
-	public void setInput(final ECPControlContext modelElementContext) {
-		modelElement = modelElementContext.getModelElement();
+	@Override
+	public void setInput(final EObject modelElement) {
+		this.modelElement = modelElement;
 		
 		if(form != null)
 			form.dispose();
 
-		form = new DefaultModelElementForm(modelElementContext);
+		form = new DefaultModelElementForm(modelElement, null);
 		scrollPane.setContent(form);
 
 //		modelElement.eAdapters().add(new AdapterImpl() {

@@ -13,17 +13,18 @@ import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 
 public class EmbeddedEnumControl extends AbstractEmbeddedControl {
 
 	private volatile boolean internal;
 	protected ChoiceBox<Enumerator> choiceBox;
 
-	public EmbeddedEnumControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context, int initialIndex) {
-		super(propertyDescriptor, context, initialIndex);
+	public EmbeddedEnumControl(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain, int initialIndex) {
+		super(propertyDescriptor, modelElement, editingDomain, initialIndex);
 
 		setSkin(new Skin(this));
 

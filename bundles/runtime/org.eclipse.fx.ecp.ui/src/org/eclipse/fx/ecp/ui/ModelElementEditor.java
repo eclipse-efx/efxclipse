@@ -1,8 +1,9 @@
 package org.eclipse.fx.ecp.ui;
 
+import org.eclipse.emf.ecore.EObject;
 
 public interface ModelElementEditor {
-	
-	void setInput(ECPControlContext modelElement);
+
+	void setInput(EObject modelElement);
 
 }

@@ -1,7 +1,6 @@
 package org.eclipse.fx.ecp.ui.controls.numeric;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Objects;
 
 import javafx.beans.value.ChangeListener;
@@ -11,10 +10,11 @@ import javafx.scene.layout.HBox;
 import jidefx.scene.control.field.NumberField;
 
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class DoubleField extends ECPControlBase implements ECPControl {
@@ -67,8 +67,8 @@ public class DoubleField extends ECPControlBase implements ECPControl {
 
 	}
 
-	public DoubleField(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		super(propertyDescriptor, context);
+	public DoubleField(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain) {
+		super(propertyDescriptor, modelElement, editingDomain);
 		setSkin(new DoubleFieldSkin(this));
 		getStyleClass().add("spinner");
 	}
@@ -94,8 +94,8 @@ public class DoubleField extends ECPControlBase implements ECPControl {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
-			return new DoubleField(itemPropertyDescriptor, context);
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain) {
+			return new DoubleField(itemPropertyDescriptor, modelElement, editingDomain);
 		}
 
 	}

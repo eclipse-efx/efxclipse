@@ -10,8 +10,8 @@ import javafx.scene.layout.Priority;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 
 public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
@@ -20,8 +20,8 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 	protected AdapterImpl valueAdapter;
 	protected EObject value;
 
-	public EmbeddedReferenceControl(IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context, int initialIndex) {
-		super(propertyDescriptor, context, initialIndex);
+	public EmbeddedReferenceControl(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain, int initialIndex) {
+		super(propertyDescriptor, modelElement, editingDomain, initialIndex);
 		
 		valueAdapter = new AdapterImpl() {
 
@@ -85,8 +85,9 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 				public void handle(ActionEvent arg0) {
 					if (eList.size() > index) {
 						Object item = eList.get(index);
-						if (item instanceof EObject)
-							context.openInNewContext((EObject) item);
+						// TODO: change this to model element opener
+						//if (item instanceof EObject)
+							//context.openInNewContext((EObject) item);
 					}
 				}
 

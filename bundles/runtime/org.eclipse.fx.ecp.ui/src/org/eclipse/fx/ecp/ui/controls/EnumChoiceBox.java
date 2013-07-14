@@ -15,17 +15,18 @@ import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 
 public class EnumChoiceBox extends ECPControlBase {
 
 	protected ChoiceBox<Enumerator> choiceBox;
 
-	public EnumChoiceBox(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		super(propertyDescriptor, context);
+	public EnumChoiceBox(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain) {
+		super(propertyDescriptor, modelElement, editingDomain);
 
 		setSkin(new Skin(this));
 
@@ -98,8 +99,8 @@ public class EnumChoiceBox extends ECPControlBase {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
-			return new EnumChoiceBox(itemPropertyDescriptor, context);
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain) {
+			return new EnumChoiceBox(itemPropertyDescriptor, modelElement, editingDomain);
 		}
 
 	}

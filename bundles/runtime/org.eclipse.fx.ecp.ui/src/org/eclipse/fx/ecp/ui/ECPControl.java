@@ -3,6 +3,7 @@ package org.eclipse.fx.ecp.ui;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 import org.eclipse.fx.ecp.ui.impl.ControlFactoryRegistryImpl;
@@ -13,7 +14,7 @@ public interface ECPControl {
 
 	interface Factory {
 		
-		ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context);
+		ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain);
 		
 		interface Descriptor {
 			

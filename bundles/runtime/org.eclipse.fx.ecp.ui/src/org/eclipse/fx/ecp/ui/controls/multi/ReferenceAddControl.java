@@ -12,8 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
@@ -52,14 +52,11 @@ public class ReferenceAddControl extends ECPControlBase {
 		
 	}
 
-	public ReferenceAddControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		super(propertyDescriptor, context);
+	public ReferenceAddControl(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain) {
+		super(propertyDescriptor, modelElement, editingDomain);
 		eClass = (EClass) ((EReference) feature).getEType();
-
 		setSkin(new Skin(this));
-		
 		getStyleClass().add("reference-add-control");
-
 		update();
 	}
 

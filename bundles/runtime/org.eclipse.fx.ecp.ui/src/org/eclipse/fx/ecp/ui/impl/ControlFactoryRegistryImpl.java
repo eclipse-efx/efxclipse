@@ -10,8 +10,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPApplicableTester;
 import org.eclipse.fx.ecp.ui.ECPControl;
-import org.eclipse.fx.ecp.ui.ECPStaticApplicableTester;
 import org.eclipse.fx.ecp.ui.ECPControl.Factory;
+import org.eclipse.fx.ecp.ui.ECPStaticApplicableTester;
 import org.osgi.framework.Bundle;
 
 public class ControlFactoryRegistryImpl implements ECPControl.Factory.Registry {

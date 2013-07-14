@@ -12,11 +12,12 @@ import javafx.scene.layout.HBox;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
@@ -34,8 +35,8 @@ public abstract class AbstractEmbeddedControl extends ECPControlBase {
 	protected Command moveDownCommand;
 	protected CompoundCommand removeCommand;
 
-	public AbstractEmbeddedControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context, int initialIndex) {
-		super(propertyDescriptor, context);
+	public AbstractEmbeddedControl(IItemPropertyDescriptor propertyDescriptor, EObject modelElement, EditingDomain editingDomain, int initialIndex) {
+		super(propertyDescriptor, modelElement, editingDomain);
 
 		index = initialIndex;
 		eList = (EList<?>) modelElement.eGet(feature);

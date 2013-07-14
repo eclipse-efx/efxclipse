@@ -17,9 +17,10 @@ import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
@@ -29,8 +30,9 @@ public class EnumAddControl extends ECPControlBase {
 	protected Button addButton;
 	protected Command addCommand;
 
-	public EnumAddControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		super(propertyDescriptor, context);
+	public EnumAddControl(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain) {
+		super(propertyDescriptor, modelElement, editingDomain);
+		
 		setSkin(new Skin(this));
 		getStyleClass().add("enum-add-control");
 		update();

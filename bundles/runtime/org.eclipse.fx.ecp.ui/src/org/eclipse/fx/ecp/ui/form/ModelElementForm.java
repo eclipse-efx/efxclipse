@@ -3,7 +3,7 @@ package org.eclipse.fx.ecp.ui.form;
 import javafx.scene.Node;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
+import org.eclipse.emf.edit.domain.EditingDomain;
 
 public interface ModelElementForm {
 	
@@ -11,7 +11,7 @@ public interface ModelElementForm {
 	
 	interface Factory {
 		
-		Node createModelElementForm(ECPControlContext modelElementContext);
+		Node createModelElementForm(EObject modelElement, EditingDomain editingDomain);
 		
 		interface Registry {
 			

@@ -9,7 +9,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 
 public abstract class ECPControlBase extends Control {
 
@@ -18,14 +17,12 @@ public abstract class ECPControlBase extends Control {
 	protected final EditingDomain editingDomain;
 	protected final IItemPropertyDescriptor propertyDescriptor;
 	protected final Adapter modelElementAdapter;
-	protected final ECPControlContext context;
 
-	public ECPControlBase(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		this.modelElement = context.getModelElement();
+	public ECPControlBase(IItemPropertyDescriptor propertyDescriptor, EObject modelElement, EditingDomain editingDomain) {
+		this.modelElement = modelElement;
 		this.feature = (EStructuralFeature) propertyDescriptor.getFeature(modelElement);
-		this.editingDomain = context.getEditingDomain();
+		this.editingDomain = editingDomain;
 		this.propertyDescriptor = propertyDescriptor;
-		this.context = context;
 		
 		modelElementAdapter = createModelElementAdapter();
 		

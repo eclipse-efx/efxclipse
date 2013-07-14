@@ -16,9 +16,10 @@ import javafx.stage.Popup;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.controls.AutoSelector;
 
 public class EmbeddedTextFieldControl extends AbstractEmbeddedControl {
@@ -26,8 +27,8 @@ public class EmbeddedTextFieldControl extends AbstractEmbeddedControl {
 	protected EDataTypeValueHandler valueHandler;
 	protected TextField textField;
 
-	public EmbeddedTextFieldControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context, int initialIndex) {
-		super(propertyDescriptor, context, initialIndex);
+	public EmbeddedTextFieldControl(IItemPropertyDescriptor propertyDescriptor, EObject modelElement, EditingDomain editingDomain, int initialIndex) {
+		super(propertyDescriptor, modelElement, editingDomain, initialIndex);
 
 		valueHandler = new EDataTypeValueHandler((EDataType) feature.getEType());
 

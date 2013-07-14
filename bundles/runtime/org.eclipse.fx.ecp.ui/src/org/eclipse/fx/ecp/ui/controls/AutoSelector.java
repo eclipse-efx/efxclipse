@@ -1,11 +1,11 @@
 package org.eclipse.fx.ecp.ui.controls;
 
-import com.google.common.base.Strings;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
+
+import com.google.common.base.Strings;
 
 public class AutoSelector implements ChangeListener<Boolean> {
 

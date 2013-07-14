@@ -1,16 +1,17 @@
 package org.eclipse.fx.ecp.ui.controls.numeric;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class DoubleSpinner extends NumberSpinner {
 
 	public static final double DEFAULT_VALUE = 0.0;
 
-	public DoubleSpinner(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		super(propertyDescriptor, context);
+	public DoubleSpinner(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain) {
+		super(propertyDescriptor, modelElement, editingDomain);
 
 		setSkin(new NumberSpinnerSkin<NumberSpinner, Double>(this) {
 
@@ -56,8 +57,8 @@ public class DoubleSpinner extends NumberSpinner {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
-			return new DoubleSpinner(itemPropertyDescriptor, context);
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain) {
+			return new DoubleSpinner(itemPropertyDescriptor, modelElement, editingDomain);
 		}
 
 	}

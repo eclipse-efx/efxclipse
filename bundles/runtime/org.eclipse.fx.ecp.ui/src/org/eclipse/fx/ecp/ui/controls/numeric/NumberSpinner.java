@@ -12,10 +12,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.controls.AutoSelector;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
@@ -132,8 +133,8 @@ public abstract class NumberSpinner extends ECPControlBase implements ECPControl
 
 	}
 
-	public NumberSpinner(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		super(propertyDescriptor, context);
+	public NumberSpinner(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain) {
+		super(propertyDescriptor, modelElement, editingDomain);
 		getStyleClass().add("spinner");
 	}
 

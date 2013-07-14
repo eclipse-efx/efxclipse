@@ -9,16 +9,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 
 public class EmbeddedCheckboxControl extends AbstractEmbeddedControl {
 
 	protected CheckBox checkBox;
 
-	public EmbeddedCheckboxControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context, int initialIndex) {
-		super(propertyDescriptor, context, initialIndex);
+	public EmbeddedCheckboxControl(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain, int initialIndex) {
+		super(propertyDescriptor, modelElement, editingDomain, initialIndex);
 
 		setSkin(new Skin(this));
 

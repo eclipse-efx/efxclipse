@@ -19,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -36,23 +35,22 @@ import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.Diagnostician;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.controls.BreadcrumbBar;
-import org.eclipse.fx.ecp.ui.controls.ControlDecoration;
 import org.eclipse.fx.ecp.ui.form.DefaultModelElementForm;
 import org.eclipse.fx.ecp.ui.form.ModelElementForm;
 
 public class ModelEditorPart2 implements ModelElementEditor {
 
 	private final ScrollPane scrollPane;
-	private ECPControlContext controlContext;
-	private final LinkedList<ECPControlContext> prevModelElements = new LinkedList<>();
-	private final LinkedList<ECPControlContext> nextModelElements = new LinkedList<>();
+	private EObject modelElement;
+	// TODO change this to weak references
+	private final LinkedList<EObject> prevModelElements = new LinkedList<>();
+	private final LinkedList<EObject> nextModelElements = new LinkedList<>();
 	private final Button forwardButton;
 	private final Button backButton;
 	private final BreadcrumbBar breadcrumbBar;
@@ -78,8 +76,8 @@ public class ModelEditorPart2 implements ModelElementEditor {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				nextModelElements.push(controlContext);
-				controlContext = prevModelElements.pop();
+				nextModelElements.push(modelElement);
+				modelElement = prevModelElements.pop();
 				if (contextMenuTimeline != null)
 					contextMenuTimeline.stop();
 				if (contextMenu != null)
@@ -136,8 +134,8 @@ public class ModelEditorPart2 implements ModelElementEditor {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				prevModelElements.push(controlContext);
-				controlContext = nextModelElements.pop();
+				prevModelElements.push(modelElement);
+				modelElement = nextModelElements.pop();
 				if (contextMenuTimeline != null)
 					contextMenuTimeline.stop();
 				if (contextMenu != null)
@@ -167,7 +165,7 @@ public class ModelEditorPart2 implements ModelElementEditor {
 
 					@Override
 					public void handle(ActionEvent arg0) {
-//						validate();
+						// validate();
 					}
 
 				});
@@ -178,11 +176,11 @@ public class ModelEditorPart2 implements ModelElementEditor {
 
 	}
 
-	public void setInput(final ECPControlContext modelElementContext) {
-		if (controlContext != null)
-			prevModelElements.push(controlContext);
+	public void setInput(EObject modelElement) {
+		if (modelElement != null)
+			prevModelElements.push(modelElement);
 
-		controlContext = modelElementContext;
+		this.modelElement = modelElement;
 
 		nextModelElements.clear();
 
@@ -192,25 +190,28 @@ public class ModelEditorPart2 implements ModelElementEditor {
 	void updateControls() {
 		backButton.setDisable(prevModelElements.isEmpty());
 		forwardButton.setDisable(nextModelElements.isEmpty());
-		breadcrumbBar.setModelElement(controlContext.getModelElement());
-		
-		if(modelElementForm != null)
+		breadcrumbBar.setModelElement(modelElement);
+
+		if (modelElementForm != null)
 			modelElementForm.dispose();
-		
-		modelElementForm = (DefaultModelElementForm) ModelElementForm.Factory.Registry.INSTANCE.getFactory(controlContext.getModelElement()).createModelElementForm(
-				controlContext);
+
+		// TODO: add null check
+		EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(modelElement);
+
+		modelElementForm = (DefaultModelElementForm) ModelElementForm.Factory.Registry.INSTANCE.getFactory(modelElement)
+				.createModelElementForm(modelElement, editingDomain);
+
 		scrollPane.setContent(modelElementForm);
 	}
 
 	public void showContextMenu(Node node, boolean back) {
 		contextMenu.getItems().clear();
 
-		List<ECPControlContext> modelElements = back ? prevModelElements : nextModelElements;
+		List<EObject> modelElements = back ? prevModelElements : nextModelElements;
 
 		for (int i = 0; i < modelElements.size(); i++) {
 			final int j = back ? -i - 1 : i + 1;
-			ECPControlContext controlContext = modelElements.get(i);
-			EObject modelElement = controlContext.getModelElement();
+			EObject modelElement = modelElements.get(i);
 			String text = org.eclipse.fx.ecp.ui.ECPUtil.getText(modelElement);
 			Node graphic = org.eclipse.fx.ecp.ui.ECPUtil.getGraphic(modelElement);
 			MenuItem menuItem = new MenuItem(text, graphic);
@@ -238,14 +239,14 @@ public class ModelEditorPart2 implements ModelElementEditor {
 	 */
 	private void go(int position) {
 		while (position < 0) {
-			nextModelElements.push(controlContext);
-			controlContext = prevModelElements.pop();
+			nextModelElements.push(modelElement);
+			modelElement = prevModelElements.pop();
 			position++;
 		}
 
 		while (position > 0) {
-			prevModelElements.push(controlContext);
-			controlContext = nextModelElements.pop();
+			prevModelElements.push(modelElement);
+			modelElement = nextModelElements.pop();
 			position--;
 		}
 

@@ -10,18 +10,19 @@ import javafx.scene.layout.HBox;
 import jidefx.scene.control.field.DateField;
 
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 
 public class DateControl extends ECPControlBase {
 
 	protected DateField dateField;
 	protected boolean internalUpdate = false;
 
-	public DateControl(IItemPropertyDescriptor propertyDescriptor, ECPControlContext context) {
-		super(propertyDescriptor, context);
+	public DateControl(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain) {
+		super(propertyDescriptor, modelElement, editingDomain);
 
 		setSkin(new Skin(this));
 
@@ -73,8 +74,8 @@ public class DateControl extends ECPControlBase {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
-			return new DateControl(itemPropertyDescriptor, context);
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain) {
+			return new DateControl(itemPropertyDescriptor, modelElement, editingDomain);
 		}
 
 	}

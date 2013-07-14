@@ -7,8 +7,6 @@ import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.domain.EditingDomain;
 
 public class ECPModelElementOpenerImpl implements ECPModelElementOpener {
 
@@ -33,27 +31,7 @@ public class ECPModelElementOpenerImpl implements ECPModelElementOpener {
 			
 			if (object instanceof ModelElementEditor) {
 				
-				
-				ECPControlContext modelElementContext = new ECPControlContext() {
-					
-					@Override
-					public void openInNewContext(EObject eObject) {
-						openModelElement(eObject);
-					}
-					
-					@Override
-					public EObject getModelElement() {
-						return modelElement;
-					}
-					
-					@Override
-					public EditingDomain getEditingDomain() {
-						return AdapterFactoryEditingDomain.getEditingDomainFor(modelElement);
-					}
-					
-				};
-				
-				((ModelElementEditor) object).setInput(modelElementContext);
+				((ModelElementEditor) object).setInput(modelElement);
 			}
 			
 		}

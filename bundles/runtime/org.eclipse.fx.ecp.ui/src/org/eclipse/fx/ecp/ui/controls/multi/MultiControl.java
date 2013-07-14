@@ -4,17 +4,12 @@ import java.net.URL;
 import java.util.Collection;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import org.eclipse.core.runtime.FileLocator;
@@ -23,23 +18,17 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.AddCommand;
-import org.eclipse.emf.edit.command.MoveCommand;
-import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
-import org.eclipse.fx.ecp.ui.ECPControlContext;
 import org.eclipse.fx.ecp.ui.ECPUIPlugin;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
-import org.eclipse.fx.ecp.ui.controls.ValidationMessage;
 import org.eclipse.fx.emf.edit.ui.dnd.LocalTransfer;
 import org.osgi.framework.Bundle;
 
@@ -59,8 +48,8 @@ public class MultiControl extends ECPControlBase {
 
 	}
 
-	public MultiControl(final IItemPropertyDescriptor propertyDescriptor, final ECPControlContext context) {
-		super(propertyDescriptor, context);
+	public MultiControl(final IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain) {
+		super(propertyDescriptor, modelElement, editingDomain);
 
 		setSkin(new Skin(this));
 
@@ -77,15 +66,15 @@ public class MultiControl extends ECPControlBase {
 		controlsBox.setSpacing(4);
 
 		for (int i = 0; i < values.size(); i++) {
-			controlsBox.getChildren().add(createEmbeddedControl(propertyDescriptor, context, i));
+			controlsBox.getChildren().add(createEmbeddedControl(propertyDescriptor, modelElement, editingDomain, i));
 		}
 
 		if (feature.getEType() instanceof EEnum) {
-			vBox.getChildren().add(addControl = new EnumAddControl(propertyDescriptor, context));
+			vBox.getChildren().add(addControl = new EnumAddControl(propertyDescriptor, modelElement, editingDomain));
 		} else if (feature.getEType() instanceof EDataType) {
-			vBox.getChildren().add(addControl = new TextFieldAddControl(propertyDescriptor, context));
+			vBox.getChildren().add(addControl = new TextFieldAddControl(propertyDescriptor, modelElement, editingDomain));
 		} else if (feature.getEType() instanceof EObject) {
-			vBox.getChildren().add(addControl = new ReferenceAddControl(propertyDescriptor, context));
+			vBox.getChildren().add(addControl = new ReferenceAddControl(propertyDescriptor, modelElement, editingDomain));
 
 			setOnDragOver(new EventHandler<DragEvent>() {
 
@@ -144,7 +133,7 @@ public class MultiControl extends ECPControlBase {
 					ObservableList<Node> children = controlsBox.getChildren();
 					switch (msg.getEventType()) {
 					case Notification.ADD:
-						controlsBox.getChildren().add(createEmbeddedControl(propertyDescriptor, context, position));
+						controlsBox.getChildren().add(createEmbeddedControl(propertyDescriptor, modelElement, editingDomain, position));
 						break;
 					case Notification.REMOVE: {
 						AbstractEmbeddedControl control = (AbstractEmbeddedControl) children.get(position);
@@ -158,7 +147,7 @@ public class MultiControl extends ECPControlBase {
 						break;
 					case Notification.ADD_MANY:
 						while (children.size() < values.size())
-							children.add(createEmbeddedControl(propertyDescriptor, context, 0));
+							children.add(createEmbeddedControl(propertyDescriptor, modelElement, editingDomain, 0));
 						break;
 					case Notification.REMOVE_MANY:
 						while (children.size() > values.size()) {
@@ -186,21 +175,21 @@ public class MultiControl extends ECPControlBase {
 	}
 
 	private AbstractEmbeddedControl createEmbeddedControl(final IItemPropertyDescriptor propertyDescriptor,
-			final ECPControlContext context, int i) {
+			final EObject modelElement, final EditingDomain editingDomain, int i) {
 
 		if (feature instanceof EReference) {
-			return new EmbeddedReferenceControl(propertyDescriptor, context, i);
+			return new EmbeddedReferenceControl(propertyDescriptor, modelElement, editingDomain, i);
 		} else if (feature.getEType() instanceof EEnum) {
-			return new EmbeddedEnumControl(propertyDescriptor, context, i);
+			return new EmbeddedEnumControl(propertyDescriptor, modelElement, editingDomain, i);
 		} else {
 			Class<?> instanceClass = feature.getEType().getInstanceClass();
 			if (Boolean.class.isAssignableFrom(instanceClass)) {
-				return new EmbeddedCheckboxControl(propertyDescriptor, context, i);
+				return new EmbeddedCheckboxControl(propertyDescriptor, modelElement, editingDomain, i);
 			} else if (Number.class.isAssignableFrom(instanceClass)
 					|| (instanceClass.isPrimitive() && instanceClass != boolean.class && instanceClass != char.class)) {
-				return new EmbeddedNumberFieldControl(propertyDescriptor, context, i);
+				return new EmbeddedNumberFieldControl(propertyDescriptor, modelElement, editingDomain, i);
 			} else {
-				return new EmbeddedTextFieldControl(propertyDescriptor, context, i);
+				return new EmbeddedTextFieldControl(propertyDescriptor, modelElement, editingDomain, i);
 			}
 		}
 
@@ -216,8 +205,8 @@ public class MultiControl extends ECPControlBase {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, ECPControlContext context) {
-			return new MultiControl(itemPropertyDescriptor, context);
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain) {
+			return new MultiControl(itemPropertyDescriptor, modelElement, editingDomain);
 		}
 
 	}
