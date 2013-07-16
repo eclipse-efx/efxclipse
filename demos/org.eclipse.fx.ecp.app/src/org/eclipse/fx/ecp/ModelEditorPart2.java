@@ -38,6 +38,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.ecp.ui.ModelElementEditor;
 import org.eclipse.fx.ecp.ui.controls.BreadcrumbBar;
@@ -57,9 +58,11 @@ public class ModelEditorPart2 implements ModelElementEditor {
 	private final ContextMenu contextMenu = new ContextMenu();
 	private Timeline contextMenuTimeline;
 	private DefaultModelElementForm modelElementForm;
+	private final ECPModelElementOpener modelElementOpener;
 
 	@Inject
-	public ModelEditorPart2(BorderPane parent, final MApplication application, MPart part) {
+	public ModelEditorPart2(BorderPane parent, final MApplication application, MPart part, ECPModelElementOpener modelElementOpener) {
+		this.modelElementOpener = modelElementOpener;
 		scrollPane = new ScrollPane();
 		parent.setCenter(scrollPane);
 		scrollPane.setFitToWidth(true);
@@ -199,7 +202,7 @@ public class ModelEditorPart2 implements ModelElementEditor {
 		EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(modelElement);
 
 		modelElementForm = (DefaultModelElementForm) ModelElementForm.Factory.Registry.INSTANCE.getFactory(modelElement)
-				.createModelElementForm(modelElement, editingDomain);
+				.createModelElementForm(modelElement, editingDomain, modelElementOpener);
 
 		scrollPane.setContent(modelElementForm);
 	}

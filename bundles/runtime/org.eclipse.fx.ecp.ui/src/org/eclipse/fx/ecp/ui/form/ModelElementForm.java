@@ -4,6 +4,7 @@ import javafx.scene.Node;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
 
 public interface ModelElementForm {
 	
@@ -11,7 +12,7 @@ public interface ModelElementForm {
 	
 	interface Factory {
 		
-		Node createModelElementForm(EObject modelElement, EditingDomain editingDomain);
+		Node createModelElementForm(EObject modelElement, EditingDomain editingDomain, ECPModelElementOpener modelElementOpener);
 		
 		interface Registry {
 			

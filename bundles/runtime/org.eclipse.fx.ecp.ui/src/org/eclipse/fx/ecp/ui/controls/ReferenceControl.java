@@ -23,6 +23,7 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 import org.eclipse.fx.emf.edit.ui.dnd.LocalTransfer;
 
@@ -38,7 +39,7 @@ public class ReferenceControl extends ECPControlBase {
 	protected Command unsetCommand;
 	protected Label label;
 
-	public ReferenceControl(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain) {
+	public ReferenceControl(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain, final ECPModelElementOpener modelElementOpener) {
 		super(propertyDescriptor, modelElement, editingDomain);
 		reference = (EReference) feature;
 
@@ -47,11 +48,10 @@ public class ReferenceControl extends ECPControlBase {
 		hyperlink.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
-			public void handle(ActionEvent arg0) {
+			public void handle(ActionEvent event) {
 				Object value = modelElement.eGet(reference);
-				// TODO change this to model element opener
-//				if (value instanceof EObject)
-//					context.openInNewContext((EObject) value);
+				if (value instanceof EObject)
+					modelElementOpener.openModelElement((EObject) value);
 			}
 
 		});
@@ -172,8 +172,8 @@ public class ReferenceControl extends ECPControlBase {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain) {
-			return new ReferenceControl(itemPropertyDescriptor, modelElement, editingDomain);
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain, ECPModelElementOpener modelElementOpener) {
+			return new ReferenceControl(itemPropertyDescriptor, modelElement, editingDomain, modelElementOpener);
 		}
 
 	}

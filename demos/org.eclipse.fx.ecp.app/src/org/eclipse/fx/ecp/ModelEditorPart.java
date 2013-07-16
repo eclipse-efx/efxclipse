@@ -41,35 +41,36 @@ public class ModelEditorPart implements ModelElementEditor {
 	@Override
 	public void setInput(final EObject modelElement) {
 		this.modelElement = modelElement;
-		
-		if(form != null)
+
+		if (form != null)
 			form.dispose();
 
-		form = new DefaultModelElementForm(modelElement, null);
+		form = new DefaultModelElementForm(modelElement, null, null);
 		scrollPane.setContent(form);
 
-//		modelElement.eAdapters().add(new AdapterImpl() {
-//
-//			@Override
-//			public void notifyChanged(Notification msg) {
-//				update();
-//			}
-//
-//		});
+		// modelElement.eAdapters().add(new AdapterImpl() {
+		//
+		// @Override
+		// public void notifyChanged(Notification msg) {
+		// update();
+		// }
+		//
+		// });
 
-//		update();
+		// update();
 	}
 
-//	public void update() {
-//		IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(modelElement, IItemLabelProvider.class);
-//		if (labelProvider != null) {
-//			part.setLabel(labelProvider.getText(modelElement));
-//			Object image = labelProvider.getImage(modelElement);
-//			if (image instanceof URL)
-//				part.setIconURI(((URL) image).toExternalForm());
-//		} else {
-//			part.setLabel("Model Editor");
-//		}
-//	}
+	// public void update() {
+	// IItemLabelProvider labelProvider = (IItemLabelProvider) adapterFactory.adapt(modelElement,
+	// IItemLabelProvider.class);
+	// if (labelProvider != null) {
+	// part.setLabel(labelProvider.getText(modelElement));
+	// Object image = labelProvider.getImage(modelElement);
+	// if (image instanceof URL)
+	// part.setIconURI(((URL) image).toExternalForm());
+	// } else {
+	// part.setLabel("Model Editor");
+	// }
+	// }
 
 }

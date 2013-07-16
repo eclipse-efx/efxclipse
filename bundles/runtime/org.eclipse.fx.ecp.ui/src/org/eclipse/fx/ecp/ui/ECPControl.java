@@ -14,7 +14,7 @@ public interface ECPControl {
 
 	interface Factory {
 		
-		ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain);
+		ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain, ECPModelElementOpener modelElementOpener);
 		
 		interface Descriptor {
 			

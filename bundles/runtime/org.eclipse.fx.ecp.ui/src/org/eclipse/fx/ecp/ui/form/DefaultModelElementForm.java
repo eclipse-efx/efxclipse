@@ -34,6 +34,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
 import org.eclipse.fx.ecp.ui.ECPControl.Factory.Registry;
+import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 
 public class DefaultModelElementForm extends Control implements ModelElementForm {
@@ -42,10 +43,13 @@ public class DefaultModelElementForm extends Control implements ModelElementForm
 
 	protected final EObject modelElement;
 	protected final EditingDomain editingDomain;
+	protected final ECPModelElementOpener modelElementOpener;
 
-	public DefaultModelElementForm(EObject modelElement, EditingDomain editingDomain) {
+	public DefaultModelElementForm(EObject modelElement, EditingDomain editingDomain, ECPModelElementOpener modelElementOpener) {
 		this.modelElement = modelElement;
 		this.editingDomain = editingDomain;
+		this.modelElementOpener = modelElementOpener;
+		
 		setSkin(new Skin(this));
 		getStyleClass().add("model-element-form");
 
@@ -100,7 +104,7 @@ public class DefaultModelElementForm extends Control implements ModelElementForm
 					ECPControl.Factory factory = registry.getFactory(propertyDescriptor, modelElement);
 
 					if (factory != null) {
-						ECPControlBase control = factory.createControl(propertyDescriptor, modelElement, editingDomain);
+						ECPControlBase control = factory.createControl(propertyDescriptor, modelElement, editingDomain, modelElementOpener);
 						gridPane.add(control, 1, i);
 
 						GridPane.setHgrow(control, Priority.ALWAYS);
@@ -140,8 +144,8 @@ public class DefaultModelElementForm extends Control implements ModelElementForm
 	public static class Factory implements ModelElementForm.Factory {
 
 		@Override
-		public Node createModelElementForm(EObject modelElement, EditingDomain editingDomain) {
-			return new DefaultModelElementForm(modelElement, editingDomain);
+		public Node createModelElementForm(EObject modelElement, EditingDomain editingDomain, ECPModelElementOpener modelElementOpener) {
+			return new DefaultModelElementForm(modelElement, editingDomain, modelElementOpener);
 		}
 
 	}

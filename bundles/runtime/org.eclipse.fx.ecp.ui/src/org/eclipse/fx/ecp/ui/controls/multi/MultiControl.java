@@ -27,6 +27,7 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.fx.ecp.ui.ECPControl;
+import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
 import org.eclipse.fx.ecp.ui.ECPUIPlugin;
 import org.eclipse.fx.ecp.ui.controls.ECPControlBase;
 import org.eclipse.fx.emf.edit.ui.dnd.LocalTransfer;
@@ -205,7 +206,7 @@ public class MultiControl extends ECPControlBase {
 	public static class Factory implements ECPControl.Factory {
 
 		@Override
-		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain) {
+		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain, ECPModelElementOpener modelElementOpener) {
 			return new MultiControl(itemPropertyDescriptor, modelElement, editingDomain);
 		}
 
