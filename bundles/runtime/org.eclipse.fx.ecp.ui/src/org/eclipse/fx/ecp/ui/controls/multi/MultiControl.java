@@ -39,7 +39,8 @@ public class MultiControl extends ECPControlBase {
 	protected EList<Object> values;
 	protected VBox controlsBox;
 	protected ECPControlBase addControl;
-	private Command addReferenceCommand;
+	protected Command addReferenceCommand;
+	protected ECPModelElementOpener modelElementOpener;
 
 	class Skin extends SkinBase<MultiControl> {
 
@@ -49,9 +50,10 @@ public class MultiControl extends ECPControlBase {
 
 	}
 
-	public MultiControl(final IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain) {
+	public MultiControl(final IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain, ECPModelElementOpener modelElementOpener) {
 		super(propertyDescriptor, modelElement, editingDomain);
-
+		this.modelElementOpener = modelElementOpener;
+		
 		setSkin(new Skin(this));
 
 		values = (EList<Object>) modelElement.eGet(feature);
@@ -179,7 +181,7 @@ public class MultiControl extends ECPControlBase {
 			final EObject modelElement, final EditingDomain editingDomain, int i) {
 
 		if (feature instanceof EReference) {
-			return new EmbeddedReferenceControl(propertyDescriptor, modelElement, editingDomain, i);
+			return new EmbeddedReferenceControl(propertyDescriptor, modelElement, editingDomain, i, modelElementOpener);
 		} else if (feature.getEType() instanceof EEnum) {
 			return new EmbeddedEnumControl(propertyDescriptor, modelElement, editingDomain, i);
 		} else {
@@ -207,7 +209,7 @@ public class MultiControl extends ECPControlBase {
 
 		@Override
 		public ECPControlBase createControl(IItemPropertyDescriptor itemPropertyDescriptor, EObject modelElement, EditingDomain editingDomain, ECPModelElementOpener modelElementOpener) {
-			return new MultiControl(itemPropertyDescriptor, modelElement, editingDomain);
+			return new MultiControl(itemPropertyDescriptor, modelElement, editingDomain, modelElementOpener);
 		}
 
 	}

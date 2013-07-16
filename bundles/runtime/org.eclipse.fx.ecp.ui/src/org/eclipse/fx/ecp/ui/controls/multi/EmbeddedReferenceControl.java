@@ -12,6 +12,7 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.fx.ecp.ui.ECPModelElementOpener;
 import org.eclipse.fx.ecp.ui.ECPUtil;
 
 public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
@@ -19,9 +20,12 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 	protected Hyperlink hyperlink;
 	protected AdapterImpl valueAdapter;
 	protected EObject value;
-
-	public EmbeddedReferenceControl(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain, int initialIndex) {
+	protected ECPModelElementOpener modelElementOpener;
+	
+	public EmbeddedReferenceControl(IItemPropertyDescriptor propertyDescriptor, final EObject modelElement, final EditingDomain editingDomain, int initialIndex, ECPModelElementOpener modelElementOpener) {
 		super(propertyDescriptor, modelElement, editingDomain, initialIndex);
+		
+		this.modelElementOpener = modelElementOpener;
 		
 		valueAdapter = new AdapterImpl() {
 
@@ -85,9 +89,8 @@ public class EmbeddedReferenceControl extends AbstractEmbeddedControl {
 				public void handle(ActionEvent arg0) {
 					if (eList.size() > index) {
 						Object item = eList.get(index);
-						// TODO: change this to model element opener
-						//if (item instanceof EObject)
-							//context.openInNewContext((EObject) item);
+						if (item instanceof EObject)
+							modelElementOpener.openModelElement((EObject) item);
 					}
 				}
 
