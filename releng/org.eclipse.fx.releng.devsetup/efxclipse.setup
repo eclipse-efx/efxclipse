@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup:Project setup:toolVersion="8" xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:setup="http://www.eclipse.org/CDO/releng/setup/1.0" name="efxclipse" label="e(fx)clipse">
+  <setupTasks xsi:type="setup:ContextVariableTask" name="git.user.id"/>
+  <branches name="master">
+    <setupTasks xsi:type="setup:GitCloneTask" location="${setup.branch.dir/git/org.eclipse.efxclipse}" remoteURI="ssh://git.eclipse.org:29418/efxclipse/org.eclipse.efxclipse" checkoutBranch="master"/>
+  </branches>
+</setup:Project>
