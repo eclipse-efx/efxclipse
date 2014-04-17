@@ -1,7 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<setup:Project setup:toolVersion="8" xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:setup="http://www.eclipse.org/CDO/releng/setup/1.0" name="efxclipse" label="e(fx)clipse">
+<setup:Project setup:toolVersion="8" xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:predicates="http://www.eclipse.org/CDO/releng/predicates/1.0" xmlns:setup="http://www.eclipse.org/CDO/releng/setup/1.0" xmlns:workingsets="http://www.eclipse.org/CDO/releng/workingsets/1.0" name="efxclipse" label="e(fx)clipse">
   <setupTasks xsi:type="setup:ContextVariableTask" name="git.user.id"/>
+  <setupTasks xsi:type="setup:P2Task">
+    <installableUnits id="org.eclipse.xtext.sdk.feature.group"/>
+    <installableUnits id="org.eclipse.fx.ide.feature.feature.group"/>
+    <installableUnits id="org.eclipse.jdt.java8patch.feature.group"/>
+    <installableUnits id="org.eclipse.pde.java8patch.feature.group"/>
+    <installableUnits id="org.eclipse.m2e.feature.feature.group"/>
+    <p2Repositories url="${train.url}"/>
+    <p2Repositories url="http://download.eclipse.org/efxclipse/updates-nightly/site"/>
+    <p2Repositories url="http://build.eclipse.org/eclipse/builds/4P/siteDir/updates/4.3-P-builds"/>
+  </setupTasks>
+  <setupTasks xsi:type="setup:ProjectsImportTask">
+    <sourceLocators rootFolder="${setup.branch.dir}/git/">
+      <predicates xsi:type="predicates:AndPredicate">
+        <operands xsi:type="predicates:NotPredicate">
+          <operand xsi:type="predicates:NamePredicate" pattern=".*swt.*"/>
+        </operands>
+        <operands xsi:type="predicates:NotPredicate">
+          <operand xsi:type="predicates:NamePredicate" pattern="org\.eclipse\.fx\.emf\.edit\.ui\.tests"/>
+        </operands>
+      </predicates>
+    </sourceLocators>
+  </setupTasks>
   <branches name="master">
     <setupTasks xsi:type="setup:GitCloneTask" location="${setup.branch.dir/git/org.eclipse.efxclipse}" remoteURI="ssh://git.eclipse.org:29418/efxclipse/org.eclipse.efxclipse" checkoutBranch="master"/>
+    <setupTasks xsi:type="setup:WorkingSetTask">
+      <workingSets name="releng">
+        <predicates xsi:type="predicates:LocationPredicate" pattern=".*releng.*"/>
+      </workingSets>
+      <workingSets name="tooling">
+        <predicates xsi:type="predicates:AndPredicate">
+          <operands xsi:type="predicates:LocationPredicate" pattern=".*tooling.*"/>
+          <operands xsi:type="workingsets:ExclusionPredicate" excludedWorkingSets="//@branches[name='master']/@setupTasks.1/@workingSets.0"/>
+        </predicates>
+      </workingSets>
+      <workingSets name="runtime-shared">
+        <predicates xsi:type="predicates:OrPredicate">
+          <operands xsi:type="predicates:NamePredicate" pattern="org\.eclipse\.fx\.javafx"/>
+          <operands xsi:type="predicates:NamePredicate" pattern="org\.eclipse\.fx\.osgi"/>
+          <operands xsi:type="predicates:NamePredicate" pattern="org\.eclipse\.fx\.ui\.workbench3"/>
+        </predicates>
+      </workingSets>
+      <workingSets name="runtime">
+        <predicates xsi:type="predicates:AndPredicate">
+          <operands xsi:type="workingsets:ExclusionPredicate" excludedWorkingSets="//@branches[name='master']/@setupTasks.1/@workingSets.0 //@branches[name='master']/@setupTasks.1/@workingSets.2"/>
+          <operands xsi:type="predicates:LocationPredicate" pattern=".*runtime.*"/>
+        </predicates>
+      </workingSets>
+      <workingSets name="misc">
+        <predicates xsi:type="workingsets:ExclusionPredicate" excludedWorkingSets="//@branches[name='master']/@setupTasks.1/@workingSets.0 //@branches[name='master']/@setupTasks.1/@workingSets.3 //@branches[name='master']/@setupTasks.1/@workingSets.2 //@branches[name='master']/@setupTasks.1/@workingSets.1"/>
+      </workingSets>
+    </setupTasks>
   </branches>
 </setup:Project>
