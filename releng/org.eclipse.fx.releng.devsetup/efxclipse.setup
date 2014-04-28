@@ -9,7 +9,7 @@
     <installableUnits id="org.eclipse.m2e.feature.feature.group"/>
     <p2Repositories url="${train.url}"/>
     <p2Repositories url="http://download.eclipse.org/efxclipse/updates-nightly/site"/>
-    <p2Repositories url="http://build.eclipse.org/eclipse/builds/4P/siteDir/updates/4.3-P-builds"/>
+    <p2Repositories url="http://download.eclipse.org/eclipse/updates/4.3-P-builds/"/>
   </setupTasks>
   <setupTasks xsi:type="setup:ProjectsImportTask">
     <sourceLocators rootFolder="${setup.branch.dir}/git/">
