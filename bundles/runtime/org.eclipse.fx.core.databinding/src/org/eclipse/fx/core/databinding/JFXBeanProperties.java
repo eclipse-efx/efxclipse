@@ -19,8 +19,6 @@ import org.eclipse.fx.core.databinding.internal.AnonymousFXBeanValueProperty;
 import org.eclipse.fx.core.databinding.internal.FXBeanPropertyHelper;
 import org.eclipse.fx.core.databinding.internal.FXBeanValueProperty;
 import org.eclipse.fx.core.databinding.internal.FXBeanValuePropertyDecorator;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Factory to create property descriptions
@@ -33,7 +31,7 @@ public class JFXBeanProperties {
 	 *            the name of the property (nested properties are separated with a .)
 	 * @return the property
 	 */
-	public static @NonNull IJFXBeanValueProperty value(@NonNull String propertyName) {
+	public static IJFXBeanValueProperty value(String propertyName) {
 		return value(null, propertyName, null);
 	}
 
@@ -46,7 +44,7 @@ public class JFXBeanProperties {
 	 *            the type
 	 * @return the property
 	 */
-	public static @NonNull IJFXBeanValueProperty value(@NonNull String propertyName, Class<?> valueType) {
+	public static IJFXBeanValueProperty value(String propertyName, Class<?> valueType) {
 		return value(null, propertyName, valueType);
 	}
 
@@ -61,9 +59,9 @@ public class JFXBeanProperties {
 	 *            the type
 	 * @return the property
 	 */
-	public static @NonNull IJFXBeanValueProperty value(@Nullable Class<?> beanClass, @NonNull String propertyName, @Nullable Class<?> _valueType) {
+	public static IJFXBeanValueProperty value(Class<?> beanClass, String propertyName, Class<?> _valueType) {
 		Class<?> valueType = _valueType;
-		@NonNull String[] propertyNames = split(propertyName);
+		String[] propertyNames = split(propertyName);
 		if (propertyNames.length > 1) {
 			valueType = null;
 		}
@@ -78,7 +76,6 @@ public class JFXBeanProperties {
 			property = new FXBeanValueProperty(propertyDescriptor, valueType);
 		}
 
-		@NonNull
 		IJFXBeanValueProperty beanProperty = new FXBeanValuePropertyDecorator(property, propertyDescriptor);
 		for (int i = 1; i < propertyNames.length; i++) {
 			beanProperty = beanProperty.value(propertyNames[i]);
@@ -86,8 +83,7 @@ public class JFXBeanProperties {
 		return beanProperty;
 	}
 
-	@SuppressWarnings("null")
-	private static @NonNull String[] split(@NonNull String _propertyName) {
+	private static String[] split(String _propertyName) {
 		String propertyName = _propertyName;
 		if (propertyName.indexOf('.') == -1)
 			return new String[] { propertyName };

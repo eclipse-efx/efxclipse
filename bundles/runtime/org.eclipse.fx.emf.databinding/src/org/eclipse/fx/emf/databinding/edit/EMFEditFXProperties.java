@@ -129,6 +129,7 @@ public class EMFEditFXProperties {
 			return this.feature.getName();
 		}
 
+		
 	}
 
 }

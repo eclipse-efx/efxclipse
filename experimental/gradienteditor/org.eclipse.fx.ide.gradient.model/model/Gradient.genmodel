@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="" modelDirectory="/org.eclipse.fx.ide.gradient.model/src"
+    modelPluginID="org.eclipse.fx.ide.gradient.model" modelName="Gradient" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="7.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>Gradient.ecore</foreignModel>
+  <genPackages prefix="Gradient" basePackage="org.eclipse.fx.ide.gradient.model" disposableProviderFactory="true"
+      ecorePackage="Gradient.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Gradient.ecore#//CycleMethod">
+      <genEnumLiterals ecoreEnumLiteral="Gradient.ecore#//CycleMethod/noCycle"/>
+      <genEnumLiterals ecoreEnumLiteral="Gradient.ecore#//CycleMethod/reflect"/>
+      <genEnumLiterals ecoreEnumLiteral="Gradient.ecore#//CycleMethod/repeat"/>
+    </genEnums>
+    <genClasses image="false" ecoreClass="Gradient.ecore#//Gradient">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//Gradient/proportional"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//Gradient/cycleMethod"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Gradient.ecore#//Gradient/stops"/>
+    </genClasses>
+    <genClasses ecoreClass="Gradient.ecore#//LinearGradient">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//LinearGradient/startX"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//LinearGradient/startY"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//LinearGradient/endX"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//LinearGradient/endY"/>
+    </genClasses>
+    <genClasses ecoreClass="Gradient.ecore#//RadialGradient">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//RadialGradient/focusAngle"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//RadialGradient/focusDistance"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//RadialGradient/centerX"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//RadialGradient/centerY"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//RadialGradient/radius"/>
+    </genClasses>
+    <genClasses ecoreClass="Gradient.ecore#//Stop">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Gradient.ecore#//Stop/color"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//Stop/offset"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Gradient.ecore#//Color"/>
+    <genClasses ecoreClass="Gradient.ecore#//RGBColor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//RGBColor/red"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//RGBColor/green"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//RGBColor/blue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Gradient.ecore#//RGBColor/opacity"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated Gradient -->
+      <package
+            uri="http://www.eclipse.org/efxclipse/tooling/fxgraph/Gradient"
+            class="org.eclipse.fx.ide.gradient.model.gradient.GradientPackage"
+            genModel="model/Gradient.genmodel"/>
+   </extension>
+
+</plugin>
