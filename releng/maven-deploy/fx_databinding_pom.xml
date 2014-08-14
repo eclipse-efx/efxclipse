@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.eclipse.fx</groupId>
+	<artifactId>org.eclipse.fx.core.databinding</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	
+	<dependencies>
+		<dependency>
+			<artifactId>org.eclipse.core.databinding.observable</artifactId>
+			<groupId>org.eclipse.fx</groupId>
+			<version>1.4.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<artifactId>org.eclipse.core.databinding.property</artifactId>
+			<groupId>org.eclipse.fx</groupId>
+			<version>1.4.200-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+</project>
