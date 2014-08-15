@@ -4,23 +4,23 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.fx</groupId>
 	<artifactId>org.eclipse.core.databinding</artifactId>
-	<version>1.4.1-SNAPSHOT</version>
+	<version>1.4.1</version>
 	
 	<dependencies>
 		<dependency>
 			<artifactId>org.eclipse.core.databinding.observable</artifactId>
 			<groupId>org.eclipse.fx</groupId>
-			<version>1.4.1-SNAPSHOT</version>
+			<version>1.4.1</version>
 		</dependency>
 		<dependency>
 			<artifactId>org.eclipse.core.databinding.property</artifactId>
 			<groupId>org.eclipse.fx</groupId>
-			<version>1.4.200-SNAPSHOT</version>
+			<version>1.4.200</version>
 		</dependency>
 		<dependency>
 			<artifactId>org.eclipse.equinox.common</artifactId>
 			<groupId>org.eclipse.fx</groupId>
-			<version>3.6.200-SNAPSHOT</version>
+			<version>3.6.200</version>
 		</dependency>
 	</dependencies>
 </project>
