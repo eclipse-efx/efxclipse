@@ -747,7 +747,7 @@ public class StyledTextArea extends Control {
 				}
 			}
 
-			System.err.println("DONE"); //$NON-NLS-1$
+//			System.err.println("DONE"); //$NON-NLS-1$
 		}
 
 		int[] getRanges(int start, int length) {

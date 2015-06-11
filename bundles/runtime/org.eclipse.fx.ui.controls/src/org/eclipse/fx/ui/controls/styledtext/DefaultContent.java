@@ -885,7 +885,7 @@ class DefaultContent implements StyledTextContent {
 		for (TextChangeListener l : this.textListeners) {
 			l.textChanged(textChanged);
 		}
-		System.err.println(getTextRange(0, getCharCount()));
+//		System.err.println(getTextRange(0, getCharCount()));
 	}
 
 	/**
