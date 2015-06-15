@@ -328,7 +328,7 @@ public class TextStyle {
 		if (style == null)
 			throw new IllegalStateException();
 		this.stylename = style.stylename;
-		this.decorationStyleClasses = new ArrayList<>(style.decorationStyleClasses);
+		this.decorationStyleClasses = style.decorationStyleClasses == null ? null : new ArrayList<>(style.decorationStyleClasses);
 		this.font = style.font;
 		this.foreground = style.foreground;
 		this.background = style.background;
