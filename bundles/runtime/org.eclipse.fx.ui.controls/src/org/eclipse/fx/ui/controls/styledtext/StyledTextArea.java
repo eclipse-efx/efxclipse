@@ -194,14 +194,6 @@ public class StyledTextArea extends Control {
 		
 		this.lastCharCount += this.lastTextChangeNewCharCount;
 		this.lastCharCount -= this.lastTextChangeReplaceCharCount;
-		
-		System.err.println("New: " + this.lastTextChangeNewCharCount);
-		System.err.println("Replace: " + this.lastTextChangeReplaceCharCount);
-		System.err.println(getCaretOffset());
-		
-//		int delta = lastTextChangeNewCharCount + lastTextChangeReplaceCharCount;
-//		System.err.println("Delta: " + delta);
-//		setCaretOffset(getCaretOffset() + delta);
 	}
 	
 	void updateSelection(int startOffset, int replacedLength, int newLength) {
@@ -231,7 +223,7 @@ public class StyledTextArea extends Control {
 			if( getSelection().length > 0 ) {
 				int delta = this.lastTextChangeNewCharCount + this.lastTextChangeReplaceCharCount;
 				// Directly work with the property!
-				this.caretOffsetProperty.set(getCaretOffset() + delta);
+				this.caretOffsetProperty.set(Math.max(0,Math.min(getCaretOffset() + delta, getCharCount()-1)));
 			}
 		}
 	}
