@@ -221,7 +221,7 @@ public class StyledTextArea extends Control {
 			// move selection to keep same text selected
 			setSelection(new TextSelection(getSelection().offset + newLength - replacedLength, getSelection().length));
 			if( getSelection().length > 0 ) {
-				int delta = this.lastTextChangeNewCharCount + this.lastTextChangeReplaceCharCount;
+				int delta = this.lastTextChangeNewCharCount - this.lastTextChangeReplaceCharCount;
 				// Directly work with the property!
 				this.caretOffsetProperty.set(Math.max(0,Math.min(getCaretOffset() + delta, getCharCount()-1)));
 			}
