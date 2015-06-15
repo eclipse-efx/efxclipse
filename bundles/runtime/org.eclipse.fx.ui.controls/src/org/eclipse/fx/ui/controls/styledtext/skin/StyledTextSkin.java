@@ -413,18 +413,18 @@ public class StyledTextSkin extends BehaviorSkinBase<StyledTextArea, StyledTextB
 			});
 			// Once this property is observed the error does not occurr
 			// need to track that down one day
-			boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
-
-				@Override
-				public void changed(
-						ObservableValue<? extends Bounds> observable,
-						Bounds oldValue, Bounds newValue) {
-					if( newValue != null && newValue.getHeight() > 100 ) {
-						System.err.println("Looks like an invalid cell height: " + newValue); //$NON-NLS-1$
-						Thread.dumpStack();
-					}
-				}
-			});
+//			boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
+//
+//				@Override
+//				public void changed(
+//						ObservableValue<? extends Bounds> observable,
+//						Bounds oldValue, Bounds newValue) {
+//					if( newValue != null && newValue.getHeight() > 100 ) {
+////						System.err.println("Looks like an invalid cell height: " + newValue); //$NON-NLS-1$
+////						Thread.dumpStack();
+//					}
+//				}
+//			});
 		}
 
 		/**
