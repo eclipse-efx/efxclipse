@@ -14,11 +14,6 @@ package org.eclipse.fx.ui.controls.styledtext;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 
-import org.eclipse.fx.ui.controls.styledtext.StyledTextContent.TextChangeListener;
-import org.eclipse.fx.ui.controls.styledtext.skin.StyledTextSkin;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -33,6 +28,11 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+
+import org.eclipse.fx.ui.controls.styledtext.StyledTextContent.TextChangeListener;
+import org.eclipse.fx.ui.controls.styledtext.skin.StyledTextSkin;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Control which allows to implemented a code-editor
@@ -128,6 +128,18 @@ public class StyledTextArea extends Control {
 
 	private int anchor;
 
+	private int lastTextChangeStart;
+
+	private int lastTextChangeNewLineCount;
+
+	private int lastTextChangeNewCharCount;
+
+	private int lastTextChangeReplaceLineCount;
+
+	private int lastTextChangeReplaceCharCount;
+
+	private int lastCharCount;
+
 	/**
 	 * Create a new control
 	 */
@@ -150,11 +162,11 @@ public class StyledTextArea extends Control {
 			event.offset += event.replaceCharCount;
 			event.replaceCharCount *= -1;
 		}
-		// lastTextChangeStart = event.offset;
-		// lastTextChangeNewLineCount = event.newLineCount;
-		// lastTextChangeNewCharCount = event.newCharCount;
-		// lastTextChangeReplaceLineCount = event.replaceLineCount;
-		// lastTextChangeReplaceCharCount = event.replaceCharCount;
+		 this.lastTextChangeStart = event.offset;
+		 this.lastTextChangeNewLineCount = event.newLineCount;
+		 this.lastTextChangeNewCharCount = event.newCharCount;
+		 this.lastTextChangeReplaceLineCount = event.replaceLineCount;
+		 this.lastTextChangeReplaceCharCount = event.replaceCharCount;
 
 		this.renderer.textChanging(event);
 		
@@ -167,17 +179,48 @@ public class StyledTextArea extends Control {
 	}
 
 	void handleTextSet(TextChangedEvent event) {
-		// TODO Implement
+		int newCharCount = getCharCount();
+		this.lastCharCount = newCharCount;
 	}
 
 	void handleTextChanged(TextChangedEvent event) {
 		// int firstLine = getContent().getLineAtOffset(lastTextChangeStart);
+				
 		if (getSkin() instanceof StyledTextSkin) {
 			((StyledTextSkin) getSkin()).recalculateItems();
 		}
-
-		// lastCharCount += lastTextChangeNewCharCount;
-		// lastCharCount -= lastTextChangeReplaceCharCount;
+		
+		updateSelection(this.lastTextChangeStart, this.lastTextChangeReplaceCharCount, this.lastTextChangeNewCharCount);
+		
+		this.lastCharCount += this.lastTextChangeNewCharCount;
+		this.lastCharCount -= this.lastTextChangeReplaceCharCount;
+	}
+	
+	void updateSelection(int startOffset, int replacedLength, int newLength) {
+//		if (selection.y <= startOffset) {
+//			// selection ends before text change
+//			if (wordWrap || visualWrap) setCaretLocation();
+//			return;
+//		}
+//		if (selection.x < startOffset) {
+//			// clear selection fragment before text change
+//			internalRedrawRange(selection.x, startOffset - selection.x);
+//		}
+//		if (selection.y > startOffset + replacedLength && selection.x < startOffset + replacedLength) {
+//			// clear selection fragment after text change.
+//			// do this only when the selection is actually affected by the 
+//			// change. Selection is only affected if it intersects the change (1GDY217).
+//			int netNewLength = newLength - replacedLength;
+//			int redrawStart = startOffset + newLength;
+//			internalRedrawRange(redrawStart, selection.y + netNewLength - redrawStart);
+//		}
+		if (getSelection().offset + getSelection().length > startOffset && getSelection().offset < startOffset + replacedLength) {
+			// selection intersects replaced text. set caret behind text change
+			setSelection(new TextSelection(startOffset + newLength, 0));
+		} else {
+			// move selection to keep same text selected
+			setSelection(new TextSelection(getSelection().offset + newLength - replacedLength, getSelection().length));
+		}
 	}
 
 	@Override
