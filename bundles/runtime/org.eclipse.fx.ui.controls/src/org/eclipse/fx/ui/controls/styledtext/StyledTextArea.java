@@ -130,15 +130,15 @@ public class StyledTextArea extends Control {
 
 	private int lastTextChangeStart;
 
-	private int lastTextChangeNewLineCount;
+//	private int lastTextChangeNewLineCount;
 
 	private int lastTextChangeNewCharCount;
 
-	private int lastTextChangeReplaceLineCount;
+//	private int lastTextChangeReplaceLineCount;
 
 	private int lastTextChangeReplaceCharCount;
 
-	private int lastCharCount;
+//	private int lastCharCount;
 
 	/**
 	 * Create a new control
@@ -158,14 +158,15 @@ public class StyledTextArea extends Control {
 	// }
 
 	void handleTextChanging(TextChangingEvent event) {
+		System.err.println("CHANGING: " + event);
 		if (event.replaceCharCount < 0) {
 			event.offset += event.replaceCharCount;
 			event.replaceCharCount *= -1;
 		}
 		 this.lastTextChangeStart = event.offset;
-		 this.lastTextChangeNewLineCount = event.newLineCount;
+//		 this.lastTextChangeNewLineCount = event.newLineCount;
 		 this.lastTextChangeNewCharCount = event.newCharCount;
-		 this.lastTextChangeReplaceLineCount = event.replaceLineCount;
+//		 this.lastTextChangeReplaceLineCount = event.replaceLineCount;
 		 this.lastTextChangeReplaceCharCount = event.replaceCharCount;
 
 		this.renderer.textChanging(event);
@@ -180,20 +181,27 @@ public class StyledTextArea extends Control {
 
 	void handleTextSet(TextChangedEvent event) {
 		int newCharCount = getCharCount();
-		this.lastCharCount = newCharCount;
+//		this.lastCharCount = newCharCount;
+		if( this.caretOffsetProperty.get() > newCharCount ) {
+			setSelection(new TextSelection(newCharCount, 0));
+		}
+		
+		if (getSkin() instanceof StyledTextSkin) {
+			((StyledTextSkin) getSkin()).recalculateItems();
+		}
 	}
 
 	void handleTextChanged(TextChangedEvent event) {
 		// int firstLine = getContent().getLineAtOffset(lastTextChangeStart);
-				
+		
 		if (getSkin() instanceof StyledTextSkin) {
 			((StyledTextSkin) getSkin()).recalculateItems();
 		}
 		
 		updateSelection(this.lastTextChangeStart, this.lastTextChangeReplaceCharCount, this.lastTextChangeNewCharCount);
 		
-		this.lastCharCount += this.lastTextChangeNewCharCount;
-		this.lastCharCount -= this.lastTextChangeReplaceCharCount;
+//		this.lastCharCount += this.lastTextChangeNewCharCount;
+//		this.lastCharCount -= this.lastTextChangeReplaceCharCount;
 	}
 	
 	void updateSelection(int startOffset, int replacedLength, int newLength) {
@@ -1390,6 +1398,7 @@ public class StyledTextArea extends Control {
 	 */
 	public void setSelection(@NonNull TextSelection selection) {
 		if (selection.length == 0) {
+			System.err.println("SETTING OFFSET: " + selection.offset);
 			setCaretOffset(selection.offset);
 		} else {
 			// this.caretOffsetProperty.set(selection.offset+selection.length);
