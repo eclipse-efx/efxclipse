@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>at.bestsolution.eclipse</groupId>
+	<artifactId>org.eclipse.fx.ui.panes</artifactId>
+	<version>2.0.0</version>
+	<name>JavaFX layout panes</name>
+	<description>A port of SWT-Layouts like GridLayout to JavaFX</description>
+	<url>http://efxclipse.org</url>
+	<licenses>
+		<license>
+			<name>Eclipse Public License - v 1.0</name>
+			<url>http://www.eclipse.org/legal/epl-v10.html</url>
+		</license>
+	</licenses>
+	<scm>
+		<url>http://git.eclipse.org/c/efxclipse/org.eclipse.efxclipse.git/tree/bundles/runtime/org.eclipse.fx.ui.panes</url>
+	</scm>
+	<developers>
+		<developer>
+			<name>Tom Schindl</name>
+			<organization>Eclipse.org</organization>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>at.bestsolution.eclipse</groupId>
+			<artifactId>org.eclipse.jdt.annotation</artifactId>
+			<version>2.0.100</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+</project>
