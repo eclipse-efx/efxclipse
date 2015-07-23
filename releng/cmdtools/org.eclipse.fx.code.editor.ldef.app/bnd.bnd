@@ -1,0 +1,14 @@
+Bundle-Version: 0.0.0.${tstamp}
+Service-Component:  \
+	*
+-buildpath:  \
+	biz.aQute.bnd.annotation,\
+	org.eclipse.fx.code.editor.ldef,\
+	com.google.inject,\
+	org.eclipse.emf.ecore,\
+	org.eclipse.emf.ecore.xmi,\
+	org.eclipse.emf.common,\
+	org.eclipse.xtext
+Private-Package:  \
+	org.eclipse.fx.code.editor.ldef.app
+-runee: JavaSE-1.8
