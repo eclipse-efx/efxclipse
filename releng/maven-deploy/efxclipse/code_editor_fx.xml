@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>at.bestsolution.eclipse</groupId>
+	<artifactId>org.eclipse.fx.code.editor.fx</artifactId>
+	<version>2.1.0</version>
+	<name>JavaFX editor components and services</name>
+	<description>JavaFX code editor components</description>
+	<url>http://efxclipse.org</url>
+	<licenses>
+		<license>
+			<name>Eclipse Public License - v 1.0</name>
+			<url>http://www.eclipse.org/legal/epl-v10.html</url>
+		</license>
+	</licenses>
+	<scm>
+		<url>http://git.eclipse.org/c/efxclipse/org.eclipse.efxclipse.git/tree/bundles/code/org.eclipse.fx.code.editor.fx</url>
+	</scm>
+	<developers>
+		<developer>
+			<name>Tom Schindl</name>
+			<organization>Eclipse.org</organization>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+		<dependency>
+			<groupId>at.bestsolution.eclipse</groupId>
+			<artifactId>org.eclipse.e4.core.di.annotations</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>at.bestsolution.eclipse</groupId>
+			<artifactId>org.eclipse.fx.code.editor</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>at.bestsolution.eclipse</groupId>
+			<artifactId>org.eclipse.fx.core.di</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>at.bestsolution.eclipse</groupId>
+			<artifactId>org.eclipse.fx.text</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>at.bestsolution.eclipse</groupId>
+			<artifactId>org.eclipse.fx.text.ui</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>at.bestsolution.eclipse</groupId>
+			<artifactId>org.eclipse.fx.ui.controls</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>at.bestsolution.eclipse</groupId>
+			<artifactId>org.eclipse.fx.core</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+	</dependencies>
+</project>

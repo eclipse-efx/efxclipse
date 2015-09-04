@@ -4,10 +4,10 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.bestsolution.eclipse</groupId>
-	<artifactId>org.eclipse.fx.ui.controls</artifactId>
+	<artifactId>org.eclipse.fx.core.di</artifactId>
 	<version>2.1.0</version>
-	<name>Custom JavaFX controls</name>
-	<description>Custom JavaFX controls like a styled text component, ...</description>
+	<name>Core DI APIs</name>
+	<description>DI APIs to be used without getting a dependency on a concrete DI container</description>
 	<url>http://efxclipse.org</url>
 	<licenses>
 		<license>
@@ -16,7 +16,7 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>http://git.eclipse.org/c/efxclipse/org.eclipse.efxclipse.git/tree/bundles/runtime/org.eclipse.fx.ui.controls</url>
+		<url>http://git.eclipse.org/c/efxclipse/org.eclipse.efxclipse.git/tree/bundles/runtime/org.eclipse.fx.core.di</url>
 	</scm>
 	<developers>
 		<developer>
@@ -36,24 +36,17 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+		<dependency>
 			<groupId>at.bestsolution.eclipse</groupId>
 			<artifactId>org.eclipse.fx.core</artifactId>
-			<version>2.0.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>at.bestsolution.eclipse</groupId>
-			<artifactId>org.eclipse.fx.ui.panes</artifactId>
-			<version>2.0.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>at.bestsolution.eclipse</groupId>
-			<artifactId>org.eclipse.fx.ui.animation</artifactId>
-			<version>2.0.0</version>
-			<scope>compile</scope>
+			<version>2.1.0</version>
 		</dependency>
 		<!--
+			org.eclipse.osgi.services_3.5.0.v20150519-2006.jar
 			org.eclipse.osgi_3.10.100.v20150529-1857.jar
 		 -->
 	</dependencies>

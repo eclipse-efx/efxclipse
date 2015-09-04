@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.bestsolution.eclipse</groupId>
 	<artifactId>org.eclipse.fx.core</artifactId>
-	<version>2.0.0</version>
+	<version>2.1.0</version>
 	<name>Core utilities</name>
 	<description>Collection of core utilities like a log abstraction, adapter system, ...</description>
 	<url>http://efxclipse.org</url>
@@ -44,6 +44,11 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>19.0-rc1</version>
 		</dependency>
 		<!--
 			org.eclipse.osgi.services_3.5.0.v20150519-2006.jar

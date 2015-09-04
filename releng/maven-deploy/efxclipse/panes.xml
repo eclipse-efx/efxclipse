@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.bestsolution.eclipse</groupId>
 	<artifactId>org.eclipse.fx.ui.panes</artifactId>
-	<version>2.0.0</version>
+	<version>2.1.0</version>
 	<name>JavaFX layout panes</name>
 	<description>A port of SWT-Layouts like GridLayout to JavaFX</description>
 	<url>http://efxclipse.org</url>
