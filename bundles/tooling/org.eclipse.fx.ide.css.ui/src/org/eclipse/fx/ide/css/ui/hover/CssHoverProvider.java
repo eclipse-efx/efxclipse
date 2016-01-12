@@ -22,7 +22,7 @@ import org.eclipse.fx.ide.css.cssDsl.CssTok;
 import org.eclipse.fx.ide.css.cssDsl.FuncTok;
 import org.eclipse.fx.ide.css.cssDsl.NumberTok;
 import org.eclipse.fx.ide.css.extapi.CssExt;
-import org.eclipse.fx.ide.css.util.Utils;
+import org.eclipse.fx.ide.css.extapi.CssExtProvider;
 import org.eclipse.jface.internal.text.html.HTMLPrinter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.FontData;
@@ -36,8 +36,17 @@ public class CssHoverProvider extends DefaultEObjectHoverProvider {
 //	@Inject
 //	private CssDialectExtensionRegistry extension;
 	
-	@Inject
-	private CssExt ext;
+	public CssHoverProvider() {
+		System.err.println(this);
+	}
+	
+	@Inject(optional=true)
+	private CssExtProvider extProvider;
+	
+	private CssExt getExt(EObject context) {
+		if (extProvider == null) return null;
+		return extProvider.getCssExt(context);
+	}
 	
 	@Inject(optional = true)
 	@Named("org.eclipse.fx.ide.css.ui.styleSheetFileName")
@@ -161,7 +170,10 @@ public class CssHoverProvider extends DefaultEObjectHoverProvider {
 	 */
 	@Override
 	protected String getFirstLine(EObject o) {
-		String firstLine =  ext.getDocumentationHeader(Utils.getFile(o.eResource()),o,o);
+		CssExt ext = getExt(o);
+		if (ext == null) return "";
+		
+		String firstLine =  ext.getDocumentationHeader(o, o);
 		
 		if (firstLine==null) {
 			firstLine = super.getFirstLine(o);
@@ -170,11 +182,14 @@ public class CssHoverProvider extends DefaultEObjectHoverProvider {
 	}
 	
 	protected boolean hasHover(EObject o) {
+		CssExt ext = getExt(o);
+		if (ext == null) return false;
+		
 		if (o.eResource() == null) {
 			System.err.println("Cannot show doc for element without eResource: " + o);
 			return false;
 		}
-		String firstLine = ext.getDocumentationHeader(Utils.getFile(o.eResource()),o,o);
+		String firstLine = ext.getDocumentationHeader(o, o);
 		return firstLine != null;
 	}
 }

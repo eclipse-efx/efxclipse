@@ -21,8 +21,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.fx.core.log.Logger;
+import org.eclipse.fx.core.log.LoggerCreator;
+import org.eclipse.fx.ide.css.cssDsl.CssDeclaration;
+import org.eclipse.fx.ide.css.cssDsl.CssDslFactory;
+import org.eclipse.fx.ide.css.cssDsl.CssProperty;
+import org.eclipse.fx.ide.css.cssDsl.CssTok;
+import org.eclipse.fx.ide.css.cssDsl.FontFaceRule;
+import org.eclipse.fx.ide.css.cssDsl.FuncTok;
+import org.eclipse.fx.ide.css.cssDsl.Ruleset;
+import org.eclipse.fx.ide.css.cssDsl.Selector;
+import org.eclipse.fx.ide.css.cssDsl.Stylesheet;
+import org.eclipse.fx.ide.css.extapi.CssExt;
+import org.eclipse.fx.ide.css.extapi.CssExtProvider;
+import org.eclipse.fx.ide.css.extapi.Proposal;
+import org.eclipse.fx.ide.css.extapi.Proposal.Type;
+import org.eclipse.fx.ide.css.extapi.SimpleProposal;
 import org.eclipse.fx.ide.css.ui.extapi.UIProposal;
-import org.eclipse.fx.ide.css.util.Utils;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -36,19 +51,6 @@ import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 import org.eclipse.xtext.ui.editor.contentassist.ReplacementTextApplier;
 import org.eclipse.xtext.ui.editor.hover.DispatchingEObjectTextHover;
-import org.eclipse.fx.core.log.Logger;
-import org.eclipse.fx.core.log.LoggerCreator;
-import org.eclipse.fx.ide.css.cssDsl.CssDslFactory;
-import org.eclipse.fx.ide.css.cssDsl.CssTok;
-import org.eclipse.fx.ide.css.cssDsl.css_declaration;
-import org.eclipse.fx.ide.css.cssDsl.font_face;
-import org.eclipse.fx.ide.css.cssDsl.ruleset;
-import org.eclipse.fx.ide.css.cssDsl.selector;
-import org.eclipse.fx.ide.css.cssDsl.stylesheet;
-import org.eclipse.fx.ide.css.extapi.CssExt;
-import org.eclipse.fx.ide.css.extapi.Proposal;
-import org.eclipse.fx.ide.css.extapi.Proposal.Type;
-import org.eclipse.fx.ide.css.extapi.SimpleProposal;
 
 import com.google.inject.Inject;
 
@@ -59,9 +61,18 @@ import com.google.inject.Inject;
  */
 public class CssDslProposalProvider extends AbstractCssDslProposalProvider {
 
-	@Inject
-	private CssExt cssExt;
+	public CssDslProposalProvider() {
+		System.err.println(this);
+	}
+	
+	@Inject(optional=true)
+	private CssExtProvider extProvider;
 
+	private CssExt getExt(EObject context) {
+		if (extProvider == null) return null;
+		return extProvider.getCssExt(context);
+	}
+	
 	@Inject
 	private DispatchingEObjectTextHover hoverDispatcher;
 
@@ -74,7 +85,7 @@ public class CssDslProposalProvider extends AbstractCssDslProposalProvider {
 	private void acceptProposals(List<Proposal> proposals, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		for (Proposal p : proposals) {
 
-			final Image img = labelProvider.getImage(CssDslFactory.eINSTANCE.createcss_property());
+			final Image img = labelProvider.getImage(CssDslFactory.eINSTANCE.createCssProperty());
 
 			if (p instanceof UIProposal) {
 				ConfigurableCompletionProposal cp = (ConfigurableCompletionProposal) createCompletionProposal(p.getLabel(), p.getLabel(), img, context);
@@ -173,9 +184,20 @@ public class CssDslProposalProvider extends AbstractCssDslProposalProvider {
 		List<CssTok> prefixToks = new ArrayList<CssTok>();
 		if (context.getLastCompleteNode().getSemanticElement() instanceof CssTok) {
 			CssTok currentTok = (CssTok) context.getLastCompleteNode().getSemanticElement();
-			for (CssTok tok : ((css_declaration)context.getLastCompleteNode().getSemanticElement().eContainer()).getValueTokens()) {
-				if (tok == currentTok) break;
-				prefixToks.add(tok);
+			EObject dings = context.getLastCompleteNode().getSemanticElement().eContainer();
+			if (dings instanceof CssDeclaration) {
+				CssDeclaration decl = (CssDeclaration) dings;
+				for (CssTok tok : decl.getValueTokens()) {
+					if (tok == currentTok) break;
+					prefixToks.add(tok);
+				}
+			}
+			else if (dings instanceof FuncTok) {
+				FuncTok funcTok = (FuncTok) dings;
+				for (CssTok tok : funcTok.getParams()) {
+					if (tok == currentTok) break;
+					prefixToks.add(tok);
+				}
 			}
 
 			// TEST
@@ -184,26 +206,64 @@ public class CssDslProposalProvider extends AbstractCssDslProposalProvider {
 		return prefixToks;
 	}
 
-	private List<selector> findSelectors(css_declaration decl) {
-		if (decl.eContainer() instanceof ruleset) {
-			return ((ruleset)decl.eContainer()).getSelectors();
+	private List<Selector> findSelectors(CssDeclaration decl) {
+		if (decl.eContainer() instanceof Ruleset) {
+			return ((Ruleset)decl.eContainer()).getSelectors();
 		}
 		return Collections.emptyList();
 	}
+	
+	private List<Selector> findSelectors(FuncTok ft) {
+		EObject container = ft;
+		
+		while (container != null) {
+			if (container instanceof Ruleset) {
+				return ((Ruleset) container).getSelectors();
+			}
+			container = container.eContainer();
+		}
+		
+		return Collections.emptyList();
+	}
+	
+	private CssProperty findProperty(CssTok token) {
+		EObject container = token;
+		
+		while (container != null) {
+			if (container instanceof CssDeclaration) {
+				return ((CssDeclaration) container).getProperty();
+			}
+			container = container.eContainer();
+		}
+		
+		return null;
+	}
 
-	public void complete_CssTok(css_declaration model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		if( model.eContainer() instanceof font_face ) {
+	public void complete_CssTok(FuncTok model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		CssExt cssExt = getExt(model);
+		if (cssExt == null) return;
+		final List<Proposal> proposals = cssExt.getValueProposalsForFunction(model, findSelectors(model), findProperty(model), model, findPrefixTokens(context), context.getPrefix());
+		System.err.println("-> func proposals: " + proposals);
+		acceptProposals(proposals, context, acceptor);
+	}
+	
+	
+	public void complete_CssTok(CssDeclaration model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		CssExt cssExt = getExt(model);
+		if (cssExt == null) return;
+		
+		if( model.eContainer() instanceof FontFaceRule ) {
 			return;
 		}
 
-		final List<Proposal> proposals = cssExt.getValueProposalsForProperty(Utils.getFile(model.eResource()),model,findSelectors(model), model.getProperty(), findPrefixTokens(context), context.getPrefix());
+		final List<Proposal> proposals = cssExt.getValueProposalsForProperty(model, findSelectors(model), model.getProperty(), findPrefixTokens(context), context.getPrefix());
 
 		acceptProposals(proposals, context, acceptor);
 	}
 
-	private void filterDuplicates(ruleset model, List<Proposal> proposals) {
+	private void filterDuplicates(Ruleset model, List<Proposal> proposals) {
 		final Set<String> defined = new HashSet<>();
-		for (css_declaration d : model.getDeclarations()) {
+		for (CssDeclaration d : model.getDeclarations()) {
 			defined.add(d.getProperty().getName());
 		}
 		final Iterator<Proposal> filterIterator = proposals.iterator();
@@ -227,9 +287,9 @@ public class CssDslProposalProvider extends AbstractCssDslProposalProvider {
 		}
 	}
 
-	private static <O extends EObject> void  filterDuplicates(O model, Function<O, List<css_declaration>> f, List<Proposal> proposals) {
+	private static <O extends EObject> void  filterDuplicates(O model, Function<O, List<CssDeclaration>> f, List<Proposal> proposals) {
 		final Set<String> defined = new HashSet<>();
-		for (css_declaration d : f.apply(model)) {
+		for (CssDeclaration d : f.apply(model)) {
 			defined.add(d.getProperty().getName());
 		}
 		final Iterator<Proposal> filterIterator = proposals.iterator();
@@ -242,7 +302,7 @@ public class CssDslProposalProvider extends AbstractCssDslProposalProvider {
 	}
 
 	@Override
-	public void completeFont_face_Declarations(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+	public void completeFontFaceRule_Declarations(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		List<Proposal> proposals = new ArrayList<>();
 		proposals.add(new FontPropertyProposal("font-family")); //$NON-NLS-1$
 		proposals.add(new FontPropertyProposal("src")); //$NON-NLS-1$
@@ -250,15 +310,18 @@ public class CssDslProposalProvider extends AbstractCssDslProposalProvider {
 		proposals.add(new FontPropertyProposal("font-style")); //$NON-NLS-1$
 		proposals.add(new FontPropertyProposal("font-weight")); //$NON-NLS-1$
 		proposals.add(new FontPropertyProposal("unicode-range")); //$NON-NLS-1$
-		filterDuplicates((font_face)model, (o) -> o.getDeclarations(), proposals);
+		filterDuplicates((FontFaceRule) model, (o) -> o.getDeclarations(), proposals);
 		acceptProposals(proposals, context, acceptor);
 
-		super.completeFont_face_Declarations(model, assignment, context, acceptor);
+		super.completeFontFaceRule_Declarations(model, assignment, context, acceptor);
 	}
 
-	public void completeRuleset_Declarations(ruleset model, Assignment assignment, ContentAssistContext context,
+	public void completeRuleset_Declarations(Ruleset model, Assignment assignment, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
-		final List<Proposal> proposals = cssExt.getPropertyProposalsForSelector(Utils.getFile(model.eResource()),model,model.getSelectors());
+		CssExt cssExt = getExt(model);
+		if (cssExt == null) return;
+		
+		final List<Proposal> proposals = cssExt.getPropertyProposalsForSelector(model, model.getSelectors());
 		filterDuplicates(model, proposals);
 		acceptProposals(proposals, context, acceptor);
 	}
@@ -266,16 +329,19 @@ public class CssDslProposalProvider extends AbstractCssDslProposalProvider {
 	// known issue
 	// for some reason autocompletion for the last property in a ruleset ends up here
 	// for now i try to get the current model, but in case we fail i return the full list
-	public void completeRuleset_Declarations(stylesheet model, Assignment assignment, ContentAssistContext context,
+	public void completeRuleset_Declarations(Stylesheet model, Assignment assignment, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
-		if (context.getPreviousModel() instanceof ruleset) {
-			ruleset ruleset = (ruleset) context.getPreviousModel();
-			final List<Proposal> proposals = cssExt.getPropertyProposalsForSelector(Utils.getFile(model.eResource()),model,ruleset.getSelectors());
+		CssExt cssExt = getExt(model);
+		if (cssExt == null) return;
+		
+		if (context.getPreviousModel() instanceof Ruleset) {
+			Ruleset ruleset = (Ruleset) context.getPreviousModel();
+			final List<Proposal> proposals = cssExt.getPropertyProposalsForSelector(model, ruleset.getSelectors());
 			filterDuplicates(ruleset, proposals);
 			acceptProposals(proposals, context, acceptor);
 		}
 		else {
-			final List<Proposal> proposals = cssExt.getPropertyProposalsForSelector(Utils.getFile(model.eResource()),model,null);
+			final List<Proposal> proposals = cssExt.getPropertyProposalsForSelector(model, null);
 			acceptProposals(proposals, context, acceptor);
 		}
 	}

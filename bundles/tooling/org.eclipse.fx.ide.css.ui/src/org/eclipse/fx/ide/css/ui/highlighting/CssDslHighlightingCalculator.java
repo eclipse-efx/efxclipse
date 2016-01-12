@@ -10,26 +10,73 @@
  *******************************************************************************/
 package org.eclipse.fx.ide.css.ui.highlighting;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.fx.ide.css.cssDsl.CssDeclaration;
+import org.eclipse.fx.ide.css.cssDsl.CssTok;
+import org.eclipse.fx.ide.css.cssDsl.ElementSelector;
+import org.eclipse.fx.ide.css.cssDsl.FuncTok;
+import org.eclipse.fx.ide.css.cssDsl.IdentifierTok;
+import org.eclipse.fx.ide.css.cssDsl.SimpleSelector;
+import org.eclipse.fx.ide.css.cssDsl.StringTok;
+import org.eclipse.fx.ide.css.cssDsl.Stylesheet;
+import org.eclipse.fx.ide.css.cssDsl.SymbolTok;
+import org.eclipse.fx.ide.css.cssDsl.URLType;
+import org.eclipse.fx.ide.css.extapi.CssExt;
+import org.eclipse.xtext.TerminalRule;
+import org.eclipse.xtext.nodemodel.BidiTreeIterator;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.DefaultHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightedPositionAcceptor;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator;
-import org.eclipse.fx.ide.css.cssDsl.CssTok;
-import org.eclipse.fx.ide.css.cssDsl.ElementSelector;
-import org.eclipse.fx.ide.css.cssDsl.FuncTok;
-import org.eclipse.fx.ide.css.cssDsl.IdentifierTok;
-import org.eclipse.fx.ide.css.cssDsl.StringTok;
-import org.eclipse.fx.ide.css.cssDsl.SymbolTok;
-import org.eclipse.fx.ide.css.cssDsl.URLType;
-import org.eclipse.fx.ide.css.cssDsl.css_declaration;
-import org.eclipse.fx.ide.css.cssDsl.simple_selector;
 
+import com.google.inject.Inject;
+
+// TODO port to new API
 public class CssDslHighlightingCalculator implements ISemanticHighlightingCalculator {
+	
+	@Inject private CssExt ext;
+	
+	private void markImports(Stylesheet s, IHighlightedPositionAcceptor acceptor) {
+		// TODO move the @import search logic to some common place
+		Pattern p = Pattern.compile("@import\\s+([\\w\\d:/.]+)");
+		// get all hidden ML_COMMENTS
+		ICompositeNode rootNode = NodeModelUtils.findActualNodeFor(s);
+		BidiTreeIterator<INode> iterator = rootNode.getAsTreeIterable().iterator();
+		while (iterator.hasNext()) {
+			INode cur = iterator.next();
+			
+			if (cur instanceof HiddenLeafNode) {
+				HiddenLeafNode n = (HiddenLeafNode) cur;
+				if (n.getGrammarElement() instanceof TerminalRule) {
+					TerminalRule tr = (TerminalRule) n.getGrammarElement();
+					
+					if ("ML_COMMENT".equals(tr.getName())) {
+						// got one
+						//System.err.println(" => " + n.getText());
+						
+						Matcher matcher = p.matcher(n.getText());
+						while (matcher.find()) {
+							acceptor.addPosition(n.getOffset() + matcher.start(), matcher.end(1) - matcher.start(), CssDslHighlightingConfiguration.SELECTOR);
+							acceptor.addPosition(n.getOffset() + matcher.start(1), matcher.end(1) - matcher.start(1), CssDslHighlightingConfiguration.URL);
+						}
+					}
+				}
+			}
+			
+			
+		}
+		
+	}
 	
 	@Override
 	public void provideHighlightingFor(XtextResource resource,
@@ -38,10 +85,21 @@ public class CssDslHighlightingCalculator implements ISemanticHighlightingCalcul
 			return;
 		}
 		
+		EList<EObject> contents = resource.getContents();
+		if (contents.size() > 0) {
+			EObject eObject = contents.get(0);
+			if (eObject instanceof Stylesheet) {
+				markImports((Stylesheet) eObject, acceptor);
+			}
+		}
+		
+		
 		TreeIterator<Object> it = EcoreUtil.getAllContents(resource, true);
 		
 		while( it.hasNext() ) {
 			Object o = it.next();
+			
+			
 			
 			if (o instanceof ElementSelector) {
 				final ICompositeNode n = NodeModelUtils.getNode((EObject)o);
@@ -51,22 +109,41 @@ public class CssDslHighlightingCalculator implements ISemanticHighlightingCalcul
 			}
 			else if (o instanceof IdentifierTok) {
 				final ICompositeNode n = NodeModelUtils.getNode((EObject)o);
-				if( n != null ) {
-					acceptor.addPosition(n.getOffset(), n.getLength(), DefaultHighlightingConfiguration.DEFAULT_ID);	
+				
+				if (ext.isPropertyVariable((IdentifierTok)o, ((IdentifierTok) o).getName())) {
+					if( n != null ) {
+						acceptor.addPosition(n.getOffset(), n.getLength(), CssDslHighlightingConfiguration.URL);	
+					}
+				}
+				else {
+					if( n != null ) {
+						acceptor.addPosition(n.getOffset(), n.getLength(), DefaultHighlightingConfiguration.DEFAULT_ID);	
+					}
 				}
 			}
-			else if( o instanceof css_declaration ) {
-				css_declaration dec = (css_declaration) o;
+			else if( o instanceof CssDeclaration ) {
+				CssDeclaration dec = (CssDeclaration) o;
 				if( dec.getProperty() != null && dec.getProperty().getName() != null && dec.getProperty().getName().trim().length() > 0 ) {
-					ICompositeNode n = NodeModelUtils.getNode(dec);
-					if( n != null ) {
-						if( n.hasChildren() ) {
-							acceptor.addPosition(n.getFirstChild().getOffset(), n.getFirstChild().getLength(), CssDslHighlightingConfiguration.DECLARATIONNAME);
-						}							
+					
+					if (ext.isPropertyVariable(dec, dec.getProperty())) {
+						ICompositeNode n = NodeModelUtils.getNode(dec);
+						if( n != null ) {
+							if( n.hasChildren() ) {
+								acceptor.addPosition(n.getFirstChild().getOffset(), n.getFirstChild().getLength(), CssDslHighlightingConfiguration.URL);
+							}							
+						}
+					}
+					else {
+						ICompositeNode n = NodeModelUtils.getNode(dec);
+						if( n != null ) {
+							if( n.hasChildren() ) {
+								acceptor.addPosition(n.getFirstChild().getOffset(), n.getFirstChild().getLength(), CssDslHighlightingConfiguration.DECLARATIONNAME);
+							}							
+						}
 					}
 				}
 			} 
-			else if( o instanceof simple_selector ) {
+			else if( o instanceof SimpleSelector ) {
 				final ICompositeNode n = NodeModelUtils.getNode((EObject)o);
 				if( n != null ) {
 					acceptor.addPosition(n.getOffset(), n.getLength(), CssDslHighlightingConfiguration.SELECTOR);	

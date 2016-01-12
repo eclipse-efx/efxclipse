@@ -1,0 +1,8 @@
+{
+	"1.0": {
+		"project_path": ":",
+		"project_dir": "/opt/projects/efxclipse/wa2/org.eclipse.fx.ide.css.parent",
+		"connection_project_dir": "/opt/projects/efxclipse/wa2/org.eclipse.fx.ide.css.parent",
+		"connection_gradle_distribution": "GRADLE_DISTRIBUTION(WRAPPER)"
+	}
+}

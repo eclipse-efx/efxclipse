@@ -1,0 +1,93 @@
+<idea-plugin version="2">
+	<extensions defaultExtensionNs="org.eclipse.xtext.idea">
+		<package
+			uri="http://www.eclipse.org/efxclipse/ide/css/cssext/CssExtDsl"
+			class="org.eclipse.fx.ide.css.cssext.cssExtDsl.CssExtDslPackage"
+		/>
+		<resourceFactory 
+			type="cssext"
+			class="org.eclipse.xtext.resource.IResourceFactory"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+		/>
+		<resourceServiceProvider
+			uriExtension="cssext"
+			class="org.eclipse.xtext.idea.resource.IResourceIdeaServiceProvider"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+		/>
+
+		<lang.setup
+			language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+			implementationClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslIdeaSetup"
+		/>
+	</extensions>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<psi.treeChangePreprocessor implementation="org.eclipse.fx.ide.css.cssext.idea.lang.psi.CssExtDslCodeBlockModificationListener"/>
+
+		<fileTypeFactory implementation="org.eclipse.fx.ide.css.cssext.idea.lang.CssExtDslFileTypeFactory"/>
+		<stubElementTypeHolder class="org.eclipse.fx.ide.css.cssext.idea.lang.CssExtDslElementTypeProvider"/>
+		<lang.ast.factory 
+			language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.lang.BaseXtextASTFactory"
+		/>
+		<lang.parserDefinition 
+			language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+			implementationClass="org.eclipse.fx.ide.css.cssext.idea.lang.parser.CssExtDslParserDefinition"
+		/>
+		<lang.findUsagesProvider 
+			language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.findusages.BaseXtextFindUsageProvider"
+		/>
+		<lang.refactoringSupport 
+			language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.refactoring.BaseXtextRefactoringSupportProvider"
+		/>
+		<lang.namesValidator 
+			language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+			implementationClass="com.intellij.lang.refactoring.NamesValidator"
+		/>
+		<lang.syntaxHighlighterFactory key="org.eclipse.fx.ide.css.cssext.CssExtDsl" implementationClass="org.eclipse.fx.ide.css.cssext.idea.highlighting.CssExtDslSyntaxHighlighterFactory" />
+		<lang.braceMatcher 
+			language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+			implementationClass="com.intellij.lang.PairedBraceMatcher"
+		/>
+		<annotator 
+			language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.annotation.IssueAnnotator"
+		/>
+		<completion.contributor language="org.eclipse.fx.ide.css.cssext.CssExtDsl" implementationClass="org.eclipse.fx.ide.css.cssext.idea.completion.CssExtDslCompletionContributor"/>
+		<pom.declarationSearcher implementation="org.eclipse.fx.ide.css.cssext.idea.lang.pom.CssExtDslPomDeclarationSearcher"/>
+
+		<lang.psiStructureViewFactory 
+			language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+			implementationClass="com.intellij.lang.PsiStructureViewFactory"
+		/>
+		<facetType implementation="org.eclipse.fx.ide.css.cssext.idea.facet.CssExtDslFacetType"/>
+      	<lang.documentationProvider 
+      		language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+      		factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+      		implementationClass="org.eclipse.xtext.idea.documentation.IdeaDocumentationProvider"
+      	/>
+		<colorSettingsPage implementation="org.eclipse.fx.ide.css.cssext.idea.highlighting.CssExtDslColorSettingsPage"/>
+		<highlightVisitor implementation="org.eclipse.fx.ide.css.cssext.idea.highlighting.CssExtDslSemanticHighlightVisitor"/>
+
+		<lang.formatter 
+			language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+			implementationClass="com.intellij.formatting.FormattingModelBuilder"
+		/>
+		<lang.commenter 
+			language="org.eclipse.fx.ide.css.cssext.CssExtDsl"
+			factoryClass="org.eclipse.fx.ide.css.cssext.idea.CssExtDslExtensionFactory"
+			implementationClass="com.intellij.lang.CodeDocumentationAwareCommenter"
+		/>
+	</extensions>
+</idea-plugin>

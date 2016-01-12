@@ -5,11 +5,14 @@ Bundle-SymbolicName: org.eclipse.fx.ide.css.cssext.proposals
 Bundle-Version: 2.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.fx.ui.controls;bundle-version="2.2.0",
- org.eclipse.fx.ide.css.cssext;bundle-version="2.2.0",
+Import-Package: org.eclipse.fx.ide.css.cssext.api,
+ org.eclipse.fx.ide.css.extapi,
+ org.eclipse.fx.ide.css.ui.extapi,
+ org.eclipse.fx.ui.controls.paint;version="2.2.0",
  org.eclipse.swt,
- org.eclipse.jface;bundle-version="3.10.0"
-Import-Package: org.eclipse.fx.ide.css.extapi,
- org.eclipse.fx.ide.css.ui.extapi
-Service-Component: OSGI-INF/paintproposalcontributor.xml
+ org.eclipse.swt.layout,
+ org.eclipse.swt.widgets,
+ org.osgi.service.component.annotations;version="1.2.0";resolution:=optional
+Service-Component: OSGI-INF/services/org.eclipse.fx.ide.css.cssext.proposals.internal.paint.PaintProposalContribution.xml
 Bundle-Vendor: Eclipse.org
+Require-Bundle: org.eclipse.fx.javafx;bundle-version="2.2.0"

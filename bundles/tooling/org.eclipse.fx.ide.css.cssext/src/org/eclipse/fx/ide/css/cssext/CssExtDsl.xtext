@@ -16,10 +16,9 @@ generate cssExtDsl "http://www.eclipse.org/efxclipse/ide/css/cssext/CssExtDsl"
 
 
 CssExtension:
+	'namespace' namespace=STRING
 	imports+=Import*
 	packageDef=PackageDefinition?
-//	packageDef=PackageDefinition?
-//	rule=CSSRuleSet
 ;
 
 terminal PSEUDO: ':' (!' ') ID;
@@ -67,6 +66,7 @@ CSSBaseType returns CSSRule hidden(WS, SL_COMMENT, ML_COMMENT):
 CSSType returns CSSType hidden(SL_COMMENT, ML_COMMENT):
 	{CSSRangedIntType} (doku=Doku WS*)? type='@INT' '(' WS* from=INT WS* '->' WS* to=INT WS* ')' |
 	{CSSRangedDoubleType} (doku=Doku WS*)? type='@NUM' '(' WS* from=DOUBLE WS* '->' WS* to=DOUBLE WS* ')' |
+	{CSSPropertyRef} (doku=Doku WS*)? type='@PROPERTY_REF' '(' rule=CSSRuleRef ')' |
 	(doku=Doku WS*)? (
 	type='@INT' WS*|
 	type='@NUM' WS* |

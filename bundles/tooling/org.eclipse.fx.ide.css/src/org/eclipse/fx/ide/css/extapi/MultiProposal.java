@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.fx.ide.css.extapi;
 
-import java.util.List;
-
 /**
  * @author Caksi
  *
@@ -19,5 +17,5 @@ import java.util.List;
 public interface MultiProposal extends Proposal {
 
 	public Proposal getPrevious();
-	
+
 }

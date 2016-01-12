@@ -22,6 +22,8 @@ public class CssDslHighlightingConfiguration extends DefaultHighlightingConfigur
 	public final static String ELEMENT = "ELEMENT";
 	public final static String URL = "Url";
 	public final static String FUNCTION = "Function";
+	
+	public final static String VARIABLE = "Variable";
 
 	@Override
 	public void configure(IHighlightingConfigurationAcceptor acceptor) {
@@ -38,6 +40,7 @@ public class CssDslHighlightingConfiguration extends DefaultHighlightingConfigur
 		acceptor.acceptDefaultHighlighting(URL, "Url", urlTextStyle());
 		acceptor.acceptDefaultHighlighting(FUNCTION, "Function", functionTextStyle());
 		acceptor.acceptDefaultHighlighting(ELEMENT, "Element", elementTextStyle());
+		acceptor.acceptDefaultHighlighting(VARIABLE, "Variable", variableTextStyle());
 	}
 
 	public TextStyle crossDeclarationTextStyle() {
@@ -61,6 +64,11 @@ public class CssDslHighlightingConfiguration extends DefaultHighlightingConfigur
 	
 	public TextStyle urlTextStyle() {
 		TextStyle textStyle = stringTextStyle().copy();
+		return textStyle;
+	}
+	
+	public TextStyle variableTextStyle() {
+		TextStyle textStyle = crossDeclarationTextStyle().copy();
 		return textStyle;
 	}
 	

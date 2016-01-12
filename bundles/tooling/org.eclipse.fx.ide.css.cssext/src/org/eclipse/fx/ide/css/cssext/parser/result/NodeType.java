@@ -14,7 +14,10 @@ public enum NodeType {
 	REF,
 	FUNCTION,
 	PLUS,
-	REGEX, TYPE_URL;
+	REGEX, TYPE_URL, 
+	
+	
+	TYPE_PROPERTY_REF, TYPE_STRING;
 	
 	private NodeType() {
 		

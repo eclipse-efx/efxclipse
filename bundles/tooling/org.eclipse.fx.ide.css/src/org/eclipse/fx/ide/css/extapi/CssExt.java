@@ -12,16 +12,11 @@ package org.eclipse.fx.ide.css.extapi;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.fx.ide.css.cssDsl.CssProperty;
 import org.eclipse.fx.ide.css.cssDsl.CssTok;
-import org.eclipse.fx.ide.css.cssDsl.css_property;
-import org.eclipse.fx.ide.css.cssDsl.selector;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceReference;
-
-import com.google.inject.Provider;
+import org.eclipse.fx.ide.css.cssDsl.FuncTok;
+import org.eclipse.fx.ide.css.cssDsl.Selector;
 
 /**
  * @author ccaks
@@ -29,26 +24,21 @@ import com.google.inject.Provider;
  */
 public interface CssExt {
 
-	public List<Proposal> getPropertyProposalsForSelector(IFile f, EObject context, List<selector> selector);
-	public List<Proposal> getValueProposalsForProperty(IFile f, EObject context, List<selector> selector, css_property property, List<CssTok> prefixTok, String prefixString);
-	
-	public String getDocumentationHeader(IFile f, EObject context, EObject obj);
-	public String getDocumentation(IFile f, EObject context, EObject obj);
-	
-	
-	public static class OsgiCssExtServiceProvider implements Provider<CssExt> {
+	public boolean isPropertyKnown(EObject context, CssProperty property);
+	public boolean isPropertyBySelectorSupported(EObject context, List<Selector> selectors, CssProperty property);
 
-		private CssExt instance = null;
-		
-		@Override
-		public CssExt get() {
-			if (instance == null) {
-				BundleContext context = FrameworkUtil.getBundle(CssExt.class).getBundleContext();
-				ServiceReference<CssExt> ref = context.getServiceReference(CssExt.class);
-				instance = context.getService(ref);
-			}
-			return instance;
-		}
-		
-	}
+	public boolean isPropertyVariable(EObject context, String name);
+	public boolean isPropertyVariable(EObject context, CssProperty property);
+	public boolean isPropertyVariable(EObject context, List<Selector> selectors, CssProperty property);
+
+
+	public List<Proposal> getPropertyProposalsForSelector(EObject context, List<Selector> selector);
+	public List<Proposal> getValueProposalsForProperty(EObject context, List<Selector> selector, CssProperty property, List<CssTok> prefixTok, String prefixString);
+
+	public List<Proposal> getValueProposalsForFunction(EObject context, List<Selector> selector, CssProperty property, FuncTok function, List<CssTok> prefixTok, String prefixString);
+
+
+	public String getDocumentationHeader(EObject context, EObject obj);
+	public String getDocumentation(EObject context, EObject obj);
+
 }

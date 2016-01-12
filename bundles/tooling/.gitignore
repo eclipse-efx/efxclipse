@@ -1,0 +1,4 @@
+# some common stuff for all tooling projects
+
+*.xtendbin
+*.java._trace

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" name="org.eclipse.fx.ide.css.cssext.api.internal.ProposalContributionRegistryImpl">
+   <service>
+      <provide interface="org.eclipse.fx.ide.css.cssext.api.ProposalContributionRegistry"/>
+   </service>
+   <reference bind="addProposalContribution" cardinality="0..n" interface="org.eclipse.fx.ide.css.cssext.api.ProposalContribution" name="ProposalContribution" policy="dynamic" policy-option="greedy" unbind="removeProposalContribution"/>
+   <implementation class="org.eclipse.fx.ide.css.cssext.api.internal.ProposalContributionRegistryImpl"/>
+</scr:component>

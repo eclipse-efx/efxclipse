@@ -9,73 +9,79 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 generate cssDsl "http://www.eclipse.org/efxclipse/ide/css/CssDsl"
 
-stylesheet:
-	charset=charset?
-	imports+=importExpression*
+Stylesheet:
+	charset=CharsetRule?
+	imports+=ImportRule*
 	(
-		ruleset+=ruleset |
-		media+=media |
-		page+=page |
-		font_face+=font_face |
-		keyframes+=keyframes
+		ruleset+=Ruleset |
+		media+=MediaRule |
+		page+=PageRule |
+		font_face+=FontFaceRule |
+		keyframes+=KeyframesRule
 	)*
 ;
 
-charset:
-	('@charset'|'@CHARSET') charset=CSSSTRING ';'
+CharsetRule:
+	'@charset' charset=CSSSTRING ';'
 ;
 
-importExpression:
-	('@import'|'@IMPORT') (value=CSSSTRING | URLType mediaList=media_list?) ';'
+ImportRule:
+	'@import' (value=CSSSTRING | URLType mediaList=MediaList?) ';'
 ;
 
-page:
-	{page} ('@page'|'@PAGE') pseudoPage=pseudo_page?
-    '{' declarations+=css_declaration? ( ';' declarations+=css_declaration? )* '}'
+PageRule:
+	{PageRule} '@page' pseudoPage=PseudoPage?
+    '{' declarations+=CssDeclaration? ( ';' declarations+=CssDeclaration? )* '}'
 ;
 
-pseudo_page:
+
+
+PseudoPage:
 	COLON Identifier
 ;
 
-media:
-	('@media'|'@MEDIA') medialist=media_list '{' rulesets+=ruleset* '}'
+MediaRule:
+	'@media' medialist=MediaList '{' rulesets+=Ruleset* '}'
 ;
 
-media_list:
-	medium ( COMMA medium)*
+MediaList:
+	entry+=Media ( COMMA entry+=Media)*
 ;
 
-medium:
-	Identifier
+Media:
+	name=Identifier
 ;
 
-font_face:
-	{font_face} ('@font-face'|'@FONT-FACE')
-	'{' declarations+=css_declaration? ( ';' declarations+=css_declaration? )* '}'
+FontFaceRule:
+	{FontFaceRule} '@font-face'
+	'{' declarations+=CssDeclaration? ( ';' declarations+=CssDeclaration? )* '}'
 ;
 
-keyframes:
-	{font_face} ('@keyframes'|'@KEYFRAMES') name=Identifier
-	'{' keyframeselectors+=keyframe_selector? ( ';' keyframeselectors+=keyframe_selector? )* '}'
+KeyframesRule:
+	{KeyframesRule} '@keyframes' name=Identifier
+	'{' keyframeselectors+=KeyframeSelector? ( ';' keyframeselectors+=KeyframeSelector? )* '}'
 ;
 
-keyframe_selector:
+KeyframeSelector:
 	(type=Identifier | (percentage=Num PERCENT)) '{'
-		declarations+=css_declaration? ( ';' declarations+=css_declaration? )*
+		declarations+=CssDeclaration? ( ';' declarations+=CssDeclaration? )*
 	'}'
 ;
 
 
-ruleset:
-	selectors+=selector ( WS* COMMA selectors+=selector )* WS* '{'
-		(declarations+=css_declaration (';' declarations+=css_declaration)* ';'?)?
+Ruleset hidden(WS, ML_COMMENT):
+	selectors+=Selector ( WS* COMMA selectors+=Selector )* WS* '{'
+		(declarations+=CssDeclaration (';' declarations+=CssDeclaration)* ';'?)?
 	'}'
+;
+
+CssDeclaration hidden(ML_COMMENT):
+	property=CssProperty WS* COLON => valueTokens+=CssTok+ important?=IMPORTANT_SYM?
 ;
 
 // check simple_selctor cardinality
-selector hidden(ML_COMMENT):
-	simpleselectors+=simple_selector ( combinator=combinator WS* selector=selector | WS+ (combinator=combinator WS*)? selector=selector )?
+Selector hidden(ML_COMMENT):
+	simpleselectors+=SimpleSelector ( combinator=Combinator WS* selector=Selector | WS+ (combinator=Combinator WS*)? selector=Selector )?
 ;
 
 SimpleSelectorForNegation:
@@ -90,7 +96,7 @@ SubSelectorForNegation returns CssSelector:
 	PseudoClass
 ;
 
-simple_selector hidden(ML_COMMENT):
+SimpleSelector hidden():
 	((element=ElementSelector | universal=UniversalSelector) subSelectors+=SubSelector*) |
 	subSelectors+=SubSelector+
 ;
@@ -115,23 +121,21 @@ ElementSelector:
 ;
 
 UniversalSelector:
-	{UniversalSelector} ( namespace=css_namespace_prefix )? '*'
+	{UniversalSelector} ( namespace=CssNamespacePrefix )? '*'
 ;
 
 IdSelector:
 	{IdSelector} HASHMARK name=Identifier
 ;
 
-css_namespace_prefix
+CssNamespacePrefix
   : ( Identifier | '*' )? '|'
   ;
 
-css_declaration hidden(ML_COMMENT):
-	WS* property=css_property WS* COLON valueTokens+=CssTok+ important?=IMPORTANT_SYM?
-;
 
-css_property:
-	{css_property} name=ValidPropertyIdent
+
+CssProperty:
+	{CssProperty} name=ValidPropertyIdent
 ;
 
 ValidPropertyIdent:
@@ -143,11 +147,11 @@ PseudoClassOrFunc:
 ;
 
 PseudoClass:
-	COLON COLON? PseudoClassName
+	COLON COLON? name=PseudoClassName
 ;
 
 PseudoClassName:
-	name=Identifier
+	Identifier
 ;
 
 PseudoClassFunction:
@@ -159,7 +163,7 @@ NotFunctionCall hidden():
 	COLON 'not('
 ;
 
-combinator
+Combinator
   :
   (
   	  PLUS
@@ -168,11 +172,11 @@ combinator
   )
 ;
 
-operator
+Operator
   : '/' | COMMA
   ;
 
-unary_operator
+UnaryOperator
   : DASH | PLUS
   ;
 
@@ -180,7 +184,7 @@ SymbolTok returns CssTok:
 	{SymbolTok} symbol=(COMMA|PERCENT)
 ;
 
-WSTok returns CssTok:
+WSTok returns CssTok hidden():
 	{WSTok} WS
 ;
 
@@ -208,11 +212,11 @@ ColorTok returns CssTok hidden():
 	{ColorTok} value=Hex
 ;
 
-IdentifierOrFuncTok returns CssTok hidden(ML_COMMENT):
+IdentifierOrFuncTok returns CssTok hidden():
 	{IdentifierTok} name=Identifier ( {FuncTok.name=current} '(' params+=CssTok+ ')')?
 ;
 
-CssTok hidden(ML_COMMENT):
+CssTok hidden():
 	IdentifierOrFuncTok |
 	SymbolTok |
 	WSTok |
@@ -320,8 +324,6 @@ terminal PERCENT: '%';
 
 terminal ML_COMMENT	: '/*' -> '*/';
 terminal WS			: (' '|'\t'|'\r'|'\n')+;
-
-
 
 terminal CSSSTRING	:
 			'"' ( '\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'0'..'9'|'a'..'f'|'A'..'F'|'\\') | !('\\'|'"') )* '"' |

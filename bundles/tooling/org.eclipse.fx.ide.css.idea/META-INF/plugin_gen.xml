@@ -1,0 +1,93 @@
+<idea-plugin version="2">
+	<extensions defaultExtensionNs="org.eclipse.xtext.idea">
+		<package
+			uri="http://www.eclipse.org/efxclipse/ide/css/CssDsl"
+			class="org.eclipse.fx.ide.css.cssDsl.CssDslPackage"
+		/>
+		<resourceFactory 
+			type="css"
+			class="org.eclipse.xtext.resource.IResourceFactory"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+		/>
+		<resourceServiceProvider
+			uriExtension="css"
+			class="org.eclipse.xtext.idea.resource.IResourceIdeaServiceProvider"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+		/>
+
+		<lang.setup
+			language="org.eclipse.fx.ide.css.CssDsl"
+			implementationClass="org.eclipse.fx.ide.css.idea.CssDslIdeaSetup"
+		/>
+	</extensions>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<psi.treeChangePreprocessor implementation="org.eclipse.fx.ide.css.idea.lang.psi.CssDslCodeBlockModificationListener"/>
+
+		<fileTypeFactory implementation="org.eclipse.fx.ide.css.idea.lang.CssDslFileTypeFactory"/>
+		<stubElementTypeHolder class="org.eclipse.fx.ide.css.idea.lang.CssDslElementTypeProvider"/>
+		<lang.ast.factory 
+			language="org.eclipse.fx.ide.css.CssDsl"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.lang.BaseXtextASTFactory"
+		/>
+		<lang.parserDefinition 
+			language="org.eclipse.fx.ide.css.CssDsl"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+			implementationClass="org.eclipse.fx.ide.css.idea.lang.parser.CssDslParserDefinition"
+		/>
+		<lang.findUsagesProvider 
+			language="org.eclipse.fx.ide.css.CssDsl"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.findusages.BaseXtextFindUsageProvider"
+		/>
+		<lang.refactoringSupport 
+			language="org.eclipse.fx.ide.css.CssDsl"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.refactoring.BaseXtextRefactoringSupportProvider"
+		/>
+		<lang.namesValidator 
+			language="org.eclipse.fx.ide.css.CssDsl"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+			implementationClass="com.intellij.lang.refactoring.NamesValidator"
+		/>
+		<lang.syntaxHighlighterFactory key="org.eclipse.fx.ide.css.CssDsl" implementationClass="org.eclipse.fx.ide.css.idea.highlighting.CssDslSyntaxHighlighterFactory" />
+		<lang.braceMatcher 
+			language="org.eclipse.fx.ide.css.CssDsl"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+			implementationClass="com.intellij.lang.PairedBraceMatcher"
+		/>
+		<annotator 
+			language="org.eclipse.fx.ide.css.CssDsl"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.annotation.IssueAnnotator"
+		/>
+		<completion.contributor language="org.eclipse.fx.ide.css.CssDsl" implementationClass="org.eclipse.fx.ide.css.idea.completion.CssDslCompletionContributor"/>
+		<pom.declarationSearcher implementation="org.eclipse.fx.ide.css.idea.lang.pom.CssDslPomDeclarationSearcher"/>
+
+		<lang.psiStructureViewFactory 
+			language="org.eclipse.fx.ide.css.CssDsl"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+			implementationClass="com.intellij.lang.PsiStructureViewFactory"
+		/>
+		<facetType implementation="org.eclipse.fx.ide.css.idea.facet.CssDslFacetType"/>
+      	<lang.documentationProvider 
+      		language="org.eclipse.fx.ide.css.CssDsl"
+      		factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+      		implementationClass="org.eclipse.xtext.idea.documentation.IdeaDocumentationProvider"
+      	/>
+		<colorSettingsPage implementation="org.eclipse.fx.ide.css.idea.highlighting.CssDslColorSettingsPage"/>
+		<highlightVisitor implementation="org.eclipse.fx.ide.css.idea.highlighting.CssDslSemanticHighlightVisitor"/>
+
+		<lang.formatter 
+			language="org.eclipse.fx.ide.css.CssDsl"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+			implementationClass="com.intellij.formatting.FormattingModelBuilder"
+		/>
+		<lang.commenter 
+			language="org.eclipse.fx.ide.css.CssDsl"
+			factoryClass="org.eclipse.fx.ide.css.idea.CssDslExtensionFactory"
+			implementationClass="com.intellij.lang.CodeDocumentationAwareCommenter"
+		/>
+	</extensions>
+</idea-plugin>

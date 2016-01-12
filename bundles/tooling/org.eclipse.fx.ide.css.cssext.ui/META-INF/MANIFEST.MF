@@ -1,38 +1,36 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.fx.ide.css.cssext.ui
-Bundle-Vendor: Eclipse.org
-Bundle-Version: 2.2.0.qualifier
-Bundle-SymbolicName: org.eclipse.fx.ide.css.cssext.ui;singleton:=true
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.eclipse.fx.ide.css.cssext.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.fx.ide.css.cssext;visibility:=reexport,
+Require-Bundle: org.eclipse.fx.ide.css.cssext,
+ org.eclipse.fx.ide.css.cssext.ide,
  org.eclipse.xtext.ui,
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.xtext.ui.codetemplates.ui,
  org.eclipse.ui.editors;bundle-version="3.5.0",
  org.eclipse.ui.ide;bundle-version="3.5.0",
- org.eclipse.xtext.ui.shared,
  org.eclipse.ui,
+ org.eclipse.compare,
  org.eclipse.xtext.builder,
- org.antlr.runtime,
- org.eclipse.xtext.common.types.ui,
- org.eclipse.xtext.ui.codetemplates.ui,
- org.eclipse.fx.core;bundle-version="2.2.0",
- org.eclipse.fx.core.guice;bundle-version="2.2.0",
+ org.eclipse.xtend.lib;resolution:=optional,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.fx.ide.css;bundle-version="2.2.0",
+ org.eclipse.jdt.core;bundle-version="3.11.0",
  org.eclipse.fx.ide.css.ui;bundle-version="2.2.0",
- org.eclipse.jdt.core;bundle-version="3.7.3",
- org.eclipse.core.databinding.observable,
- org.eclipse.core.databinding.beans,
- org.eclipse.jface.databinding,
- org.eclipse.core.databinding;bundle-version="1.4.1",
- org.eclipse.core.databinding.property;bundle-version="1.4.200",
- org.eclipse.jdt.annotation;bundle-version="2.0.100";resolution:=optional
+ org.eclipse.pde.core;bundle-version="3.10.101"
 Import-Package: org.apache.log4j,
- org.eclipse.core.filesystem,
- org.eclipse.fx.osgi.util
+ org.eclipse.equinox.frameworkadmin;version="2.0.0",
+ org.eclipse.fx.core.guice;version="2.2.0",
+ org.eclipse.fx.core.log;version="2.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.eclipse.fx.ide.css.cssext.ui;x-internal:=true; uses:="org.eclipse.core.resources,  org.eclipse.ui.plugin,  org.osgi.framework,  org.eclipse.xtext.ui,  org.eclipse.xtext.ui.guice,  com.google.inject",
- org.eclipse.fx.ide.css.cssext.ui.contentassist;x-internal:=true; uses:="org.eclipse.xtext,  org.eclipse.emf.ecore,  org.eclipse.xtext.common.ui.contentassist,  org.eclipse.xtext.ui.editor.contentassist",
- org.eclipse.fx.ide.css.cssext.ui.contentassist.antlr;x-internal:=true; uses:="org.eclipse.xtext,  org.eclipse.fx.ide.css.cssext.services,  org.eclipse.fx.ide.css.cssext.ui.contentassist.antlr.internal,  org.eclipse.xtext.ui.editor.contentassist.antlr.internal,  org.eclipse.xtext.ui.codetemplates.ui.partialEditing,  org.eclipse.xtext.ui.editor.contentassist.antlr",
- org.eclipse.fx.ide.css.cssext.ui.internal;x-internal:=true;uses:="org.eclipse.ui.plugin,org.osgi.framework,com.google.inject",
- org.eclipse.fx.ide.css.cssext.ui.quickfix
-Bundle-Activator: org.eclipse.fx.ide.css.cssext.ui.internal.CssExtDslActivator
-Service-Component: OSGI-INF/cssExtProvider.xml,OSGI-INF/ColorProposalContributor.xml
+Export-Package: org.eclipse.fx.ide.css.cssext.ui.quickfix,
+ org.eclipse.fx.ide.css.cssext.ui.internal,
+ org.eclipse.fx.ide.css.cssext.ui.contentassist
+Bundle-Activator: org.eclipse.fx.ide.css.cssext.ui.internal.CssextActivator
+Service-Component: OSGI-INF/ColorProposalContributor.xml,
+ OSGI-INF/services/org.eclipse.fx.ide.css.cssext.ui.ext.ColorProposalContribution.xml,
+ OSGI-INF/services/org.eclipse.fx.ide.css.cssext.ui.internal.ProjectScopeProviderImpl.xml,
+ OSGI-INF/services/org.eclipse.fx.ide.css.cssext.ui.internal.CssExtProviderImpl.xml

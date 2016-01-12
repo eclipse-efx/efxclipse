@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Queue;
 
 import org.eclipse.fx.ide.css.cssDsl.CssTok;
+import org.eclipse.fx.ide.css.cssext.cssExtDsl.CSSRule;
 import org.eclipse.fx.ide.css.cssext.parser.ParserInputCursor;
 import org.eclipse.fx.ide.css.extapi.Proposal;
 
@@ -13,26 +14,29 @@ public class ResultNode {
 
 	public ParserInputCursor remainingInput;
 	public State status;
-	
+
 	final public NodeType nodeType;
-	
+
 	public CssTok matched;
-	
+
 	final public List<ResultNode> next = new ArrayList<>();
-	
+
+	public ResultNode child;
+
 	public Proposal proposal;
 	public String message;
 	public boolean partial = false;
-	
+	public CSSRule rule;
+
 	public ResultNode(NodeType nodeType) {
 		this.nodeType = nodeType;
 	}
-	
+
 	@Override
 	public String toString() {
-		return status+"|"+remainingInput+"|"+proposal + "|" + partial + " (" + message +")";
+		return nodeType + "|" + status+"|"+remainingInput+"|"+proposal + "|" + partial + " (" + message +")";
 	}
-	
+
 	public List<ResultNode> findLast() {
 		List<ResultNode> last = new ArrayList<>();
 		Queue<ResultNode> toCheck = new LinkedList<>();
@@ -46,11 +50,11 @@ public class ResultNode {
 				toCheck.addAll(check.next);
 			}
 		}
-		
+
 //		System.err.println("findLast returns : " + last);
 		return last;
 	}
-	
+
 	public List<ResultNode> findByState(State state) {
 		List<ResultNode> found = new ArrayList<>();
 		Queue<ResultNode> toCheck = new LinkedList<>();
@@ -60,33 +64,39 @@ public class ResultNode {
 			if (!check.next.isEmpty()) {
 				toCheck.addAll(check.next);
 			}
-			
+
 			if (check.status == state) {
 				found.add(check);
 			}
 		}
-		
+
 //		System.err.println("findLast returns : " + last);
 		return found;
 	}
-	
-	
+
+
 	public boolean isValid() {
 		return status != null && status != State.INVALID && status != State.PROPOSE;
 	}
-	
+
 	public static ResultNode createSkipNode(ResultNode src) {
 		ResultNode r = new ResultNode(src.nodeType);
 		r.status = State.SKIP;
 		r.remainingInput = src.remainingInput.copy();
 		return r;
 	}
-	
+
 	private static void dbg(ResultNode cur, int depth, StringBuffer s) {
-		final String last = "-->";
+		String last = "-->";
 		boolean lastMode = false;
 		if (cur.next.isEmpty()) {
 			lastMode = true;
+			if (cur.isValid()) {
+				last = "-->";
+			}
+			else {
+				last = "  >";
+			}
 		}
 		for (int i = 0; i < depth; i++) {
 			if (lastMode) {
@@ -115,14 +125,26 @@ public class ResultNode {
 		default: s.append(cur.remainingInput);
 		}
 		s.append("\n");
+
+		if (cur.child != null) {
+			s.append("child: ");
+			dbg(cur.child, depth+1, s);
+		}
+
 		for (ResultNode n : cur.next) {
 			dbg(n, depth+1, s);
 		}
 	}
-	
+
 	public static void dbg(ResultNode node) {
 		StringBuffer buf = new StringBuffer();
 		dbg(node, 0, buf);
 		System.err.println(buf.toString());
+	}
+
+	public static String dbg2(ResultNode node) {
+		StringBuffer buf = new StringBuffer();
+		dbg(node, 0, buf);
+		return buf.toString();
 	}
 }

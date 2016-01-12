@@ -1,0 +1,3 @@
+includeFlat 'org.eclipse.fx.ide.css'
+includeFlat 'org.eclipse.fx.ide.css.ide'
+includeFlat 'org.eclipse.fx.ide.css.idea'

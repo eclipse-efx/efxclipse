@@ -1,28 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-
 <plugin>
-
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "http://www.eclipse.org/efxclipse/ide/css/CssDsl" 
-       class = "org.eclipse.fx.ide.css.cssDsl.CssDslPackage"
-       genModel = "org/eclipse/fx/ide/css/CssDsl.genmodel" /> 
-	
-  </extension>
-  <extension
-        id="nature"
-        name="CSS Editor Nature"
-        point="org.eclipse.core.resources.natures">
-     <runtime>
-        <run
-              class="org.eclipse.fx.ide.css.CSSEditorNature">
-        </run>
-     </runtime>
-  </extension>
-
-
-
-
-
+	<extension point="org.eclipse.emf.ecore.generated_package">
+		<package 
+			uri = "http://www.eclipse.org/efxclipse/ide/css/CssDsl"
+			class = "org.eclipse.fx.ide.css.cssDsl.CssDslPackage"
+			genModel = "model/generated/CssDsl.genmodel" />
+	</extension>
 </plugin>
