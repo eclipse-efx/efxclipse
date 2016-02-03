@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="org.eclipse.fx.ide.css.cssext.resolver.osgi.OSGiBundlesCssExtResolver">
+   <property name="context" value="java.lang.Void"/>
+   <service>
+      <provide interface="org.eclipse.fx.ide.css.cssext.extapi.registry.CssExtFileWatcher"/>
+   </service>
+   <implementation class="org.eclipse.fx.ide.css.cssext.resolver.osgi.OSGiBundlesCssExtResolver"/>
+</scr:component>

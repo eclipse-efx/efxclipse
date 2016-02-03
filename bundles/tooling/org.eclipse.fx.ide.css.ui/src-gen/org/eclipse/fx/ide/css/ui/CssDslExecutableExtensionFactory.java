@@ -11,7 +11,7 @@ import com.google.inject.Injector;
 
 /**
  * This class was generated. Customizations should only happen in a newly
- * introduced subclass. 
+ * introduced subclass.
  */
 public class CssDslExecutableExtensionFactory extends AbstractGuiceAwareExecutableExtensionFactory {
 
@@ -19,10 +19,10 @@ public class CssDslExecutableExtensionFactory extends AbstractGuiceAwareExecutab
 	protected Bundle getBundle() {
 		return CssActivator.getInstance().getBundle();
 	}
-	
+
 	@Override
 	protected Injector getInjector() {
 		return CssActivator.getInstance().getInjector(CssActivator.ORG_ECLIPSE_FX_IDE_CSS_CSSDSL);
 	}
-	
+
 }
