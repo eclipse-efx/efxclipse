@@ -8,7 +8,9 @@ Service-Component:  \
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.xmi,\
 	org.eclipse.emf.common,\
-	org.eclipse.xtext
+	org.eclipse.xtext,\
+	javax.inject
 Private-Package:  \
 	org.eclipse.fx.code.editor.ldef.app
 -runee: JavaSE-1.8
+-runfw: org.eclipse.osgi;version='[3.10.100.v20150529-1857,3.10.100.v20150529-1857]'
