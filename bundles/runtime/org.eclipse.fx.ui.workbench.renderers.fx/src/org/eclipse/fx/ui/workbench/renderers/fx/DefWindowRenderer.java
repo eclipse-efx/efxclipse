@@ -524,7 +524,7 @@ public class DefWindowRenderer extends BaseWindowRenderer<Stage> {
 
 			// Add a css which sets defaults
 			{
-				URL url = getClass().getClassLoader().getResource("css/efx-default.css"); //$NON-NLS-1$
+				URL url = WWindowImpl.class.getClassLoader().getResource("css/efx-default.css"); //$NON-NLS-1$
 				if (url != null) {
 					s.getStylesheets().add(url.toExternalForm());
 				} else {
