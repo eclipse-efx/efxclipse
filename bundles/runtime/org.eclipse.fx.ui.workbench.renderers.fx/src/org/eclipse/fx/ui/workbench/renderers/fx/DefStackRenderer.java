@@ -463,6 +463,7 @@ public class DefStackRenderer extends BaseStackRenderer<Node, Object, Node> {
 				if( this.tab.getContent() instanceof Parent ) {
 					this.domElement.getParent().setSelectedElement(this.domElement);
 					((Parent)this.tab.getContent()).requestLayout();
+					((Parent)this.tab.getContent()).impl_reapplyCSS();
 				} else {
 					this.tab.getTabPane().requestLayout();
 				}
