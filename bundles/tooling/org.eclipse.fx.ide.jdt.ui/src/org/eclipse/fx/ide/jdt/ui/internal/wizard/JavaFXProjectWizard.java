@@ -232,7 +232,7 @@ public class JavaFXProjectWizard extends NewElementWizard implements IExecutable
 
 				{
 					IFile cssFile = p.getProject().getWorkspace().getRoot().getFile(path.append("application.css"));
-					ByteArrayInputStream in = new ByteArrayInputStream("/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */".getBytes());
+					ByteArrayInputStream in = new ByteArrayInputStream("/* JavaFX CSS - Leave this comment until you have created at least one rule which uses -fx-Property */".getBytes());
 					cssFile.create(in, IFile.FORCE|IFile.KEEP_HISTORY, null);
 					in.close();
 				}
